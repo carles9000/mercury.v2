@@ -4,7 +4,7 @@ function MC_ViewError( hError )
 	local cHtml := ''
 	local aLines, n, cTitle, cInfo, cLine
 
-	cHtml := MC_Info_Style()	
+	cHtml := MC_Style()	
 	cHtml += MC_Msg_Header( 'Mercury Error' )
 
 	BLOCKS TO cHtml 	

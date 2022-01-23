@@ -2,7 +2,7 @@ function MC_MsgError( cError, cMsg, cTitle )
 
 	LOCAl cHtml 	:= ''
 	
-	cHtml := MC_Info_Style()	
+	cHtml := MC_Style()	
 	cHtml += MC_Msg_Header( cTitle )
 	
 	BLOCKS TO cHtml 	
@@ -28,7 +28,7 @@ function MC_Msg_Table( cTitle, aHeaders, aData, aBlockData )
 	LOCAl cHtml 	:= ''
 	local hItem, nI, nJ, nLen, nCols, nRows, uItem, bBlock		
 	
-	cHtml := MC_Info_Style()	
+	cHtml := MC_Style()	
 	cHtml += MC_Msg_Header( cTitle )
 	
 	nLen 		:= len(aData)
@@ -82,7 +82,7 @@ function MC_Msg_Table( cTitle, aHeaders, aData, aBlockData )
 	
 retu nil
 
-function MC_Info_Style() 
+function MC_Style() 
 
 	local cHtml := ''
 
