@@ -7,8 +7,8 @@
 
 CLASS MC_Router 
 
-	DATA oApp 
-	DATA aMap 				INIT {}
+	CLASSDATA oApp 
+	CLASSDATA aMap 				INIT {}
 
 	METHOD New( oApp )		CONSTRUCTOR
 	
@@ -84,7 +84,6 @@ METHOD Listen() CLASS MC_Router
 				
 					cId		:= ::aMap[n][ MAP_ID ]		
 					cRule 	:= ::aMap[n][ MAP_RULE ]	
-
 				
 					lRule	:= ::Match( cRule, aRequest_Friendly, @hParam )				
 					
@@ -373,7 +372,7 @@ METHOD ExecuteController( hInfo, hParam, cMap ) CLASS MC_Router
 
 			cCode :=  hb_memoread( cFile )
 				
-			::ExecuteCode( hInfo, cCode, hParam  )
+			::ExecuteCode( hInfo, cCode, hParam )
 			
 		case hInfo[ 'type' ] == 'class'	
 
@@ -383,7 +382,7 @@ METHOD ExecuteController( hInfo, hParam, cMap ) CLASS MC_Router
 			cCode += "#include 'hboo.ch' " + HB_OsNewLine() + HB_OsNewLine()
 			cCode +=  hb_memoread( cFile )					
 		
-			::ExecuteClass( hInfo, cCode, hParam  )
+			::ExecuteClass( hInfo, cCode, hParam )
 
 		otherwise 
 		
@@ -407,18 +406,23 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	local pSym
 	local cClass, oClass, hError
 	local cCodePP := ''   
-   	
-	pSym 	:= MC_Compile( @cCode )
-	
-	cClass := '{|oApp,hParam| ' + hInfo[ 'class' ] + '():New( oApp, hParam ) }' 								
-	oClass := Eval( &( cClass ), ::oApp, hParam )
+	local oController 
+  	
+	oController 	:= MC_Controller():New( hInfo[ 'method' ], hParam )
 
+	pSym 	:= MC_Compile( @cCode )	
+	
+	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
+	oClass := Eval( &( cClass ), oController )
+
+ 	
 	if __objHasMethod( oClass, hInfo[ 'method' ] )		
-		__ObjSendMsg( oClass, hInfo[ 'method' ], ::oApp, hParam )	
+		__ObjSendMsg( oClass, hInfo[ 'method' ], oController )	
 	else 				
-		MC_MsgError( 'Router',"Method doesn't exist: " + hInfo[ 'method' ] )
+		MC_MsgError( 'Router',"Method doesn't exist: " + hInfo[ 'method' ] + ', Controller: ' + hInfo[ 'file' ]  )
 	endif 
 	
+ 	
 	//ErrorBlock( hError )
 
 retu nil 
@@ -459,6 +463,149 @@ METHOD MC_Tools( cTag ) CLASS MC_Router
 
 retu nil
 
+//	-------------------------------------------------------------------------	//	
+
+
+FUNCTION  MC_Route( cRoute, aParams ) 
+
+	LOCAL aRoute
+	LOCAL aDefParams, nDefParams, cDefParam
+	LOCAL cUrl 	:= ''
+	LOCAL oRouter 	:= MC_GetApp():oRouter
+	LOCAL aMap 	:= oRouter:aMap
+	LOCAL lFound 	:= .F. 
+	LOCAL n
+	LOCAL nLen 	:= len(aMap)
+	local cRule, aRequest_Friendly, hParam, lRule
+	
+	//_w( oRouter )
+	//_w( aMap)
+	
+	? 'MC_ROUTE()----------------------'
+	
+	FOR n := 1 to nLen 
+	
+		IF aMap[n][ MAP_ID ] == cRoute
+			aRoute := aMap[n]
+			lFound := .t.
+			exit
+		ENDIF 
+	
+	NEXT 
+	
+	if ! lFound
+		retu ''
+	endif
+	
+	? aRoute	
+	
+	cRule 	:= aRoute[ MAP_RULE ]
+	aRequest_Friendly		:= MC_Url_Friendly()
+	hParam 					:= {=>}
+	
+	? cRule
+	? aRequest_Friendly
+
+	lRule	:= oRouter:Match( cRule, aRequest_Friendly, @hParam )
+
+	? hParam
+	
+	? 'MC_ROUTE() END----------------------'
+retu nil 
+	
+/*
+FUNCTION  MC_Route( cRoute, aParams ) 
+
+	LOCAL aRoute
+	LOCAL aDefParams, nDefParams, cDefParam
+	LOCAL cUrl 	:= ''
+	LOCAL aMap 	:= MC_GetApp():oRouter:aMap
+	LOCAL lError 	:= .F.
+	LOCAL lFound	:= .F.
+	LOCAL hError 	:= {=>}
+	LOCAL cError 	:= ''
+	LOCAL nI
+	
+	__defaultNIL( @cRoute, '' )
+	__defaultNIL( @aParams, {=>} )
+	
+	
+	FOR EACH aRoute IN aMap
+	
+		IF aRoute[ MAP_ID ] == cRoute
+		
+			lFound := .T.
+		
+			//	URL Base
+			
+				IF aRoute[ MAP_QUERY ] <> '/' 	//	Default page		
+					cUrl := MC_App_Url() + '/' + aRoute[ MAP_QUERY ]
+				ELSE
+					cUrl := MC_App_Url() + '/' 
+				ENDIF
+	
+			// 	Cuantos parámetros tiene la Ruta
+			
+				aDefParams := aRoute[ MAP_PARAMS ]
+				nDefParams := len( aParams )
+	
+				
+			// 	Si los parámetros definidos == parametros recibidos -> OK
+			
+				IF nDefParams == len( aParams )
+				
+						FOR nI := 1 TO nDefParams
+
+							cDefParam := aDefParams[nI]
+							
+							IF HB_HHasKey( aParams, cDefParam )
+
+								cUrl += '/'
+								cUrl += MC_ValToChar( aParams[ cDefParam ] ) 								
+								
+							ELSE	
+							
+								//	Generamos ERROR ?	=> Yo diria que si
+								
+								lError 	:= .T.
+								
+								hError[ 'id' ]		    := cRoute
+								hError[ 'define' ]		:= aRoute[ MAP_ROUTE ]
+								hError[ 'descripcion' ]	:= 'Parámetro definido<strong> ' + cDefParam + ' </strong>no existe'
+								
+								cError += 'ID: ' + cRoute + ' => ' + aRoute[ MAP_ROUTE ] + ", Doesn't existe parameter " + cDefParam + '<br>'
+								
+							
+							ENDIF						
+						
+						NEXT				
+				
+				ENDIF
+				
+			//	Salir...
+				exit
+			
+	
+		ENDIF
+		
+	NEXT	
+	
+	//	Si NO tenemos ningun error devolvemos la URL
+	
+		IF lFound .AND. !lError			
+			RETU cUrl
+		ELSEIF !lFound .AND. lError
+			MC_MsgError( 'Router', cError )
+		ENDIF	
+	
+	
+RETU ''
+*/
+
+
+
+
+//	-------------------------------------------------------------------------	//	
 
 function _e( ... )
 	ap_RPuts( '<code>' + MH_Out( 'web', ... ) + '</code>' )

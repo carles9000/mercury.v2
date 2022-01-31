@@ -1,4 +1,15 @@
 
+FUNCTION MC_GetApp()
+	
+	thread STATIC oApp
+	
+	IF oApp == NIL
+		oApp := MC_App():New()
+		//oApp := TApp():New( cTitle, uInit , cPsw, cId_Cookie, nTime )
+	ENDIF
+
+RETU oApp
+
 
 CLASS MC_App	
 
@@ -16,7 +27,8 @@ CLASS MC_App
 	CLASSDATA cPathController						INIT '/src/controller/'
 	CLASSDATA cPathModel							INIT '/src/model/'   
    
-	CLASSDATA cTitle 
+	DATA cTitle 
+	DATA bInit
 	
 	
 	
@@ -28,9 +40,10 @@ CLASS MC_App
    
 ENDCLASS
 
-METHOD New( cTitle ) CLASS MC_App
+METHOD New( cTitle, bInit ) CLASS MC_App
 
 	::cTitle 		:= IF( valtype( cTitle ) == 'C', cTitle, AP_GETENV( 'APP_TITLE' ) )
+	::bInit 		:= bInit
 
 	//::oRequest 	:= TRequest():New()	
 	//::oResponse 	:= TResponse():New()	
@@ -43,13 +56,19 @@ METHOD New( cTitle ) CLASS MC_App
 	*/
 	
 	::oRouter 		:= MC_Router():New( self )
-	::oRequest		:= MC_Request():New( self )
+//	::oRequest		:= MC_Request():New( self )
 	
 
 RETU Self
 
 METHOD Init() CLASS MC_App
 
+	LOCAL oThis := SELF  
+	
+	IF Valtype( ::bInit ) == 'B'
+		Eval( ::bInit, oThis )
+	ENDIF
+	
 	::oRouter:Listen()
 	
 retu nil
