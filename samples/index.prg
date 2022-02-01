@@ -11,8 +11,8 @@ function main()
 	DEFINE APP oApp 
 
 	
-		DEFINE ROUTE 'r1' URL '/' 				CONTROLLER 'xxx.prg' 					METHOD 'GET' OF oApp
-		DEFINE ROUTE 'r2' URL 'hello' 			CONTROLLER 'hello.prg' 					METHOD 'GET' OF oApp
+		DEFINE ROUTE 'r1' 		URL '/' 				CONTROLLER 'xxx.prg' 					METHOD 'GET' OF oApp
+		DEFINE ROUTE 'hello' 	URL 'hello' 			CONTROLLER 'hello.prg' 					METHOD 'GET' OF oApp
 		
 		DEFINE ROUTE 'r3' URL 'customer/[id]'	CONTROLLER 'customer.prg' 				METHOD 'GET' OF oApp
 		DEFINE ROUTE 'r4' URL 'nofile'			CONTROLLER 'nofile.prg' 				METHOD 'GET' OF oApp
@@ -39,6 +39,9 @@ function main()
 			
 		//	Test MC_Route
 		
+			DEFINE ROUTE 'z0'		URL 'get' 					CONTROLLER 'test1@route.prg'		OF oApp				
+			DEFINE ROUTE 'z1'		URL 'get/(id)/name/[st]' 	CONTROLLER 'test1@route.prg'		OF oApp				
+			DEFINE ROUTE 'z2'		URL 'get/name/(id)' 		CONTROLLER 'test1@route.prg'		OF oApp				
 			DEFINE ROUTE 'route1'	URL 'route1' 	CONTROLLER 'test1@route.prg'		OF oApp				
 
 

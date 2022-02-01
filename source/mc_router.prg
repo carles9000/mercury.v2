@@ -468,50 +468,81 @@ retu nil
 
 FUNCTION  MC_Route( cRoute, aParams ) 
 
-	LOCAL aRoute
-	LOCAL aDefParams, nDefParams, cDefParam
 	LOCAL cUrl 	:= ''
 	LOCAL oRouter 	:= MC_GetApp():oRouter
 	LOCAL aMap 	:= oRouter:aMap
-	LOCAL lFound 	:= .F. 
-	LOCAL n
 	LOCAL nLen 	:= len(aMap)
-	local cRule, aRequest_Friendly, hParam, lRule
-	
-	//_w( oRouter )
-	//_w( aMap)
-	
-	? 'MC_ROUTE()----------------------'
-	
-	FOR n := 1 to nLen 
-	
-		IF aMap[n][ MAP_ID ] == cRoute
-			aRoute := aMap[n]
-			lFound := .t.
-			exit
-		ENDIF 
-	
-	NEXT 
-	
-	if ! lFound
-		retu ''
-	endif
-	
-	? aRoute	
-	
-	cRule 	:= aRoute[ MAP_RULE ]
-	aRequest_Friendly		:= MC_Url_Friendly()
-	hParam 					:= {=>}
-	
-	? cRule
-	? aRequest_Friendly
+	LOCAL lFound 	:= .F. 
+	LOCAL n, nPos, aRoute 
+	local cRule, aToken_Rule, cToken 
 
-	lRule	:= oRouter:Match( cRule, aRequest_Friendly, @hParam )
+	DEFAULT aParams := {=>}
 
-	? hParam
+	//	Buscamos en el mapa, la ruta con ID == cRoute
+
+		FOR n := 1 to nLen 
+		
+			IF aMap[n][ MAP_ID ] == cRoute
+				aRoute := aMap[n]
+				lFound := .t.
+				exit
+			ENDIF 
+		
+		NEXT 
+		
+		if ! lFound
+			retu ''
+		endif
 	
-	? 'MC_ROUTE() END----------------------'
-retu nil 
+	//	Tokenizamos la regla de la url 
+	
+		cRule 	:= aRoute[ MAP_RULE ]
+
+		//	Si rule == '/'
+		if cRule == '/'
+			aToken_Rule 	:= { '/' }
+		else
+			aToken_Rule 	:= hb_ATokens( cRule, "/" )
+		endif
+		
+		if empty( aToken_Rule )
+			aToken_Rule := { '/' }
+		endif		
+		
+	//	Creamos la Url a partir de los tokens de la regla 
+	//	y sustituyendo los obligatorios/opcionales por los
+	//	parámetros recibidos 
+	
+		nPos := 0 
+		
+		for n := 1 to len( aToken_Rule )
+		
+			cToken := aToken_Rule[n]
+			
+			if  oRouter:IsVariable( cToken ) .or. oRouter:IsOptional( cToken )	
+			
+				nPos++ 
+				
+				if nPos <= len( aParams )
+				
+					cUrl += '/' + mh_valtochar( aParams[nPos] )
+					
+				else 
+				
+					exit 
+				endif 
+				
+			else 				
+				
+				cUrl += '/' + cToken 
+				
+			endif 			
+		
+		next 	
+		
+		cUrl := Substr( cUrl, 2 )		//	Eliminamos primera /
+
+retu cUrl  
 	
 /*
 FUNCTION  MC_Route( cRoute, aParams ) 

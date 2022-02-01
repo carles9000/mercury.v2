@@ -74,7 +74,11 @@ RETU NIL
 
 METHOD redirect( o ) CLASS Response
 
-	//	falta route -> o:oResponse:redirect(  MC_Route( 'my_new' ) )
+	local cUrl := MC_App_Url() + MC_Route( 'hello' ) 		
+
+	//? cUrl 
+	o:oResponse:redirect( cUrl  )
+	
 
 RETU NIL
 

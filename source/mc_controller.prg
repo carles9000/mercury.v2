@@ -5,11 +5,11 @@ CLASS MC_Controller
 
 	DATA cAction 													INIT ''
 	DATA oRequest	
-	DATA hParam														INIT {=>}
+	DATA oResponse	
+	DATA hParam													INIT {=>}
 	
 	//	---------------------------
 	/*
-	DATA oResponse	
 	DATA oMiddleware
 	DATA oView
 	DATA lAutenticate												INIT .T.
@@ -49,6 +49,7 @@ METHOD New( cAction, hParam  ) CLASS MC_Controller
 	::hParam 			:= hParam	
 	
 	::oRequest 		:= MC_Request():New( hParam )
+	::oResponse 		:= MC_Response():New()
 
 RETU Self
 
