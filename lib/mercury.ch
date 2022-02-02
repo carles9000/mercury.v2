@@ -41,6 +41,19 @@
 
 #xcommand INIT APP <oApp> => <oApp>:Init()
 
+//	Validator	-------------------------------------------------------------------	
+
+#xcommand DEFINE VALIDATOR <oValidator> WITH <hData> ;
+	[<err:ERROR ROUTE, DEFAULT> <cRoute>] [<json:ERROR JSON> ] ;
+=> ;
+	<oValidator> := MC_Validator():New( <hData>, [<cRoute>], [<.json.>]  )
+	
+#xcommand PARAMETER <cParameter> [NAME <cName>] ROLES <cRoles> [FORMATTER <cFormat>] OF <oValidator> ;
+=> ;
+	<oValidator>:Set( <cParameter>, <cRoles>, [<cName>], [<cFormat>] )
+	
+#xcommand RUN VALIDATOR <oValidator> => <oValidator>:Run()
+
 
 
 #endif /* _MERCURY_CH */

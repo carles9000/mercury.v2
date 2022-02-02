@@ -1,0 +1,11 @@
+<h1>View 4</h1>
+<hr>
+
+	<?prg
+		local hRow 		:= pValue(1
+		local cHtml 	:= time()
+
+		retu cHtml				
+	?>
+
+

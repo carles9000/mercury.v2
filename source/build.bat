@@ -1,7 +1,7 @@
 @echo off
 @cls
 @set path=c:\xampp\htdocs\master\harbour
-@set include=c:\xampp\htdocs\master\harbour\include
+@set include=c:\xampp\htdocs\master\harbour\include;c:\harbour\include
 
 del ..\lib\mercury.hrb
 

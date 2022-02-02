@@ -1,0 +1,4 @@
+<h1>Html - Macros</h1>
+<hr>
+
+Time {{ time() }}, and date {{ DToC(date()) }}

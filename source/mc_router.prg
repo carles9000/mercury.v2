@@ -403,14 +403,22 @@ retu nil
 //	-------------------------------------------------------------------------	//	
 
 METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
-	local pSym
+	local pSym, oHrb
 	local cClass, oClass, hError
 	local cCodePP := ''   
 	local oController 
   	
 	oController 	:= MC_Controller():New( hInfo[ 'method' ], hParam )
 
-	pSym 	:= MC_Compile( @cCode )	
+	oHrb 	:= MC_Compile( @cCode )
+
+	WHILE !hb_mutexLock( MH_Mutex() )
+	ENDDO	
+	
+	pSym := hb_hrbLoad( 2, oHrb )	//HB_HRB_BIND_OVERLOAD							
+
+	
+	hb_mutexUnlock( MH_Mutex() )	
 	
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
 	oClass := Eval( &( cClass ), oController )
@@ -464,7 +472,6 @@ METHOD MC_Tools( cTag ) CLASS MC_Router
 retu nil
 
 //	-------------------------------------------------------------------------	//	
-
 
 FUNCTION  MC_Route( cRoute, aParams ) 
 
@@ -543,98 +550,55 @@ FUNCTION  MC_Route( cRoute, aParams )
 		cUrl := Substr( cUrl, 2 )		//	Eliminamos primera /
 
 retu cUrl  
-	
-/*
-FUNCTION  MC_Route( cRoute, aParams ) 
 
-	LOCAL aRoute
-	LOCAL aDefParams, nDefParams, cDefParam
+
+//	-------------------------------------------------------------------------	//	
+
+FUNCTION  MC_RouteToController( cRoute )  //	Controller/View
+
 	LOCAL cUrl 	:= ''
-	LOCAL aMap 	:= MC_GetApp():oRouter:aMap
-	LOCAL lError 	:= .F.
-	LOCAL lFound	:= .F.
-	LOCAL hError 	:= {=>}
-	LOCAL cError 	:= ''
-	LOCAL nI
+	LOCAL oRouter 	:= MC_GetApp():oRouter
+	LOCAL aMap 	:= oRouter:aMap
+	LOCAL aRoute
 	
-	__defaultNIL( @cRoute, '' )
-	__defaultNIL( @aParams, {=>} )
-	
+	__defaultNIL( @cRoute, '' )		
 	
 	FOR EACH aRoute IN aMap
 	
 		IF aRoute[ MAP_ID ] == cRoute
+			retu aRoute[ MAP_CONTROLLER ]
+		ENDIF				
 		
-			lFound := .T.
-		
-			//	URL Base
-			
-				IF aRoute[ MAP_QUERY ] <> '/' 	//	Default page		
-					cUrl := MC_App_Url() + '/' + aRoute[ MAP_QUERY ]
-				ELSE
-					cUrl := MC_App_Url() + '/' 
-				ENDIF
-	
-			// 	Cuantos parámetros tiene la Ruta
-			
-				aDefParams := aRoute[ MAP_PARAMS ]
-				nDefParams := len( aParams )
-	
-				
-			// 	Si los parámetros definidos == parametros recibidos -> OK
-			
-				IF nDefParams == len( aParams )
-				
-						FOR nI := 1 TO nDefParams
+	NEXT	
 
-							cDefParam := aDefParams[nI]
-							
-							IF HB_HHasKey( aParams, cDefParam )
+RETU ''
 
-								cUrl += '/'
-								cUrl += MC_ValToChar( aParams[ cDefParam ] ) 								
-								
-							ELSE	
-							
-								//	Generamos ERROR ?	=> Yo diria que si
-								
-								lError 	:= .T.
-								
-								hError[ 'id' ]		    := cRoute
-								hError[ 'define' ]		:= aRoute[ MAP_ROUTE ]
-								hError[ 'descripcion' ]	:= 'Parámetro definido<strong> ' + cDefParam + ' </strong>no existe'
-								
-								cError += 'ID: ' + cRoute + ' => ' + aRoute[ MAP_ROUTE ] + ", Doesn't existe parameter " + cDefParam + '<br>'
-								
-							
-							ENDIF						
-						
-						NEXT				
-				
-				ENDIF
-				
-			//	Salir...
-				exit
-			
+//	-------------------------------------------------------------------------	//	
+
+/*
+FUNCTION MC_RouteToUrl( cRoute, lDirBase )  //	Controller/View
+
+	LOCAL oRouter 	:= MC_GetApp():oRouter
+	LOCAL aMap 	:= oRouter:aMap
+	LOCAL aRoute
 	
-		ENDIF
+	__defaultNIL( @cRoute, '' )		
+	__defaultNIL( @lDirBase, .F. )		
+	
+	FOR EACH aRoute IN aMap
+	
+		IF aRoute[ MAP_ID ] == cRoute
+			if lDirBase				
+				retu ( MC_App_Url() + '/' + aRoute[ MAP_URL] )
+			else
+				retu aRoute[ MAP_URL ]
+			endif
+		ENDIF				
 		
 	NEXT	
 	
-	//	Si NO tenemos ningun error devolvemos la URL
-	
-		IF lFound .AND. !lError			
-			RETU cUrl
-		ELSEIF !lFound .AND. lError
-			MC_MsgError( 'Router', cError )
-		ENDIF	
-	
-	
 RETU ''
 */
-
-
-
 
 //	-------------------------------------------------------------------------	//	
 

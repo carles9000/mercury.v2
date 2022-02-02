@@ -1,0 +1,56 @@
+<?prg
+
+	local hRow 		:= pValue(1)
+	local cHtml 	:= ''
+	local cInfo 	:= ''
+	local cTime 	:= time()	
+	
+	BLOCKS VIEW cHtml PARAMS cTime 
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<title>Test bootstrap</title>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
+		</head>
+		<body>
+		<div class="container">
+   	    <h4>Login into system: <$ cTime $></h4><hr>
+
+	ENDTEXT	
+	
+	cInfo += '<b>Lapsus:</b> ' + ltrim(str( hb_milliseconds()))
+	
+	
+	BLOCKS VIEW cHtml PARAMS cInfo, hRow 
+
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th>Field</th><th>Value</th>
+					</tr>
+				</thead>
+				
+				<tr>
+					<td>First</td><td><$ hRow[ 'first' ]  $></td>
+				</tr>
+				<tr>
+					<td>Last</td><td><$ hRow[ 'last' ]  $></td>
+				</tr>
+				<tr>
+					<td>Zip</td><td><$ hRow[ 'zip' ]  $></td>
+				</tr>								
+			</table>
+			
+			<$ cInfo $>
+	
+		  </div>
+		 </body>
+		</html>
+	ENDTEXT 
+	
+	retu cHtml		
+		
+?>

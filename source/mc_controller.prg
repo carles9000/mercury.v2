@@ -21,27 +21,30 @@ CLASS MC_Controller
 	
 	METHOD New( cMethod, hPar ) 									CONSTRUCTOR
 	
+	METHOD View( cFile, ... ) 
+	
+	METHOD Request 	( cKey, cDefault, cType )				INLINE ::oRequest:Request( cKey, cDefault, cType )
+	METHOD Get			( cKey, cDefault, cType )				INLINE ::oRequest:Get	 	( cKey, cDefault, cType )
+	METHOD Post		( cKey, cDefault, cType )				INLINE ::oRequest:Post	( cKey, cDefault, cType )
+	METHOD PostAll()												INLINE ::oRequest:PostAll()
+	METHOD GetAll()												INLINE ::oRequest:GetAll()
+	METHOD RequestAll()											INLINE ::oRequest:RequestAll()
+
 /*	
 	METHOD InitView()
-	METHOD View( cFile, ... ) 
 	
 	METHOD ListController()
 	METHOD ListRoute()												INLINE ::oRoute:ListRoute()
 	
 	
-	METHOD RequestValue 	( cKey, cDefault, cType )				INLINE ::oRequest:Request( cKey, cDefault, cType )
-	METHOD GetValue		( cKey, cDefault, cType )				INLINE ::oRequest:Get	 	( cKey, cDefault, cType )
-	METHOD PostValue		( cKey, cDefault, cType )				INLINE ::oRequest:Post	( cKey, cDefault, cType )
-	METHOD PostAll()												INLINE ::oRequest:PostAll()
-	METHOD GetAll()												INLINE ::oRequest:GetAll()
-	METHOD RequestAll()											INLINE ::oRequest:RequestAll()
-
 	METHOD Middleware		( cType, cRoute, aExceptionMethods, hError  )					
 
 	METHOD Redirect		( cRoute )
 */
 	
 ENDCLASS 
+
+//	-------------------------------------------------------------------------	//	
 
 METHOD New( cAction, hParam  ) CLASS MC_Controller
 		
@@ -52,6 +55,21 @@ METHOD New( cAction, hParam  ) CLASS MC_Controller
 	::oResponse 		:= MC_Response():New()
 
 RETU Self
+
+//	-------------------------------------------------------------------------	//	
+
+METHOD View( cFile, ... ) CLASS MC_Controller
+
+	LOCAL oView 			:= MC_Viewer():New()
+	
+	//oView:oRoute		:= ::oRouter
+	//oView:oResponse	:= ::oResponse 		
+	
+	oView:Exec( cFile, ... )
+
+RETU ''
+
+//	-------------------------------------------------------------------------	//	
 
 /*
 METHOD Middleware( cType, cRoute, aExceptionMethods, hError, lJson, aParams ) CLASS MC_Controller

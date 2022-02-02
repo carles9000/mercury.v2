@@ -1,0 +1,30 @@
+<h1>View 3</h1>
+<hr>
+
+	<?prg
+		local hRow 		:= pValue(1)
+		local cHtml 	:= ''
+		
+		cHtml += 'Identity: ' + hRow[ 'first' ] + ' ' + hRow[ 'last' ] + ', ' + hRow[ 'zip' ]
+		
+		retu cHtml				
+	?>
+	
+<hr>
+<h3>Next prg bloc</h3>
+
+	<?prg
+		local hRow 		:= pValue(1)
+		local cHtml 	:= ''
+		
+		cHtml += '<b>First:</b> ' + hRow[ 'first' ] 
+		cHtml += '<br><b>Last:</b> ' + hRow[ 'last' ] 
+		cHtml += '<br><b>Zip:</b> ' + hRow[ 'zip' ] 
+		
+		retu cHtml				
+	?>
+
+
+
+
+End of html...

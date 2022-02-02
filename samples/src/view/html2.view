@@ -1,0 +1,16 @@
+<h1>View 2</h1>
+<hr>
+
+	<?prg
+		local hRow 		:= pValue(1)
+		local cHtml 	:= ''
+		
+		cHtml += 'Identity: ' + hRow[ 'first' ] + ' ' + hRow[ 'last' ] + ', ' + hRow[ 'zip' ]
+		
+		retu cHtml		
+		//retu 		
+	?>
+	
+<hr>
+
+End of html...

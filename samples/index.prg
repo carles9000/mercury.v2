@@ -42,9 +42,16 @@ function main()
 			DEFINE ROUTE 'z0'		URL 'get' 					CONTROLLER 'test1@route.prg'		OF oApp				
 			DEFINE ROUTE 'z1'		URL 'get/(id)/name/[st]' 	CONTROLLER 'test1@route.prg'		OF oApp				
 			DEFINE ROUTE 'z2'		URL 'get/name/(id)' 		CONTROLLER 'test1@route.prg'		OF oApp				
-			DEFINE ROUTE 'route1'	URL 'route1' 	CONTROLLER 'test1@route.prg'		OF oApp				
+			DEFINE ROUTE 'route1'	URL 'route1' 	CONTROLLER 'test1@route.prg'		OF oApp		
+
+		//	Test Validator
+		
+			DEFINE ROUTE 'valid'	URL 'valid' 				CONTROLLER 'view@validator.prg'	OF oApp					
 
 
+		//	Test View
+		
+			DEFINE ROUTE 'view'	URL 'view/[id]' 			CONTROLLER 'show@views.prg'	OF oApp					
 		
 			
 		
