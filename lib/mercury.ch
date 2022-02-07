@@ -35,9 +35,10 @@
 #xcommand INIT APP <oApp> => <oApp>:Init()	
 
 
-#xcommand DEFINE ROUTE <cId> URL <cRule> <type:CONTROLLER,VIEW> <cController> [ METHOD <cMethod> ] OF <oApp> ;
+
+#xcommand DEFINE ROUTE <cId> URL <cRule> [ CONTROLLER <cController>] [ VIEW <cView> ] [ METHOD <cMethod> ] OF <oApp> ;
 => ;
-	<oApp>:oRouter:Map( <cId>, <cRule>, <cController>, [<cMethod>] )
+	<oApp>:oRouter:Map( <cId>, <cRule>, [<cController>], [<cView>], [<cMethod>] )
 
 #xcommand INIT APP <oApp> => <oApp>:Init()
 
@@ -48,7 +49,7 @@
 => ;
 	<oValidator> := MC_Validator():New( <hData>, [<cRoute>], [<.json.>]  )
 	
-#xcommand PARAMETER <cParameter> [NAME <cName>] ROLES <cRoles> [FORMATTER <cFormat>] OF <oValidator> ;
+#xcommand PARAMETER <cParameter> [NAME <cName>] [ ROLES <cRoles> ] [FORMATTER <cFormat>] OF <oValidator> ;
 => ;
 	<oValidator>:Set( <cParameter>, <cRoles>, [<cName>], [<cFormat>] )
 	

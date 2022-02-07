@@ -152,7 +152,8 @@ METHOD Echo() CLASS MC_Response
 		
 	//	Sino salida del Body...
 
-		AP_RPUTS( ::cBody )								
+		//AP_RPUTS( ::cBody )								
+		ap_echo( ::cBody )
 
 RETU NIL
 

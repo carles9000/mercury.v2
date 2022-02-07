@@ -17,7 +17,7 @@ METHOD Show( oController ) CLASS Views
 
 	local cId 		:= oController:Get( 'id' )
 	local hData 	:= { 'first' => 'Max', 'last' => 'Headrom', 'zip' => '45004X'}
-	local cFile 	:= 'html' + cId + '.view'
+	local cFile 	:= 'views/html' + cId + '.view'
 
 	oController:View( cFile, hData )
 

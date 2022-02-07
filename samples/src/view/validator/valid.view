@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Valid Test</title>
+  </head>
+  <body>
+    <form action="{{ MC_Route( 'valid.test' ) }}" method="post">
+      <br>required <input type="text" name="test_required" value="Hello">
+      <br>numeric  <input type="text" name="test_numeric" value="1234">
+      <br>string   <input type="text" name="test_string" value="Hi everybody!">
+      <br>len:   <input type="text" name="test_len" value="maria">
+      <br>max:   <input type="text" name="test_max" value="100">
+      <br>min:   <input type="text" name="test_min" value="1">
+      <br>maxlen:<input type="text" name="test_maxlen" value="Maria del O">
+      <br>minlen:<input type="text" name="test_minlen" value="Mar">
+      <br>logic<input type="text" name="test_logic" value="true">
+      <br>binary<input type="text" name="test_binary" value="1">
+      <br>date<input type="text" name="test_date" value="2022-02-07">
+      <br><br>
+      <input type="submit" value="Send data">
+    </form>
+  </body>
+</html>
+

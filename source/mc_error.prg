@@ -65,38 +65,39 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 		hError[ 'block_error' ] := ''
 		hError[ 'code' ]		:= cCode
 		hError[ 'codePP' ]		:= cCodePP
-		hError[ 'view' ]		:= ''
+		hError[ 'view' ]		:= mc_get( 'view', '')
+		
+
+		
 
 _d( 'MC_ErrorInfo------------------------------' )	
+
+
+
 	//	Check error from BLOCKS 
 	
-		ts_block := mc_get_hBlock() 
-		
-		//hError[ 'view' ]		:= HB_HGetDef( 'ts_block', 'view', '')
-
-	
-		if !empty( ts_block )
-		
-			hError[ 'type' ] 		:= ts_block[ 'type' ]	// 'block'
+			
+			hError[ 'type' ] 		:= mc_get( 'type', '' )
 			
 			do case	
 				case hError[ 'type' ] == 'block'
-					hError[ 'block_code' ] 	:= ts_block[ 'code' ]
-					hError[ 'block_error'] 	:= ts_block[ 'error' ]
+					hError[ 'block_code' ] 	:= mc_get( 'code', '' )
+					hError[ 'block_error'] 	:= mc_get( 'error', '' )
 				
-				case hError[ 'type' ] == 'initprocess'
-					hError[ 'filename' ]	:= ts_block[ 'filename' ]
+				//case hError[ 'type' ] == 'initprocess'
+				//	hError[ 'filename' ]	:= ts_block[ 'filename' ]
 					
 				otherwise
-					hError[ 'block_code' ] 	:= ts_block[ 'code' ]
-					hError[ 'block_error'] 	:= ts_block[ 'error' ]					
+					hError[ 'block_code' ] 	:= mc_get( 'code', '' )
+					hError[ 'block_error'] 	:= mc_get( 'error', '' )				
 			endcase
 			
-		endif 
+	
 
 
 		
 	//		
+    
 		
 	hError[ 'description' ]	:= oError:description		
 	
@@ -269,9 +270,6 @@ _d( hError[ 'line' ] )
 _d( 'STACk....')		
 _d( hError[ 'stack' ])
 
-_d( 'BLOCK-----------------' )
-_d( mc_get_hBlock() )
-_d( 'END BLOCK-----------------' )
 
 	//	--------------------------------------
 _d('B1')	
@@ -449,11 +447,11 @@ function MC_ErrorView( hError )
 					<th>Value</th>			
 				</tr>	
 	ENDTEXT 
-/*	
+	
 	if !empty( hError[ 'view' ] )
 		cHtml += '<tr><td class="description">View</td><td class="value">' + hError[ 'view' ] + '</td><tr>'	
 	endif
-*/	
+	
 	
 	cHtml += '<tr><td class="description">Description</td><td class="value">' + hError[ 'description' ] + '</td><tr>'
 	

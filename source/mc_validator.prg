@@ -32,8 +32,10 @@ METHOD New( hData, cRoute, lJson ) CLASS MC_Validator
 
 	::hData 		:= hData
 	::hValidate 	:= {=>}	
-	::cRoute 		:= MC_RouteToController( cRoute )
-	::lJson			:= lJson
+	
+	//	Disabled
+	//::cRoute 		:= MC_RouteToController( cRoute )
+	//::lJson			:= lJson
 	
 RETU Self
 
@@ -317,6 +319,7 @@ RETU NIL
 
 METHOD Set( cParameter, cRoles, cName, cFormat ) CLASS MC_Validator
 
+	DEFAULT cRoles 	:= 'required'
 	DEFAULT cName 		:= ''
 	DEFAULT cFormat 	:= ''
 

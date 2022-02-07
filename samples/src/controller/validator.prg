@@ -1,9 +1,12 @@
+
+
 CLASS Validator
 
 	METHOD New() 	CONSTRUCTOR
 	
 	METHOD View() 
-//	METHOD Run()		
+	METHOD Test() 
+	
    
 ENDCLASS
 
@@ -14,34 +17,48 @@ RETU SELF
 METHOD View( o ) CLASS Validator
 
 	LOCAL oApp := MC_GetApp()
-	
-	? oApp:cApp_Path 
-	? oApp:cPathController
-	? oApp:cPathView
-	
-	//? o:View( 'xxx.view' )
-	? o:View( 'user.view' )
+
+	o:View( 'validator/valid.view' )
 
 	
 RETU NIL
 
+METHOD Test( oController ) CLASS Validator
 
-/*
-METHOD Run( o ) CLASS Validator
+	local hData := oController:PostAll()
+	local oV 		
 	
-	LOCAL oValidator := TValidator():New()
-	LOCAL hRoles     := {=>}	
+	_z( 'PRE-VALIDATED', hData )
 	
-		hRoles[ 'name' ] := 'required|string|maxlen:5'
-		hRoles[ 'age'  ] := 'required|numeric'
-
-		IF ! oValidator:Run( hRoles )
-			o:View( 'test_validator_run.view', oValidator:ErrorMessages() )			
-			RETU NIL
-		endif		
-
-
-	o:View( 'test_validator_run.view' )
+	DEFINE VALIDATOR oV WITH hData
+		PARAMETER 'test_required' 	NAME 'Test Required' ROLES 'required' OF oV	
+		PARAMETER 'test_numeric'  	NAME 'Test Numeric'  ROLES 'numeric' FORMATTER 'tonumber' OF oV	
+		PARAMETER 'test_string'   	NAME 'Test String'  ROLES 'string' FORMATTER 'upper' OF oV	
+		PARAMETER 'test_len'   	NAME 'Test Len'  ROLES 'len:5' OF oV	
+		PARAMETER 'test_max'   	NAME 'Test Max'  ROLES 'max:100' OF oV	
+		PARAMETER 'test_min'   	NAME 'Test Min'  ROLES 'min:1' OF oV	
+		PARAMETER 'test_maxlen'   	NAME 'Test MaxLen'  ROLES 'maxlen:20' OF oV	
+		PARAMETER 'test_minlen'   	NAME 'Test MinLen'  ROLES 'minlen:3' OF oV	
+		PARAMETER 'test_logic'   	NAME 'Test Logic'  FORmATTER 'tologic' OF oV	
+		PARAMETER 'test_binary'   	NAME 'Test Binary' FORmATTER 'tobin' OF oV	
+		PARAMETER 'test_binary'   	NAME 'Test Binary' FORmATTER 'tobin' OF oV	
+		PARAMETER 'test_date'   	NAME 'Test Binary' FORmATTER 'todate' OF oV	
+	RUN VALIDATOR oV 
 	
-RETU NIL
-*/
+	if oV:lError
+		oController:View( 'error.view', oV:ErrorString() )				
+		retu 
+	endif			
+	
+	_z( 'POST-VALIDATED', hData  )	
+
+retu nil 
+
+
+
+function _z( cTitle, u )
+
+	? '<b><u>' + cTitle + '</u></b><br>' 
+	_w( u )
+	
+retu nil 

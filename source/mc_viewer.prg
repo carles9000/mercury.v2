@@ -49,21 +49,16 @@ METHOD Exec( cFile, ... ) CLASS MC_Viewer
 	local hError 
 	
 	IF !empty( cCode )
-	
-		mc_set_hBlock( 'view', cFile )
-	
-	_d( 'VIEW--------------------------')
-	_d( cCode )
-	_d( '*----------------------******')
+
+		mc_set( 'view', cFile ) 
 
 		hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, cCodePP ), Break( oError ) } )
 	
 		//mh_ReplaceBlocks( @cCode, "{%", "%}" )	
 
-	_d( 'REPLACEBLOCKS--------------------')
-		mc_ReplaceBlocks( @cCode, "{{", "}}", ... )		
-	_d( cCode )
-	_d( '*----------------------******')		
+
+		mc_ReplaceBlocks( @cCode, "{{", "}}", nil, ... )		
+	
 		
 		cHtml := mc_InlinePrg( @cCode, nil, ... )  
 		

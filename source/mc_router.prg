@@ -2,8 +2,9 @@
 
 #define MAP_ID				1
 #define MAP_RULE			2
-#define MAP_CONTROLLER		3
-#define MAP_METHOD			4
+#define MAP_WAY			3
+#define MAP_FILE		4
+#define MAP_METHOD			5
 
 CLASS MC_Router 
 
@@ -12,14 +13,15 @@ CLASS MC_Router
 
 	METHOD New( oApp )		CONSTRUCTOR
 	
-	METHOD Map( cId, cRule, cController, cMethod )
+	METHOD Map( cId, cRule, cController, cView, cMethod )
 	METHOD Match( cRule, aRequest_Friendly, hParam )
 	METHOD IsVariable( cParam, uValue )	
 	METHOD IsOptional( cParam, uValue )	
-	METHOD InfoController( cController )
-	METHOD ExecuteController( hInfo, hParam, cMap )
+	METHOD InfoRouter( cController )
+	METHOD ExecuteRouter( hInfo, hParam, cMap )
 	METHOD ExecuteCode( cFile )
 	METHOD ExecuteClass( cCode, hParam )
+	METHOD ExecuteView( hInfo )
 	
 	METHOD Listen()
 	
@@ -40,13 +42,23 @@ retu Self
 
 //	------------------------------------------------------------	//
 
-METHOD Map( cId, cRule, cController, cMethod ) CLASS MC_Router
+METHOD Map( cId, cRule, cController, cView, cMethod ) CLASS MC_Router	
 
-	DEFAULT cMethod := 'GET'
+	local cWay 
 
+	DEFAULT cMethod := 'GET'	
 	
-	Aadd( ::aMap, { cId, cRule, cController, cMethod } )
-
+	if valtype( cController ) == 'C'		//	Controller 
+	
+		Aadd( ::aMap, { cId, cRule, 'C', cController, cMethod } )		
+		
+	elseif valtype( cView ) == 'C'			//	View
+	
+		Aadd( ::aMap, { cId, cRule, 'V', cView, cMethod } )	
+		
+	else 
+		//	Hem de fer error 
+	endif 			
 
 retu nil 
 
@@ -106,9 +118,9 @@ METHOD Listen() CLASS MC_Router
 
 		if lRule
 
-			if ::InfoController( ::aMap[n], @hInfo )
+			if ::InfoRouter( ::aMap[n], @hInfo )
 			
-				::ExecuteController( hInfo, hParam, cMap ) 
+				::ExecuteRouter( hInfo, hParam, cMap ) 
 				
 			endif 
 			
@@ -297,10 +309,10 @@ retu lIsOptional
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD InfoController( aRoute, hInfo ) CLASS MC_Router
+METHOD InfoRouter( aRoute, hInfo ) CLASS MC_Router
 
 	local cId  		:= aRoute[ MAP_ID ]
-	local cController := aRoute[ MAP_CONTROLLER ]
+	local cRunFile 	:= aRoute[ MAP_FILE ]
 	local lAccept 		:= .t. 
 	local cType, cExt, nPos, cFile
 	
@@ -308,49 +320,62 @@ METHOD InfoController( aRoute, hInfo ) CLASS MC_Router
 	
 	hInfo[ 'id' ] 		:= cId
 	hInfo[ 'rule' ] 	:= aRoute[ MAP_RULE ]
+	hInfo[ 'way' ] 	:= ''
 	hInfo[ 'type' ] 	:= ''
 	hInfo[ 'file' ] 	:= ''
+	hInfo[ 'filepath' ]:= ''
 	hInfo[ 'class' ] 	:= ''
 	hInfo[ 'method' ] 	:= ''
 	
-
-		nPos := At( '@', cController )
+	DO CASE
+		CASE aRoute[ MAP_WAY ] == 'C' 						
 		
-		if ( nPos >  0 )	//	Class
+			nPos := At( '@', cRunFile )
 			
-			hInfo[ 'type' ]	:= 'class'
-			hInfo[ 'file' ] 	:= alltrim( Substr( cController, nPos+1 ) )									
-			hInfo[ 'class' ]  	:= cFileNoExt( cFileNoPath( hInfo[ 'file' ] ) )
-			hInfo[ 'method' ]  := alltrim( Substr( cController, 1, nPos-1) )
-		
-		else 
-		
-			cExt := lower(cFileExt( cController ))				
-
-			hInfo[ 'file' ] 	:= cController
-			
-			do case
-				case cExt == 'prg'
-					
-					hInfo[ 'type' ]	:= 'func'
-					
-				case cExt == 'view'
+			if ( nPos >  0 )	//	Class
 				
-					hInfo[ 'type' ]	:= 'view'
+				hInfo[ 'type' ]	:= 'class'
+				hInfo[ 'file' ] 	:= alltrim( Substr( cRunFile, nPos+1 ) )									
+				hInfo[ 'class' ]  	:= cFileNoExt( cFileNoPath( hInfo[ 'file' ] ) )
+				hInfo[ 'method' ]  := alltrim( Substr( cRunFile, 1, nPos-1) )
+			
+			else 
+			
+				cExt := lower(cFileExt( cRunFile ))				
+
+				hInfo[ 'file' ] 	:= cRunFile
+				
+				do case
+					case cExt == 'prg'
+						
+						hInfo[ 'type' ]	:= 'func'
+						
+					//case cExt == 'view'
 					
-			endcase		
+					//	hInfo[ 'type' ]	:= 'view'
+						
+				endcase		
+			
+			endif 
 		
-		endif 
+			hInfo[ 'filepath' ] := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
+			
+		CASE aRoute[ MAP_WAY ] == 'V'
+
+			hInfo[ 'type' ]	:= 'view'
+			hInfo[ 'file' ] 	:= cRunFile
 		
+			hInfo[ 'filepath' ] := ::oApp:cApp_Path + ::oApp:cPathView + hInfo[ 'file' ]
+			
+	ENDCASE
+	
 	//	Xec file 
-	
-	cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
-	
-	if ! file( cFile )
+
+	if ! file( hInfo[ 'filepath' ] )
 	
 		lAccept := .f.
 	
-		MC_MsgError( 'Router', 'Id: ' + hInfo[ 'id' ] + '<br>Rule: ' + hInfo[ 'rule' ] + "<br>File prg don't exist: " +  cFile )				
+		MC_MsgError( 'Router', 'Id: ' + hInfo[ 'id' ] + '<br>Rule: ' + hInfo[ 'rule' ] + "<br>File prg don't exist: " +  hInfo[ 'file' ] )				
 					
 	endif 
 		
@@ -358,7 +383,7 @@ retu lAccept
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD ExecuteController( hInfo, hParam, cMap ) CLASS MC_Router
+METHOD ExecuteRouter( hInfo, hParam, cMap ) CLASS MC_Router
 
 	local cFile, cCode 
 	
@@ -368,21 +393,29 @@ METHOD ExecuteController( hInfo, hParam, cMap ) CLASS MC_Router
 	do case
 		case hInfo[ 'type' ] == 'func'
 
-			cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
+			//cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
 
-			cCode :=  hb_memoread( cFile )
+			cCode :=  hb_memoread( hInfo[ 'filepath' ] )
 				
 			::ExecuteCode( hInfo, cCode, hParam )
 			
 		case hInfo[ 'type' ] == 'class'	
 
-			cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
+			//cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
 
 			cCode := "#include 'hbclass.ch' "  + HB_OsNewLine()
 			cCode += "#include 'hboo.ch' " + HB_OsNewLine() + HB_OsNewLine()
-			cCode +=  hb_memoread( cFile )					
+			cCode +=  hb_memoread( hInfo[ 'filepath' ] )					
 		
 			::ExecuteClass( hInfo, cCode, hParam )
+			
+		case hInfo[ 'type' ] == 'view'
+
+			//hInfo[ 'filepath' ] := ::oApp:cApp_Path + ::oApp:cPathView + hInfo[ 'file' ]
+
+			//cCode :=  hb_memoread( hInfo[ 'filepath' ] )				
+		
+			::ExecuteView( hInfo, hParam  )
 
 		otherwise 
 		
@@ -433,6 +466,21 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
  	
 	//ErrorBlock( hError )
 
+retu nil 
+
+//	-------------------------------------------------------------------------	//	
+
+METHOD ExecuteView( hInfo, hParam ) CLASS MC_Router
+
+	local oViewer
+
+	//? 'Execute VIEW', hInfo[ 'filepath' ]
+	
+	oViewer	:= MC_Viewer():New()
+	
+	oViewer:Exec( hInfo[ 'file' ], hParam ) 
+	
+	
 retu nil 
 
 
@@ -566,7 +614,7 @@ FUNCTION  MC_RouteToController( cRoute )  //	Controller/View
 	FOR EACH aRoute IN aMap
 	
 		IF aRoute[ MAP_ID ] == cRoute
-			retu aRoute[ MAP_CONTROLLER ]
+			retu aRoute[ MAP_FILE ]
 		ENDIF				
 		
 	NEXT	

@@ -1,14 +1,46 @@
 
+
 FUNCTION MC_GetApp()
 	
 	thread STATIC oApp
 	
 	IF oApp == NIL
+_d( 'MC_GETAPP() inicio amb threaid ' + str( hb_threadID()) )	
 		oApp := MC_App():New()
 		//oApp := TApp():New( cTitle, uInit , cPsw, cId_Cookie, nTime )
+else 
+_d( 'MC_GETAPP() YA Esta inicialitzat !' + str( hb_threadID()) )	
+
+		
 	ENDIF
 
 RETU oApp
+
+FUNCTION MC_Set( key, value )
+
+	local cType := valtype( key  )
+
+	thread STATIC hData
+	
+	IF hData == NIL
+		hData := {=>}
+	endif 
+	
+	if cType == 'L' .and. key 
+		hData := {=>}
+	elseif cType == 'C'	
+		hData[key] := value 
+	endif			
+
+RETU hData 
+
+FUNCTION MC_Get( key, uDefault )
+
+	local h := MC_Set()
+
+	HB_HCaseMatch( h, .f. )
+	
+RETU if( key == nil , h, HB_HGetDef( h, key, uDefault ) )
 
 
 CLASS MC_App	
@@ -57,6 +89,7 @@ METHOD New( cTitle, bInit ) CLASS MC_App
 	
 	::oRouter 		:= MC_Router():New( self )
 //	::oRequest		:= MC_Request():New( self )
+
 	
 
 RETU Self
@@ -70,6 +103,12 @@ METHOD Init() CLASS MC_App
 	ENDIF
 	
 	::oRouter:Listen()
+	
+	_d( 'TEST MC_GETAPP()-----------------------')
+	MC_GetApp()
+	MC_GetApp()
+	MC_GetApp()
+	MC_GetApp()
 	
 retu nil
 

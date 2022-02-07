@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Test</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
+</head>
+<body>
+
+
+<div class="container">
+	<h4>Mercury Test...</h4><hr>
+
+	<div class="row">
+	  
+
+		<div class="col-sm-12">
+
+			<ul>
+			  
+			  <br><h5>View</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'hello' ) }}>View</a></li>
+				<li><a href={{ mc_Route( 'view' ) }} >Friendly url -> view/[id]</a></li>
+			  </ul>	
+
+			  <br><h5>Router</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'rt.1' ) }}>user 				</a></li>
+				<li><a href={{ mc_Route( 'rt.2' ) + '/123' }}>user/name/(id) 	</a></li>								
+				<li><a href={{ mc_Route( 'rt.3' ) + '/123/info/salary' }}>user/(id)/info/[what]</a></li>
+			  </ul>				  
+			  
+			  <br><h5>Request</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'req.1' ) }}>get/[id]</a></li>
+				<li><a href={{ mc_Route( 'req.2' ) }}>post/[id]</a></li>
+				<li><a href={{ mc_Route( 'req.3' ) }}>request/[id]</a></li>
+			  </ul>
+			  
+			  <br><h5>Response</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'response.json' ) }}	>response/json 	</a></li>
+				<li><a href={{ mc_Route( 'response.xml' ) }}	>response/xml 	</a></li>
+				<li><a href={{ mc_Route( 'response.html' ) }}	>response/html	</a></li>
+				<li><a href={{ mc_Route( 'response.401' ) }}	>response/401	</a></li>
+				<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>
+				
+		
+			  </ul>			  
+
+			</ul>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>
+   
