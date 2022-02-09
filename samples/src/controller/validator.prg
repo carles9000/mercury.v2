@@ -40,9 +40,10 @@ METHOD Test( oController ) CLASS Validator
 		PARAMETER 'test_maxlen'   	NAME 'Test MaxLen'  ROLES 'maxlen:20' OF oV	
 		PARAMETER 'test_minlen'   	NAME 'Test MinLen'  ROLES 'minlen:3' OF oV	
 		PARAMETER 'test_logic'   	NAME 'Test Logic'  FORmATTER 'tologic' OF oV	
-		PARAMETER 'test_binary'   	NAME 'Test Binary' FORmATTER 'tobin' OF oV	
-		PARAMETER 'test_binary'   	NAME 'Test Binary' FORmATTER 'tobin' OF oV	
+		PARAMETER 'test_binary'   	NAME 'Test Binary' FORmATTER 'tobin' OF oV			
 		PARAMETER 'test_date'   	NAME 'Test Binary' FORmATTER 'todate' OF oV	
+		PARAMETER 'test_formatter'	NAME 'Test Formatter' ROLES 'numeric|lenmax:5' FORMATTER {|u| MyFormatter(u) } OF oV	
+		PARAMETER 'test_mail'		NAME 'Test Mail' ROLES 'ismail' FORMATTER 'lower' OF oV	
 	RUN VALIDATOR oV 
 	
 	if oV:lError
@@ -62,3 +63,11 @@ function _z( cTitle, u )
 	_w( u )
 	
 retu nil 
+
+
+function MyFormatter(u)			
+
+retu 'PY-' + StrZero( val(u), 5)
+	
+	
+	

@@ -217,17 +217,16 @@ retu uRet
 
 // ----------------------------------------------------------------//
 
-function MC_Compile( cCode )
+function MC_Compile( cCode, cCodePP )
 
 	local oHrb, pSym
 	local hPP
 	local hError 	
 	LOCAL cOs   		:= OS()
 	LOCAL cHBHeader  := ''
-	LOCAL cCodePP  := ''
+	//LOCAL cCodePP  := ''
 
-
-
+	DEFAULT cCodePP := ''
 
 	DO CASE
 		CASE "Windows" $ cOs  ; cHBHeader := "c:\harbour\include"
@@ -241,35 +240,17 @@ function MC_Compile( cCode )
 
 	hPP := mc_AddPPRules()   
 
-	//mc_ReplaceBlocks( @cCode, "{%", "%}" )
+
+	mc_ReplaceBlocks( @cCode, "{%", "%}" )
    
 
 	cCodePP := __pp_Process( hPP, cCode )
 
-	
-
 	oHrb = HB_CompileFromBuf( cCodePP, .T., "-n", "-q2", "-I" + cHBheader, ;
 			"-I" + hb_GetEnv( "HB_INCLUDE" ), hb_GetEnv( "HB_USER_PRGFLAGS" ) )	
 
-
-	
-/*
-	WHILE !hb_mutexLock( MH_Mutex() )
-	ENDDO	
-	
-	pSym := hb_hrbLoad( 2, oHrb )	//HB_HRB_BIND_OVERLOAD							
-
-	
-	hb_mutexUnlock( MH_Mutex() )
-	*/
-	
-	
 	mc_set( 'type', '')
-	mc_set( 'code', '' )
-	
-
-
-
+	mc_set( 'code', '' )	
 
 retu oHrb
 

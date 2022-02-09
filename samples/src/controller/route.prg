@@ -16,7 +16,7 @@ METHOD Test1( o ) CLASS Route
 
 	?? '<h3>Test 1. No parameters</h3><hr>'
 	
-	? "DEFINE ROUTE 'rt.1'	URL 'get' CONTROLLER 'test1@route.prg' OF oApp"	
+	? "<code>DEFINE ROUTE 'rt.1'	URL 'get' CONTROLLER 'test1@route.prg' OF oApp</code>"	
 
 RETU NIL 
 
@@ -24,7 +24,7 @@ METHOD Test2( o ) CLASS Route
 
 	?? '<h3>Test 2. Url Friendly. Required Parameter</h3><hr>'
 	
-	? "DEFINE ROUTE 'rt.2'	URL 'get/name/(id)' CONTROLLER 'test2@route.prg' OF oApp"	
+	? "<code>DEFINE ROUTE 'rt.2'	URL 'get/name/(id)' CONTROLLER 'test2@route.prg' OF oApp</code>"	
 	
 	? '<br><hr><b>Parameters</b><br>'
 	
@@ -36,7 +36,7 @@ METHOD Test3( o ) CLASS Route
 
 	?? '<h3>Test 3. Url Friendly. Required and Optional parameters</h3><hr>'
 	
-	? "DEFINE ROUTE 'rt.3' 	URL 'user/(id)/name/[what]' CONTROLLER 'test3@route.prg' OF oApp"	
+	? "<code>DEFINE ROUTE 'rt.3' 	URL 'user/(id)/name/[what]' CONTROLLER 'test3@route.prg' OF oApp</code>"	
 	
 	? '<br><hr><b>Parameters</b><br>'
 	

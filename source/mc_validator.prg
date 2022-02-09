@@ -212,7 +212,14 @@ METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
 				IF valtype( uValue ) == 'C' .AND. len(uValue) < cargo
 					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Minima longitud de ' + ltrim(str(cargo)), 'value' => uValue  }
 					EXIT
-				ENDIF					
+				ENDIF	
+
+			CASE cRole == 'ismail'
+	
+				IF ! MC_IsMail( uValue )
+					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no mail', 'value' => uValue  }
+					EXIT
+				ENDIF				
 				
 		ENDCASE		
 		
@@ -225,8 +232,23 @@ RETU { 'success' => .T. }
 METHOD Formatter( cKey, cFormat ) CLASS MC_Validator
 
 	local cFunc, uValue, cType 
-	local cSet 
+	local cSet, uRet
+	
+	HB_HCaseMatch( ::hData, .F. )
+	
 		
+	if valtype( cFormat ) == 'B'	
+	
+		if HB_HHasKey( ::hData, cKey )	
+		
+			uValue := ::hData[ cKey ]					
+
+			::hData[ cKey ] := eval( cFormat, uValue )
+			
+		endif 
+	
+		retu nil 
+	endif 		
 
 	cFunc := alltrim(lower(cFormat))
 	
@@ -235,7 +257,8 @@ METHOD Formatter( cKey, cFormat ) CLASS MC_Validator
 		return nil
 	endif 
 	
-	HB_HCaseMatch( ::hData, .F. )
+	
+	
 	
 	if HB_HHasKey( ::hData, cKey )	
 		uValue := ::hData[ cKey ]

@@ -55,6 +55,24 @@
 	
 #xcommand RUN VALIDATOR <oValidator> => <oValidator>:Run()
 
+//	Middleware	-------------------------------------------------------------------
+
+#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cType> ] [<err:ERROR ROUTE, DEFAULT> <cRoute> [WITH <aParams>] ] ;
+	[ <exc: EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] ;
+=> ;
+	<oController>:Middleware( [<cType>], [<cRoute>], [\{<cMethod>\}], [<hError>], [<.json.>], [<aParams>] )
+	
+//	Token JWT 	-------------------------------------------------------------------
+
+#xcommand CREATE JWT <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
+	<cToken> := <oController>:oMiddleware:SetAutenticationJWT( [<hTokenData>], [<nTime>] )
+#xcommand CREATE TOKEN <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
+	<cToken> := <oController>:oMiddleware:SetAutenticationToken( [<hTokenData>], [<nTime>] )
+
+#xcommand GET JWT <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetDataJWT()
+#xcommand GET TOKEN <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetDataToken()
+
+#xcommand CLOSE JWT OF <oController> => <oController>:oMiddleware:CloseJWT()
 
 
 #endif /* _MERCURY_CH */

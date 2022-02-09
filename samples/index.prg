@@ -39,17 +39,30 @@ function main()
 			DEFINE ROUTE 'response.401' 		URL 'response/401'		CONTROLLER 'error401@response.prg'	OF oApp
 			DEFINE ROUTE 'response.redirect'	URL 'response/redirect'	CONTROLLER 'redirect@response.prg'	OF oApp	
 			
+		//	Test Validator					
+
+			DEFINE ROUTE 'valid.view'	URL 'valid' 				CONTROLLER  'view@validator.prg'	OF oApp						
+			DEFINE ROUTE 'valid.test'	URL 'valid/test' 			CONTROLLER  'test@validator.prg'	METHOD 'POST' OF oApp					
+
+			
+		//	Test Error 
+		
+			DEFINE ROUTE 'err.nomethod' URL 'nomethod'		CONTROLLER 'nomethod@testerror.prg' 	METHOD 'GET' OF oApp
+			DEFINE ROUTE 'err.nofile' 	 URL 'nofile'		CONTROLLER 'nofile.prg' 				METHOD 'GET' OF oApp
+			DEFINE ROUTE 'err.check' 	 URL 'crash'		CONTROLLER 'crash@testerror.prg' 		METHOD 'GET' OF oApp
+			
+		//	Test Validator					
+
+			DEFINE ROUTE 'token.setjwt'	URL 'setjwt' 		CONTROLLER  'setjwt@testaccess.prg'	OF oApp						
 			
 			
+		//	Restes
+			DEFINE ROUTE 'r5' URL 'testclass/[id]'	CONTROLLER 'info@testclass.prg' 		METHOD 'GET' OF oApp
+			DEFINE ROUTE 'r3' URL 'customer/[id]'	CONTROLLER 'customer.prg' 				METHOD 'GET' OF oApp
 			
 //	--------------------------------------			
 
 		
-		DEFINE ROUTE 'r3' URL 'customer/[id]'	CONTROLLER 'customer.prg' 				METHOD 'GET' OF oApp
-		DEFINE ROUTE 'r4' URL 'nofile'			CONTROLLER 'nofile.prg' 				METHOD 'GET' OF oApp
-		DEFINE ROUTE 'r5' URL 'testclass/[id]'	CONTROLLER 'info@testclass.prg' 		METHOD 'GET' OF oApp
-		DEFINE ROUTE 'r6' URL 'testerror'		CONTROLLER 'crash@testclass.prg' 		METHOD 'GET' OF oApp
-		DEFINE ROUTE 'r7' URL 'nomethod'		CONTROLLER 'nomethod@testclass.prg' 	METHOD 'GET' OF oApp
 		
 		DEFINE ROUTE 'get1' URL 'get1'			CONTROLLER 'get1@testset.prg' METHOD 'GET' OF oApp
 		DEFINE ROUTE 'set2' URL 'set2'			CONTROLLER 'set2@testset.prg' METHOD 'GET' OF oApp

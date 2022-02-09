@@ -439,17 +439,20 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	local pSym, oHrb
 	local cClass, oClass, hError
 	local cCodePP := ''   
-	local oController 
-  	
+	local oController   
+
+	
+	hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, @cCodePP ), Break( oError ) } )
+		
+  
 	oController 	:= MC_Controller():New( hInfo[ 'method' ], hParam )
 
-	oHrb 	:= MC_Compile( @cCode )
+	oHrb 	:= MC_Compile( @cCode, @cCodePP )
 
 	WHILE !hb_mutexLock( MH_Mutex() )
 	ENDDO	
 	
 	pSym := hb_hrbLoad( 2, oHrb )	//HB_HRB_BIND_OVERLOAD							
-
 	
 	hb_mutexUnlock( MH_Mutex() )	
 	
@@ -460,7 +463,9 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	if __objHasMethod( oClass, hInfo[ 'method' ] )		
 		__ObjSendMsg( oClass, hInfo[ 'method' ], oController )	
 	else 				
+
 		MC_MsgError( 'Router',"Method doesn't exist: " + hInfo[ 'method' ] + ', Controller: ' + hInfo[ 'file' ]  )
+
 	endif 
 	
  	

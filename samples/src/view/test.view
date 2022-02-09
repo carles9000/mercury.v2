@@ -46,10 +46,30 @@
 				<li><a href={{ mc_Route( 'response.xml' ) }}	>response/xml 	</a></li>
 				<li><a href={{ mc_Route( 'response.html' ) }}	>response/html	</a></li>
 				<li><a href={{ mc_Route( 'response.401' ) }}	>response/401	</a></li>
-				<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>
-				
-		
+				<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>						
+			  </ul>	
+			  
+			  <br><h5>Validator</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'valid.view' ) }}	>Check Validator</a></li>
+			  </ul>
+			  
+			  <br><h5>Tokens</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'token.setjwt' ) }}	>Set JWT</a></li>
 			  </ul>			  
+				
+
+			  <br><h5>Error</h5>			  
+			  <ul>
+				<li><a href={{ mc_Route( 'err.nomethod' ) }}	>No method 	</a></li>
+				<li><a href={{ mc_Route( 'err.nofile' ) }}		>No file	</a></li>
+				<li><a href={{ mc_Route( 'err.check' ) }}		>Check...	</a></li>
+				
+				
+				
+				
+			  </ul>				  
 
 			</ul>
 		</div>

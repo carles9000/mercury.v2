@@ -6,11 +6,11 @@ CLASS MC_Controller
 	DATA cAction 													INIT ''
 	DATA oRequest	
 	DATA oResponse	
+	DATA oMiddleware
 	DATA hParam													INIT {=>}
 	
 	//	---------------------------
 	/*
-	DATA oMiddleware
 	DATA oView
 	DATA lAutenticate												INIT .T.
 	DATA aRouteSelect												INIT {=>}
@@ -53,6 +53,7 @@ METHOD New( cAction, hParam  ) CLASS MC_Controller
 	
 	::oRequest 		:= MC_Request():New( hParam )
 	::oResponse 		:= MC_Response():New()
+	//::oMiddleware 		:= MC_Middleware():New( ::oRequest , ::oResponse )
 
 RETU Self
 

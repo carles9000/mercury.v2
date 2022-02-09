@@ -6,12 +6,7 @@ FUNCTION MC_ErrorSys( oError, cCode, cCodePP )
 	hb_default( @cCode, "" )
 	hb_default( @cCodePP, "" )
 	
-_d( 'MC_ErrorSys-------------------------' )	
-_d( cCode )	
-_d( '======================')
-_d( oError ) 
-_d( '======================')
-   
+
 	//	Delete buffer out
    
 		//ts_cBuffer_Out := ''
@@ -21,20 +16,9 @@ _d( '======================')
 		hError := MC_ErrorInfo( oError, cCode, cCodePP )
 
 
+
 		MC_ErrorView( hError )
 		//MC_ViewError( hError )
-
-
-/*
-// Output of buffered text
-
-   ap_RPuts( ts_cBuffer_Out )
-
-   // Unload hrbs loaded.
-
-   mh_LoadHrb_Clear()
-*/
-// EXIT.----------------
 
 RETU NIL
 
@@ -46,7 +30,7 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 	local aTagLine 	:= {}
 	local hError	:= {=>}
     local n, aLines, nLine, cLine, nPos, nErrorLine, nL  	
-	local nLin, nOffSet, lReview, ts_block
+	local nLin, nOffSet, lReview, ts_block, cProc
 
 	//	Init hError info 
 	
@@ -67,12 +51,6 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 		hError[ 'codePP' ]		:= cCodePP
 		hError[ 'view' ]		:= mc_get( 'view', '')
 		
-
-		
-
-_d( 'MC_ErrorInfo------------------------------' )	
-
-
 
 	//	Check error from BLOCKS 
 	
@@ -139,9 +117,7 @@ _d( 'MC_ErrorInfo------------------------------' )
 			endif 	  
 
 		next 
-		
-_d( 'Tagline')		
-_d( aTagLine )	
+_d( aTagLine )
 
 	//	Buscamos si oError nos da Linea
 	
@@ -156,9 +132,7 @@ _d( aTagLine )
 			endif	  	  
 		  
 		endif 
-		
-_d( 'Line1')	
-_d( nL )	
+
 	
 	//	Procesamos Offset segun linea error
 	
@@ -197,18 +171,17 @@ _d( nL )
 			
 		endif
 
-_d( 'Line2')	
-_d( hError[ 'line' ] )		
 
 
     if ValType( oError:Args ) == "A"
 		hError[ 'args' ] := oError:Args
     endif	
 	
+_d( 'A1', hError[ 'line' ] )	
 	
-	/* OLD VERSION 
+
     n = 2 
-	lReview = .f.
+
   
     while ! Empty( ProcName( n ) )  
 	
@@ -220,68 +193,76 @@ _d( hError[ 'line' ] )
 		
 		n++
 		
-		if nL == 0 .and. !lReview 
-	
-			if ProcFile(n) == 'pcode.hrb'
-				nL := ProcLine( n )
-				
-				lReview := .t.
-			endif
-		
-		endif
-	
-		
 	end
-	
-	*/
-	
-	
-	//if ! Empty( ProcName( 2 ) ) .and.  ProcName( 2 ) == '(b)MC_VIEWER_EXEC' 
-	if  ProcName( 2 ) == '(b)MC_VIEWER_EXEC' 
-		nL := ProcLine( 2 )	
-		lReview := .t.
-	endif 
-	
-	
-	
-	
-	
-_d( 'Line3')	
-_d( nL )		
 
-	if lReview .and. nL > 0 
+	//_d( 'STACK-----------------')
+	//_d( hError[ 'stack' ] )
+
+	
+	cProc := ProcName( 2 )
+	lReview = .f.
+	
+	do case 
+		case cProc == '(b)MC_ROUTER_EXECUTECLASS'
 		
-		hError[ 'line' ] := nL 
-		
-		for n := 1  to len( aTagLine ) 
+			//if nL == 0 .and. !lReview 
+			if hError[ 'line' ] == 0 .and. !lReview 
 			
-			if aTagLine[n][1] < nL 
-				nOffset 			:= aTagLine[n][2]
-				hError[ 'line' ]	:= nL + nOffset 
-			endif		
+				n = 2 
+			  
+				while ! Empty( ProcName( n ) )  
+					
+					n++						
+				
+					if ProcFile(n) == 'pcode.hrb'
+						nL := ProcLine( n )
+						
+						lReview := .t.
+						exit					
+					endif		
+					
+				end			
 		
-		next 	
+			endif
+			
+		case cProc == '(b)MC_VIEWER_EXEC'
+		
+			nL := ProcLine( 2 )	
+			lReview := .t.
+			
+		otherwise 
+		
+			if lReview .and. nL > 0 
+			
+				hError[ 'line' ] := nL 
+			
+				for n := 1  to len( aTagLine ) 
+					
+					if aTagLine[n][1] < nL 
+						nOffset 			:= aTagLine[n][2]
+						hError[ 'line' ]	:= nL + nOffset 
+					endif		
+				
+				next 	
 
-	endif 
+			endif 
+		
+	endcase 
 	
-_d( 'Line4')	
-_d( hError[ 'line' ] )
-
-_d( 'STACk....')		
-_d( hError[ 'stack' ])
-
+_d( 'A3', hError[ 'line' ] )	
 
 	//	--------------------------------------
-_d('B1')	
-_d(oError:subsystem)	
+
+_d( oError:subsystem )	
+_d( oError:filename )	
 		if oError:subsystem  == 'COMPILER'
-_d('B2')	
+_d( oError:operation )	
 
 			if substr( oError:operation, 1, 4 ) == 'line' 
 
-_d('B3')	
+
 				hError[ 'line' ] := Val(Substr( oError:operation, 6 ))	
-_d('B4')	
+	
 				
 			endif
 					
@@ -289,17 +270,13 @@ _d('B4')
 		
 		
 		endif 	
-		
-_d( 'LINE' )		
-_d( hError[ 'line' ]  )		
-_d( 'VIEW')
-_d( hError[ 'view' ]  )		
-	
-	
-	
+
+_d( 'A4-->', hError[ 'line' ] )		
 	//	--------------------------------------
 	
 		if valtype( oError:subcode ) == 'N'
+		
+_d( oError:subcode )		
 		
 			do case
 			case oError:subcode == 6101 	//Unknown or unregistered symbol
@@ -326,8 +303,20 @@ _d( hError[ 'view' ]  )
 		
 		
 		endif 
+_d( 'A5-->', hError[ 'line' ] )	
+	//	--------------------------------------
 
-	//	--------------------------------------	
+		nL := hError[ 'line' ]
+		for n := 1  to len( aTagLine ) 
+			
+			if aTagLine[n][1] < nL 
+				nOffset 			:= aTagLine[n][2]
+				hError[ 'line' ]	:= nL + nOffset 
+			endif		
+		
+		next 	
+				
+_d( 'A6-->', hError[ 'line' ] )	
 
 	//MC_ViewError( hError )
 	
@@ -458,6 +447,10 @@ function MC_ErrorView( hError )
 	if !empty( hError[ 'operation' ] )
 		cHtml += '<tr><td class="description">Operation</td><td class="value">' + hError[ 'operation' ] + '</td><tr>'
 	endif
+	
+	if !empty( hError[ 'filename' ] )
+		cHtml += '<tr><td class="description">Filename</td><td class="value">' + hError[ 'filename' ] + '</td><tr>'
+	endif	
 
 	
 	if !empty( hError[ 'line' ] )

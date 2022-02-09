@@ -16,6 +16,8 @@
       <br>logic<input type="text" name="test_logic" value="true">
       <br>binary<input type="text" name="test_binary" value="1">
       <br>date<input type="text" name="test_date" value="2022-02-07">
+      <br>formatter<input type="text" name="test_formatter" value="52">
+      <br>mail<input type="text" name="test_mail" value="SHARON@GMAIL.COM">
       <br><br>
       <input type="submit" value="Send data">
     </form>
