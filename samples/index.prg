@@ -1,8 +1,3 @@
-//	{-% mh_LoadHrb( '../lib/mercury.hrb' ) %-} 
-
-// #include "{-% MC_App_Path() + '/../lib/mercury.ch' %-}"
-
-
 function main()
 
 	local oApp

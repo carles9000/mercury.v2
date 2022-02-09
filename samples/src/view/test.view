@@ -9,76 +9,101 @@
 </head>
 <body>
 
+<style>
+	body { margin:10px;}
+	hr { margin:0 ;}
+	
+	.title {
+		width:100%;
+		height:70px;
+		padding: 10px;
+	}
+	
+	.title_error {
+		margin-left: 20px;
+		float: left;
+		margin-top: 8px;
+		font-size: 26px;
+		font-family: sans-serif;
+		font-weight: bold;
+	}
+	
+	.logo {
+		float:left;
+		width: 50px;
+	}	
+</style>
 
-<div class="container">
-	<h4>Mercury Test...</h4><hr>
+	<div class="title">
+		<img class="logo" src="{{ mc_logo() }}"></img>
+		<p class="title_error">Mercury Test</p>
+	</div>
+		<hr>
 
-	<div class="row">
-	  
+	<div class="container">
 
-		<div class="col-sm-12">
+		<div class="row--">
+		  
 
-			<ul>
-			  
-			  <br><h5>View</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'hello' ) }}>View</a></li>
-				<li><a href={{ mc_Route( 'view' ) }} >Friendly url -> view/[id]</a></li>
-				<li><a href={{ mc_Route( 'bootstrap' ) }} >Bootstrap example</a></li>
-			  </ul>	
+			<div class="col-sm-12">
 
-			  <br><h5>Router</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'rt.1' ) }}>user 				</a></li>
-				<li><a href={{ mc_Route( 'rt.2' ) + '/123' }}>user/name/(id) 	</a></li>								
-				<li><a href={{ mc_Route( 'rt.3' ) + '/123/info/salary' }}>user/(id)/info/[what]</a></li>
-			  </ul>				  
-			  
-			  <br><h5>Request</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'req.1' ) }}>get/[id]</a></li>
-				<li><a href={{ mc_Route( 'req.2' ) }}>post/[id]</a></li>
-				<li><a href={{ mc_Route( 'req.3' ) }}>request/[id]</a></li>
-			  </ul>
-			  
-			  <br><h5>Response</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'response.json' ) }}	>response/json 	</a></li>
-				<li><a href={{ mc_Route( 'response.xml' ) }}	>response/xml 	</a></li>
-				<li><a href={{ mc_Route( 'response.html' ) }}	>response/html	</a></li>
-				<li><a href={{ mc_Route( 'response.401' ) }}	>response/401	</a></li>
-				<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>						
-			  </ul>	
-			  
-			  <br><h5>Validator</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'valid.view' ) }}	>Check Validator</a></li>
-			  </ul>
-			  
-			  <br><h5>Tokens</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'token.crea' ) }}	>Send Token</a></li>
-				<li><a href={{ mc_Route( 'token.del' ) }}	>Delete Token</a></li>
-				<li><a href={{ mc_Route( 'token.hello' ) }}	>Hello from Token</a></li>
-			  </ul>			  
+			
+				  
+				  <br><h5>View</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'hello' ) }}>View</a></li>
+					<li><a href={{ mc_Route( 'view' ) }} >Friendly url -> view/[id]</a></li>
+					<li><a href={{ mc_Route( 'bootstrap' ) }} >Bootstrap example</a></li>
+				  </ul>	
+
+				  <br><h5>Router</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'rt.1' ) }}>user 				</a></li>
+					<li><a href={{ mc_Route( 'rt.2' ) + '/123' }}>user/name/(id) 	</a></li>								
+					<li><a href={{ mc_Route( 'rt.3' ) + '/123/info/salary' }}>user/(id)/info/[what]</a></li>
+				  </ul>				  
+				  
+				  <br><h5>Request</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'req.1' ) }}>get/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.2' ) }}>post/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.3' ) }}>request/[id]</a></li>
+				  </ul>
+				  
+				  <br><h5>Response</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'response.json' ) }}	>response/json 	</a></li>
+					<li><a href={{ mc_Route( 'response.xml' ) }}	>response/xml 	</a></li>
+					<li><a href={{ mc_Route( 'response.html' ) }}	>response/html	</a></li>
+					<li><a href={{ mc_Route( 'response.401' ) }}	>response/401	</a></li>
+					<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>						
+				  </ul>	
+				  
+				  <br><h5>Validator</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'valid.view' ) }}	>Check Validator</a></li>
+				  </ul>
+				  
+				  <br><h5>Tokens</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'token.crea' ) }}	>Send Token</a></li>
+					<li><a href={{ mc_Route( 'token.del' ) }}	>Delete Token</a></li>
+					<li><a href={{ mc_Route( 'token.hello' ) }}	>Hello from Token</a></li>
+				  </ul>			  
+					
+
+				  <br><h5>Error</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'err.nomethod' ) }}	>No method 	</a></li>
+					<li><a href={{ mc_Route( 'err.nofile' ) }}		>No file	</a></li>
+					<li><a href={{ mc_Route( 'err.check' ) }}		>Check...	</a></li>
+				  </ul>				  
+
 				
-
-			  <br><h5>Error</h5>			  
-			  <ul>
-				<li><a href={{ mc_Route( 'err.nomethod' ) }}	>No method 	</a></li>
-				<li><a href={{ mc_Route( 'err.nofile' ) }}		>No file	</a></li>
-				<li><a href={{ mc_Route( 'err.check' ) }}		>Check...	</a></li>
-				
-				
-				
-				
-			  </ul>				  
-
-			</ul>
-		</div>
+			</div>
+		</div>	
 	</div>
 
-</div>
 </body>
 </html>
    

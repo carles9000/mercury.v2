@@ -37,8 +37,6 @@ CLASS MC_Middleware
 	METHOD ValidateJWT()	
 	METHOD Unauthorized()
 	
-	//METHOD SetJWT( hData, nTime )
-	
 	METHOD SetTokenJWT( hData, nTime )
 	
 	METHOD SendToken( cToken )
@@ -80,38 +78,29 @@ METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg ) CLASS MC_Middleware
 	
 	::lAutenticate := .f.
 	
-_d( 'Exec' )	
+
 	//	Recover token 
-_d( 'VIA ' +  ::cVia)	
+
 		do case
 			case ::cVia == 'cookie' ; cToken := ::GetTokenCookie() 				
 			case ::cVia == 'header' ; cToken := ::GetTokenHeader()
 		endcase
 	
-_d( 'TOKEN: ' + cToken )
+
 
 		if empty( cToken )
-		_d( 'buid')
 			::Unauthorized() 
 			retu .f.
 		endif 
 	
-	//	Validate 
-	
+	//	Validate 	
 	
 		do case
 			case ::cType =='jwt'  ; ::lAutenticate := ::ValidateJWT( cToken )		
-		endcase 		
-		
+		endcase 					
+
 	
-	_d( 'AUTENTICATE', ::lAutenticate )
-	
-	if !::lAutenticate
-		_d( 'Surtu amb NIL')
-		retu .f.
-	endif 
-	
-retu .t.
+retu ::lAutenticate			
 
 //	--------------------------------------------------------------------------
 
@@ -147,7 +136,7 @@ retu cToken
 METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 	
 	local oJWT, lValid, nLapsus	
-_d( 'ValidateJWT' )
+
 	::hData := {=>}	
 	
 	if empty( cToken )
@@ -158,7 +147,6 @@ _d( 'ValidateJWT' )
 	oJWT 	:= MC_JWT():New( ::cPsw ) 	
 	lValid 	:= oJWT:Decode( cToken )						
 
-_d( 'VALID', lValid )
 
 	IF ! lValid
 	
@@ -171,11 +159,11 @@ _d( 'VALID', lValid )
 		//	En este punto tenemos el token decodificado dentro del objeto oJWT
 		
 			::hData := oJWT:GetData()
-_d( 'DATA', ::hData )			
+		
 		//	Consultamos el lapsus que hay definidio, para ponerla en la nueva cookie
 		
 			nLapsus 	:= oJWT:GetLapsus()
-_d( 'LAPSUS', nLapsus )
+
 	
 		//	Si el Token es correcto, prepararemos el sistema para que lo refresque cuando genere una nueva salida
 
@@ -200,10 +188,6 @@ METHOD Unauthorized() CLASS MC_Middleware
 	local oViewer
 	local oApp		:= MC_GetApp()
 	
-	//_d( oApp )
-	_d( oApp:CAPP_URL )
-
-_d( 'Unauthorized', ::cErrorRoute )
 	do case
 	
 		case !empty( ::cErrorRoute )
@@ -225,10 +209,9 @@ _d( 'Unauthorized', ::cErrorRoute )
 			else 
 			
 				cUrl := MC_Route( ::cErrorRoute )		
-_d( 'Routing to ' + cUrl )				
+	
 
-				if empty( cUrl )
-				
+				if empty( cUrl )				
 					
 					MC_MsgError( 'middleware', "Doesn't exist route ==> " + ::cErrorRoute )
 					
@@ -238,14 +221,11 @@ _d( 'Routing to ' + cUrl )
 				
 					if !empty( ::cMsg )
 						cUrl += '?' + ::cMsg 
-					endif
-					
-_d('Redirecciono a ' + cUrl )					
+					endif					
+				
 					::oResponse:Redirect( cUrl )
-					//oViewer:Exec( cUrl, ::cMsg )
-_d( 'Oks redirect' )					
-					
-_d( 'He fet quit' )					
+					//oViewer:Exec( cUrl, ::cMsg )										
+				
 				endif						
 				
 			endif		
@@ -293,24 +273,21 @@ retu cToken
 METHOD SendToken( cToken ) CLASS MC_Middleware
 
 	DEFAULT cToken := '' 
-	
-_d( 'SENDTOKEN' )	
-_d( 'type ' + ::cType )	
 
 	if empty( cToken )
 	
 		do case
 			case ::cType =='jwt'  ; cToken  := ::SetTokenJWT()		
 		endcase 
+		
 	endif 
 	
-_d( cToken  )	
+	
 	if empty( cToken )
 		retu .f.
 	endif
 	
 
-_d( 'Via ' + ::cVia )
 	
 	do case
 		case ::cVia == 'cookie' 
@@ -321,8 +298,7 @@ _d( 'Via ' + ::cVia )
 		
 	endcase			
 	
-
-_d( 'SENDTOKEN END' )	
+	
 retu .t. 
 
 
@@ -330,11 +306,6 @@ retu .t.
 
 METHOD DeleteToken() CLASS MC_Middleware
 
-	
-_d( 'DeleteToken' )	
-
-
-_d( 'Via ' + ::cVia )
 	
 	do case
 		case ::cVia == 'cookie' 
@@ -345,8 +316,6 @@ _d( 'Via ' + ::cVia )
 		
 	endcase			
 	
-
-_d( 'DeleteToken END' )	
 retu .t. 
 
 

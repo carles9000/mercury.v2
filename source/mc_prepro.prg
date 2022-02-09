@@ -14,8 +14,8 @@ FUNCTION MC_AddPPRules()
       hPP = __pp_Init()
 
       DO CASE
-      CASE "Windows" $ cOs  ; __pp_Path( hPP, "c:\harbour\include" )
-      CASE "Linux" $ cOs   ; __pp_Path( hPP, "~/harbour/include" )
+		  CASE "Windows" $ cOs  ; __pp_Path( hPP, "c:\harbour\include" )
+		  CASE "Linux" $ cOs   ; __pp_Path( hPP, "~/harbour/include" )
       ENDCASE
 
       IF ! Empty( hb_GetEnv( "HB_INCLUDE" ) )

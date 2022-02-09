@@ -75,13 +75,12 @@ METHOD View( cFile, ... ) CLASS MC_Controller
 RETU ''
 
 //	-------------------------------------------------------------------------	//	
-					 //cVia, cType, cErrorView, hError, lJson, cMsg
-//METHOD Middleware( cType, cRoute, aExceptionMethods, hError, lJson, aParams ) CLASS MC_Controller
+
 METHOD Middleware( cVia, cType, cErrorRoute, aExceptionMethods, hError, lJson, cMsg,  aParams ) CLASS MC_Controller
 
 	local nPos := 0
 	local lAccess
-_d( 'DINS MIDDLEAWARE ' )
+
 
 	DEFAULT cVia					:= 'cookie'
 	DEFAULT cType					:= 'jwt'
@@ -90,23 +89,20 @@ _d( 'DINS MIDDLEAWARE ' )
 	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
 	DEFAULT lJson  				:= .F.
 	DEFAULT cMsg  					:= ''
-	
-	_d( 'exeptions', aExceptionMethods)
-	_d( 'action', ::cAction )
+
 	
 	//	If exist some exception, don't autenticate
 
 		nPos := Ascan( aExceptionMethods, {|x,y| lower(x) == lower( ::cAction )} )
 		
 		if nPos > 0
-		_d( 'Trobada exception', ::cAction )
 			retu .t.
 		endif
 		
 	//	
-_d( 'DINS MIDDLEWARE2..' )
+
 	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg, aParams )
-_d( 'Em retorna', lAccess )	
+
 	
 retu lAccess 
 	/*
