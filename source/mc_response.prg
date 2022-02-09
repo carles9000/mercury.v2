@@ -209,6 +209,8 @@ METHOD SetCookie( cName, cValue, nSecs, cPath, cDomain, lHttps, lOnlyHttp ) CLAS
 
 		//AP_HeadersOutSet( "Set-Cookie", cCookie )
 		::SetHeader( "Set-Cookie", cCookie )
+		
+	
 	
 
 RETU NIL

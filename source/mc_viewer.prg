@@ -54,8 +54,7 @@ METHOD Exec( cFile, ... ) CLASS MC_Viewer
 
 		hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, cCodePP ), Break( oError ) } )
 	
-		mc_ReplaceBlocks( @cCode, "{{", "}}", nil, ... )		
-	
+		mc_ReplaceBlocks( @cCode, "{{", "}}", nil, ... )			
 		
 		cHtml := mc_InlinePrg( @cCode, nil, ... )  
 		

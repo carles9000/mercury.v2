@@ -1,6 +1,6 @@
-//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %} 
+//	{-% mh_LoadHrb( '../lib/mercury.hrb' ) %-} 
 
-#include "{% MC_App_Path() + '/../lib/mercury.ch' %}"
+// #include "{-% MC_App_Path() + '/../lib/mercury.ch' %-}"
 
 
 function main()
@@ -13,11 +13,13 @@ function main()
 	
 		DEFINE ROUTE 'root'	URL '/' 				VIEW 'test.view' 				OF oApp
 		
-		DEFINE ROUTE 'hello' 	URL 'hello' 			CONTROLLER 'hello.prg' 		METHOD 'GET' OF oApp
+		DEFINE ROUTE 'hello' 			URL 'hello' 			CONTROLLER 'hello.prg' 		METHOD 'GET' OF oApp
+		DEFINE ROUTE 'unathorized' 	URL 'unathorized' 		VIEW 'unathorized.view' 		METHOD 'GET' OF oApp
 		
 		//	Test View
 		
-			DEFINE ROUTE 'view'	URL 'view/[id]' 	CONTROLLER 'show@views.prg'	OF oApp	
+			DEFINE ROUTE 'view'		URL 'view/[id]' 	CONTROLLER 'show@views.prg'	OF oApp	
+			DEFINE ROUTE 'bootstrap'	URL 'bootstrap' 	VIEW 'views/bootstrap.view'		OF oApp	
 
 		//	Test Router
 		
@@ -53,7 +55,9 @@ function main()
 			
 		//	Test Validator					
 
-			DEFINE ROUTE 'token.setjwt'	URL 'setjwt' 		CONTROLLER  'setjwt@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.crea'		URL 'tk_crea' 		CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.del'		URL 'tk_del' 		CONTROLLER  'deltoken@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.hello'		URL 'tk_hello' 		CONTROLLER  'hello_access@testaccess.prg'	OF oApp						
 			
 			
 		//	Restes

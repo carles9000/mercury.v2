@@ -5,12 +5,15 @@ CLASS MC_Middleware
 
 	CLASSDATA cType			          					INIT ''			
 	CLASSDATA cVia			          					INIT ''			
-	CLASSDATA cErrorView	          					INIT ''			
+	CLASSDATA cErrorRoute	          					INIT ''			
+	CLASSDATA cMsg			          					INIT ''			
+	
 	CLASSDATA cPsw 			          					INIT 'mcV2!2022@'			
 	CLASSDATA cId_Cookie           					INIT 'MC_V2'						
 	CLASSDATA nTime			     						INIT 3600
 	
 	DATA hData				
+	DATA lAutenticate				
 	
 	
 	
@@ -26,7 +29,7 @@ CLASS MC_Middleware
 	
 	METHOD New( cAction, hPar ) 						CONSTRUCTOR
 	
-	METHOD Exec( oController, cVia, cType, cErrorView, hError, lJson, cMsg )
+	METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg )
 	
 	METHOD GetTokenCookie()	
 	METHOD GetTokenHeader()	
@@ -34,19 +37,28 @@ CLASS MC_Middleware
 	METHOD ValidateJWT()	
 	METHOD Unauthorized()
 	
-	METHOD SetJWT( hData, nTime )
+	//METHOD SetJWT( hData, nTime )
+	
+	METHOD SetTokenJWT( hData, nTime )
+	
+	METHOD SendToken( cToken )
+	METHOD DeleteToken()
 	
 ENDCLASS 
 
 METHOD New( oRequest, oResponse ) CLASS MC_Middleware	
 
-	::oResponse := oResponse
-	::oRequest  := oRequest
+
+	::cVia 			:= 'cookie'
+	::cType		:= 'jwt'
+
+	::oResponse 	:= oResponse
+	::oRequest  	:= oRequest
 
 RETU Self
 
 
-METHOD Exec( oController, cVia, cType, cErrorView, hError, lJson, cMsg ) CLASS MC_Middleware
+METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg ) CLASS MC_Middleware
 
 	local lValidate 	:= .F.
 	local cToken
@@ -54,41 +66,52 @@ METHOD Exec( oController, cVia, cType, cErrorView, hError, lJson, cMsg ) CLASS M
 	//LOCAL oResponse 	:= App():oResponse
 	//LOCAL cUrl
 
-	__defaultNIL( @cVia, '' )		//	Por defecto habria de ser 'jwt'
-	__defaultNIL( @cType, '' )	
-	__defaultNIL( @cErrorView, '' )		
+	__defaultNIL( @cVia, 'cookie' )		//	Por defecto habria de ser 'cookie'
+	__defaultNIL( @cType, 'jwt' )	
+	__defaultNIL( @cErrorRoute, '' )		
 	__defaultNIL( @hError, { 'success' => .f., 'error' => 'Error autentication' } )		
 	__defaultNIL( @lJson, .F. )		
 	__defaultNIL( @cMsg, '' )		
 	
-	::cType 		:= lower( cType )
 	::cVia 			:= lower( cVia )
-	::cErrorView	:= lower( cErrorView )
+	::cType 		:= lower( cType )
+	::cErrorRoute	:= lower( cErrorRoute )
+	::cMsg			:= cMsg
+	
+	::lAutenticate := .f.
 	
 _d( 'Exec' )	
 	//	Recover token 
-	
+_d( 'VIA ' +  ::cVia)	
 		do case
-			case cVia == 'cookie' 
-				cToken := ::GetTokenCookie() 
-				
-			case cVia == 'header' 
-				cToken := ::GetTokenHeader()
+			case ::cVia == 'cookie' ; cToken := ::GetTokenCookie() 				
+			case ::cVia == 'header' ; cToken := ::GetTokenHeader()
 		endcase
 	
-_d( cToken )
+_d( 'TOKEN: ' + cToken )
+
+		if empty( cToken )
+		_d( 'buid')
+			::Unauthorized() 
+			retu .f.
+		endif 
 	
 	//	Validate 
 	
 	
 		do case
-			case ::cVia =='jwt'  ; ::ValidateJWT( cToken )
+			case ::cType =='jwt'  ; ::lAutenticate := ::ValidateJWT( cToken )		
+		endcase 		
 		
-		endcase 
 	
+	_d( 'AUTENTICATE', ::lAutenticate )
 	
+	if !::lAutenticate
+		_d( 'Surtu amb NIL')
+		retu .f.
+	endif 
 	
-retu self
+retu .t.
 
 //	--------------------------------------------------------------------------
 
@@ -124,7 +147,7 @@ retu cToken
 METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 	
 	local oJWT, lValid, nLapsus	
-
+_d( 'ValidateJWT' )
 	::hData := {=>}	
 	
 	if empty( cToken )
@@ -135,6 +158,7 @@ METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 	oJWT 	:= MC_JWT():New( ::cPsw ) 	
 	lValid 	:= oJWT:Decode( cToken )						
 
+_d( 'VALID', lValid )
 
 	IF ! lValid
 	
@@ -147,11 +171,11 @@ METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 		//	En este punto tenemos el token decodificado dentro del objeto oJWT
 		
 			::hData := oJWT:GetData()
-			
+_d( 'DATA', ::hData )			
 		//	Consultamos el lapsus que hay definidio, para ponerla en la nueva cookie
 		
 			nLapsus 	:= oJWT:GetLapsus()
-
+_d( 'LAPSUS', nLapsus )
 	
 		//	Si el Token es correcto, prepararemos el sistema para que lo refresque cuando genere una nueva salida
 
@@ -161,7 +185,8 @@ METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 		
 			::oResponse:SetCookie( ::cId_Cookie, cToken, nLapsus )
 		
-		retu .T.
+			retu .T.
+			
 		
 	ENDIF				
 
@@ -172,12 +197,20 @@ retu .t.
 METHOD Unauthorized() CLASS MC_Middleware
 
 	local cUrl 
+	local oViewer
+	local oApp		:= MC_GetApp()
+	
+	//_d( oApp )
+	_d( oApp:CAPP_URL )
 
+_d( 'Unauthorized', ::cErrorRoute )
 	do case
 	
-		case !empty( ::cErrorView )
+		case !empty( ::cErrorRoute )
+		
+			oViewer := MC_Viewer():New()
 
-			if right( ::cErrorView, 5 ) == '.view'
+			if right( ::cErrorRoute, 5 ) == '.view'
 			
 				//	Borrar cookie
 
@@ -185,33 +218,46 @@ METHOD Unauthorized() CLASS MC_Middleware
 
 				//	Redireccionamos pantalla incial
 				
-					::oController:View( ::cErrorView, ::cMsg )
+					//::oController:View( ::cErrorRoute, ::cMsg )
+					oViewer:Exec( ::cErrorRoute, ::cMsg )
+					
 				
 			else 
 			
-				cUrl := MC_Route( ::cErrorView )				
+				cUrl := MC_Route( ::cErrorRoute )		
+_d( 'Routing to ' + cUrl )				
 
 				if empty( cUrl )
+				
+					
+					MC_MsgError( 'middleware', "Doesn't exist route ==> " + ::cErrorRoute )
+					
+				else
+				
+					cUrl := oApp:CAPP_URL + cUrl 
 				
 					if !empty( ::cMsg )
 						cUrl += '?' + ::cMsg 
 					endif
 					
-					MC_MsgError( 'middleware', "Doesn't exist route ==> " + ::cErrorView )
-				else
+_d('Redirecciono a ' + cUrl )					
 					::oResponse:Redirect( cUrl )
-				endif
-			
-			endif
-		
+					//oViewer:Exec( cUrl, ::cMsg )
+_d( 'Oks redirect' )					
+					
+_d( 'He fet quit' )					
+				endif						
+				
+			endif		
 		
 	endcase 
 
 retu nil 
 
+
 //	--------------------------------------------------------------------------
 
-METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
+METHOD SetTokenJWT( hData, nTime ) CLASS MC_Middleware
 
 	local oJWT 		:= MC_JWT():New( ::cPsw )	
 	local cToken 
@@ -235,9 +281,72 @@ METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
 	
 	//	Preparamos la Cookie. NO se envia aun, hasta que haya un sendhtml()...
 
-		::oResponse:SetCookie( ::cId_Cookie, cToken, ::nTime )
-		::oResponse:Echo()
+		//::oResponse:SetCookie( ::cId_Cookie, cToken, ::nTime )
+		//::oResponse:Echo()
 		
-RETU cToken
+			
+
+retu cToken  
+
+//	--------------------------------------------------------------------------
+
+METHOD SendToken( cToken ) CLASS MC_Middleware
+
+	DEFAULT cToken := '' 
+	
+_d( 'SENDTOKEN' )	
+_d( 'type ' + ::cType )	
+
+	if empty( cToken )
+	
+		do case
+			case ::cType =='jwt'  ; cToken  := ::SetTokenJWT()		
+		endcase 
+	endif 
+	
+_d( cToken  )	
+	if empty( cToken )
+		retu .f.
+	endif
+	
+
+_d( 'Via ' + ::cVia )
+	
+	do case
+		case ::cVia == 'cookie' 
+		
+			MH_SetCookie( ::cId_Cookie, cToken, ::nTime ) 
+			
+		case ::cVia == 'header' 
+		
+	endcase			
+	
+
+_d( 'SENDTOKEN END' )	
+retu .t. 
+
+
+//	--------------------------------------------------------------------------
+
+METHOD DeleteToken() CLASS MC_Middleware
+
+	
+_d( 'DeleteToken' )	
+
+
+_d( 'Via ' + ::cVia )
+	
+	do case
+		case ::cVia == 'cookie' 
+		
+			MH_SetCookie( ::cId_Cookie, '', -1 ) 
+			
+		case ::cVia == 'header' 
+		
+	endcase			
+	
+
+_d( 'DeleteToken END' )	
+retu .t. 
 
 

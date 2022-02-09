@@ -35,6 +35,6 @@ static _hBlock
 #include "mc_viewer.prg"		//	Funcs. View
 #include "mc_viewerror.prg"		//	Funcs. View Error
 #include "mc_prepro.prg"		//	Funcs. Prepro
-//#include "mc_middleware.prg"	//	Funcs. Middleware
+#include "mc_middleware.prg"	//	Funcs. Middleware
 
 //	---------------------------------------------------------------------------- //

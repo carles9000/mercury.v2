@@ -458,6 +458,12 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
 	oClass := Eval( &( cClass ), oController )
+	
+_d( 'EXECUTECLASS ' + valtype( oClass ) )	
+	if valtype( oClass ) != 'O' 
+	_d( 'Surtu executeclass')
+		retu nil
+	endif
 
  	
 	if __objHasMethod( oClass, hInfo[ 'method' ] )		

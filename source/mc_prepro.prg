@@ -3,13 +3,14 @@
 FUNCTION MC_AddPPRules()
 
    LOCAL cOs := OS()
-   LOCAL n, aPair, cExt 
+   LOCAL n, aPair, cExt    
    
-   local hPP 
-   
-   //thread static hPP 
+   thread static hPP 
 
-   //IF hPP == nil
+    IF hPP != nil
+		retu hPP 
+	ENDIF 
+	
       hPP = __pp_Init()
 
       DO CASE
@@ -20,49 +21,10 @@ FUNCTION MC_AddPPRules()
       IF ! Empty( hb_GetEnv( "HB_INCLUDE" ) )
          __pp_Path( hPP, hb_GetEnv( "HB_INCLUDE" ) )
       ENDIF
-   //ENDIF
-
-   __pp_AddRule( hPP, "#xcommand ? [<explist,...>] => ap_Echo( '<br>' [,<explist>] )" )
-   __pp_AddRule( hPP, "#xcommand ?? [<explist,...>] => ap_Echo( [<explist>] )" )
-   __pp_AddRule( hPP, "#define CRLF hb_OsNewLine()" )
-   __pp_AddRule( hPP, "#xcommand TEXT <into:TO,INTO> <v> => #pragma __cstream|<v>:=%s" )
-   __pp_AddRule( hPP, "#xcommand TEXT <into:TO,INTO> <v> ADDITIVE => #pragma __cstream|<v>+=%s" )
-   __pp_AddRule( hPP, "#xcommand TEMPLATE [ USING <x> ] [ PARAMS [<v1>] [,<vn>] ] => " + ;
-      '#pragma __cstream | ap_Echo( mc_InlinePrg( %s, [@<x>] [,<(v1)>][+","+<(vn)>] [, @<v1>][, @<vn>] ) )' )
-   __pp_AddRule( hPP, "#xcommand BLOCKS [ PARAMS [<v1>] [,<vn>] ] => " + ;
-      '#pragma __cstream | ap_Echo( mc_ReplaceBlocks( %s, "{{", "}}" [,<(v1)>][+","+<(vn)>] [, @<v1>][, @<vn>] ) )' )
-   __pp_AddRule( hPP, "#xcommand BLOCKS TO <b> [ PARAMS [<v1>] [,<vn>] ] => " + ;
-      '#pragma __cstream | <b>+=mc_ReplaceBlocks( %s, "{{", "}}" [,<(v1)>][+","+<(vn)>] [, @<v1>][, @<vn>] )' )
-	  
-   __pp_AddRule( hPP, "#xcommand BLOCKS VIEW <b> [ PARAMS [<v1>] [,<vn>] ] => " + ;
-      '#pragma __cstream | <b>+=mc_ReplaceBlocks( %s, "<$", "$>" [,<(v1)>][+","+<(vn)>] [, @<v1>][, @<vn>] )' )	  
-	  
-   __pp_AddRule( hPP, "#command ENDTEMPLATE => #pragma __endtext" )
-   __pp_AddRule( hPP, "#xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }" )
-   __pp_AddRule( hPP, "#xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->" )
-   __pp_AddRule( hPP, "#xcommand FINALLY => ALWAYS" )
-   __pp_AddRule( hPP, "#xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] => ;" + ;
-      "IF <v1> == NIL ; <v1> := <x1> ; END [; IF <vn> == NIL ; <vn> := <xn> ; END ]" )
-
-
- __pp_AddRule( hPP, "#xcommand DEFINE VALIDATOR <oValidator> WITH <hData> "+;
-	"[<err:ERROR ROUTE, DEFAULT> <cRoute>] [<json:ERROR JSON> ] => " + ;
-	"<oValidator> := MC_Validator():New( <hData>, [<cRoute>], [<.json.>]  )" )
 	
- __pp_AddRule( hPP, "#xcommand PARAMETER <cParameter> [NAME <cName>] [ROLES <cRoles>] [FORMATTER <cFormat>] OF <oValidator> => " +;
-	"<oValidator>:Set( <cParameter>, <cRoles>, [<cName>], [<cFormat>] )	" )
-	
- __pp_AddRule( hPP, "#xcommand RUN VALIDATOR <oValidator> => <oValidator>:Run()" )
-
-
-
-// OK	__pp_AddRule( hPP, hb_memoread( 'c:\xampp\htdocs\master\mercury.v2\source\mercury.ch' ) )			
-
-	
-//	__pp_AddRule( hPP, 'c:\xampp\htdocs\master\mercury.v2\source\mercury.ch' )			
 
 	//	InitProcess .ch files
-	/*
+	
 	for n := 1 to len(mh_HashModules())
 	
 		aPair 	:= HB_HPairAt( mh_HashModules(), n )		
@@ -73,7 +35,7 @@ FUNCTION MC_AddPPRules()
 		endif 
 		
 	next 
-	*/
+	
 
 RETURN hPP
 

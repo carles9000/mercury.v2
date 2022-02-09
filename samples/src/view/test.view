@@ -24,6 +24,7 @@
 			  <ul>
 				<li><a href={{ mc_Route( 'hello' ) }}>View</a></li>
 				<li><a href={{ mc_Route( 'view' ) }} >Friendly url -> view/[id]</a></li>
+				<li><a href={{ mc_Route( 'bootstrap' ) }} >Bootstrap example</a></li>
 			  </ul>	
 
 			  <br><h5>Router</h5>			  
@@ -56,7 +57,9 @@
 			  
 			  <br><h5>Tokens</h5>			  
 			  <ul>
-				<li><a href={{ mc_Route( 'token.setjwt' ) }}	>Set JWT</a></li>
+				<li><a href={{ mc_Route( 'token.crea' ) }}	>Send Token</a></li>
+				<li><a href={{ mc_Route( 'token.del' ) }}	>Delete Token</a></li>
+				<li><a href={{ mc_Route( 'token.hello' ) }}	>Hello from Token</a></li>
 			  </ul>			  
 				
 

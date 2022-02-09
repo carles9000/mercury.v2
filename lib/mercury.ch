@@ -57,10 +57,13 @@
 
 //	Middleware	-------------------------------------------------------------------
 
-#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cType> ] [<err:ERROR ROUTE, DEFAULT> <cRoute> [WITH <aParams>] ] ;
+
+#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] [<err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
 	[ <exc: EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] ;
 => ;
-	<oController>:Middleware( [<cType>], [<cRoute>], [\{<cMethod>\}], [<hError>], [<.json.>], [<aParams>] )
+	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [\{<cMethod>\}], [<hError>], [<aParams>] ) ;;
+		return nil ;;
+	endif;;
 	
 //	Token JWT 	-------------------------------------------------------------------
 

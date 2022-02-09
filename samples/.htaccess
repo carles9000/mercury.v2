@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# Carga Inicial de modulos hrb,ch,prg...
+# --------------------------------------------------------------------------
+SetEnv MH_INITPROCESS 	../lib/mercury.hrb,../lib/mercury.ch
+
 # Test -> https://www.htaccessredirect.net/
 
 
