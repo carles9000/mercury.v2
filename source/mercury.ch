@@ -59,9 +59,9 @@
 
 
 #xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] [<err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
-	[ <exc: EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] ;
+	[ <exc: EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ] ;
 => ;
-	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [\{<cMethod>\}], [<hError>], [<aParams>] ) ;;
+	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>] ) ;;
 		return nil ;;
 	endif;;
 	

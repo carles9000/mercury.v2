@@ -41,13 +41,15 @@ METHOD Load( cFile ) CLASS MC_Viewer
 
 RETU cCode
 
-METHOD Exec( cFile, ... ) CLASS MC_Viewer
+METHOD Exec( cFile, nCode, ... ) CLASS MC_Viewer
 
 	LOCAL cHtml	:= ''		
 	LOCAL cCode  	:= ::Load( cFile )
 	LOCAL cCodePP  := ''
 	local hError 
-	
+
+	DEFAULT nCode :=  200
+
 	IF !empty( cCode )
 
 		mc_set( 'view', cFile ) 
@@ -59,7 +61,7 @@ METHOD Exec( cFile, ... ) CLASS MC_Viewer
 		cHtml := mc_InlinePrg( @cCode, nil, ... )  
 		
 		IF valtype( cHtml ) == 'C' 
-			::oResponse:SendHtml( cHtml )
+			::oResponse:SendHtml( cHtml, nCode )
 		else			
 			MC_MsgError( 'View', 'File: ' + cFile + '<br>Message: Bloc prg not return string'  )				
 		endif

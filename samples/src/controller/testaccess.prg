@@ -12,6 +12,11 @@ ENDCLASS
 
 METHOD New( oController ) CLASS TestAccess 
 	
+	//AUTENTICATE CONTROLLER oController 	
+	//AUTENTICATE CONTROLLER oController  ERROR CODE 401
+	//AUTENTICATE CONTROLLER oController  ERROR ROUTE 'xxx'
+	//AUTENTICATE CONTROLLER oController  ERROR ROUTE 'unathorized'
+
 	AUTENTICATE CONTROLLER oController VIA 'cookie' TYPE 'jwt' ;
 		ERROR ROUTE 'unathorized' EXCEPTION 'creatoken', 'deltoken'
 		

@@ -52,10 +52,15 @@ RETU NIL
 
 METHOD SendJson( uResult, nCode, cCharset ) CLASS MC_Response
 
-	DEFAULT cCharSet  := MC_GetApp():cCharset 	//	'ISO-8859-1'	//	'utf-8'		
+	DEFAULT nCode 	:= 0	
+	DEFAULT cCharSet  := MC_GetApp():cCharset 	//	'ISO-8859-1'	//	'utf-8'	
 
 	::cContentType 	:= "application/json;charset=" + cCharSet	
 	::cBody 			:= IF( HB_IsHash( uResult ) .or. HB_IsArray( uResult ), hb_jsonEncode( uResult ), '' )
+	
+	if !empty(nCode)
+		::SendCode(nCode)
+	endif	
 	
 	::echo()	
 
@@ -63,19 +68,30 @@ RETU NIL
 
 METHOD SendXml( uResult, nCode, cCharset ) CLASS MC_Response
 
+	DEFAULT nCode 	:= 0	
 	DEFAULT cCharSet  := MC_GetApp():cCharset 	//	'ISO-8859-1'	//	'utf-8'
 	
 	::cContentType 	:= "text/xml;charset=" + cCharSet	
 	::cBody 			:= IF( HB_IsString( uResult ), uResult, '' )
+	
+	if !empty(nCode)
+		::SendCode(nCode)
+	endif	
 	
 	::echo()	
 
 RETU NIL
 
 METHOD SendHtml( uResult, nCode ) CLASS MC_Response
+
+	DEFAULT nCode := 0
 	
 	::cContentType 	:= "text/html"
 	::cBody 			:= IF( HB_IsString( uResult ), uResult, '' )
+
+	if !empty(nCode)
+		::SendCode(nCode)
+	endif
 	
 	::echo()
 

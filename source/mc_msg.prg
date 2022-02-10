@@ -2,6 +2,28 @@ function MC_MsgError( cError, cMsg, cTitle )
 
 	LOCAl cHtml 	:= ''
 	
+	//MH_DoError( cDescription, cSubsystem, nSubCode )
+	/*	
+		FUNCTION MH_DoError( cDescription, cSubsystem, nSubCode )
+
+		   LOCAL oError := ErrorNew()
+
+		   hb_default( @cSubsystem, "modHarbour.v2" )
+		   hb_default( @nSubCode, 0 )
+
+		   oError:Subsystem   	:= cSubsystem
+		   oError:SubCode 		:= nSubCode
+		   oError:Severity    	:= 2 // ES_ERROR
+		   oError:Description 	:= cDescription
+		   Eval( ErrorBlock(), oError )
+
+		RETURN NIL
+	*/	
+	
+	MH_DoError( cMsg, cError, 99999 )
+	
+	retu ''
+	
 	cHtml := MC_Style()	
 	cHtml += MC_Msg_Header( cTitle )
 	

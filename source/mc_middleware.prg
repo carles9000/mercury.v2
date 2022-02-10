@@ -6,6 +6,7 @@ CLASS MC_Middleware
 	CLASSDATA cType			          					INIT ''			
 	CLASSDATA cVia			          					INIT ''			
 	CLASSDATA cErrorRoute	          					INIT ''			
+	CLASSDATA nErrorCode	          					INIT 401
 	CLASSDATA cMsg			          					INIT ''			
 	
 	CLASSDATA cPsw 			          					INIT 'mcV2!2022@'			
@@ -56,10 +57,12 @@ METHOD New( oRequest, oResponse ) CLASS MC_Middleware
 RETU Self
 
 
-METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg ) CLASS MC_Middleware
+METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, lJson, cMsg ) CLASS MC_Middleware
 
 	local lValidate 	:= .F.
 	local cToken
+	
+	_d( 'Exec ' , nErrorcode )
 	
 	//LOCAL oResponse 	:= App():oResponse
 	//LOCAL cUrl
@@ -67,6 +70,7 @@ METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg ) CLASS MC_Middleware
 	__defaultNIL( @cVia, 'cookie' )		//	Por defecto habria de ser 'cookie'
 	__defaultNIL( @cType, 'jwt' )	
 	__defaultNIL( @cErrorRoute, '' )		
+	__defaultNIL( @nErrorCode, 401 )		
 	__defaultNIL( @hError, { 'success' => .f., 'error' => 'Error autentication' } )		
 	__defaultNIL( @lJson, .F. )		
 	__defaultNIL( @cMsg, '' )		
@@ -74,7 +78,9 @@ METHOD Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg ) CLASS MC_Middleware
 	::cVia 			:= lower( cVia )
 	::cType 		:= lower( cType )
 	::cErrorRoute	:= lower( cErrorRoute )
+	::nErrorCode	:= nErrorCode
 	::cMsg			:= cMsg
+	
 	
 	::lAutenticate := .f.
 	
@@ -187,8 +193,11 @@ METHOD Unauthorized() CLASS MC_Middleware
 	local cUrl 
 	local oViewer
 	local oApp		:= MC_GetApp()
-	
-	do case
+
+	//	Error code ?
+
+			
+	do case	
 	
 		case !empty( ::cErrorRoute )
 		
@@ -198,12 +207,12 @@ METHOD Unauthorized() CLASS MC_Middleware
 			
 				//	Borrar cookie
 
-					::oResponse:SetCookie( ::cId_Cookie, '', -1 )						
-
+					::oResponse:SetCookie( ::cId_Cookie, '', -1 )
+					
 				//	Redireccionamos pantalla incial
 				
-					//::oController:View( ::cErrorRoute, ::cMsg )
-					oViewer:Exec( ::cErrorRoute, ::cMsg )
+					//::oController:View( ::cErrorRoute, ::nErrorCode, ::cMsg )
+					oViewer:Exec( ::cErrorRoute, ::nErrorCode, ::cMsg )
 					
 				
 			else 
@@ -217,14 +226,14 @@ METHOD Unauthorized() CLASS MC_Middleware
 					
 				else
 				
-					cUrl := oApp:CAPP_URL + cUrl 
+					//cUrl := oApp:CAPP_URL + cUrl 
 				
 					if !empty( ::cMsg )
 						cUrl += '?' + ::cMsg 
 					endif					
-				
+	
 					::oResponse:Redirect( cUrl )
-					//oViewer:Exec( cUrl, ::cMsg )										
+					//oViewer:Exec( cUrl, ::nErrorCode, ::cMsg )										
 				
 				endif						
 				

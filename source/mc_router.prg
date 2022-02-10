@@ -459,9 +459,8 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
 	oClass := Eval( &( cClass ), oController )
 	
-_d( 'EXECUTECLASS ' + valtype( oClass ) )	
+
 	if valtype( oClass ) != 'O' 
-	_d( 'Surtu executeclass')
 		retu nil
 	endif
 
@@ -489,7 +488,7 @@ METHOD ExecuteView( hInfo, hParam ) CLASS MC_Router
 	
 	oViewer	:= MC_Viewer():New()
 	
-	oViewer:Exec( hInfo[ 'file' ], hParam ) 
+	oViewer:Exec( hInfo[ 'file' ], 200, hParam ) 
 	
 	
 retu nil 
@@ -535,7 +534,8 @@ retu nil
 FUNCTION  MC_Route( cRoute, aParams ) 
 
 	LOCAL cUrl 	:= ''
-	LOCAL oRouter 	:= MC_GetApp():oRouter
+	LOCAL oApp  	:= MC_GetApp()
+	LOCAL oRouter 	:= oApp:oRouter
 	LOCAL aMap 	:= oRouter:aMap
 	LOCAL nLen 	:= len(aMap)
 	LOCAL lFound 	:= .F. 
@@ -605,8 +605,9 @@ FUNCTION  MC_Route( cRoute, aParams )
 			endif 			
 		
 		next 	
-		
+	
 		cUrl := Substr( cUrl, 2 )		//	Eliminamos primera /
+		cUrl := oApp:cApp_Url + cUrl 
 
 retu cUrl  
 

@@ -63,20 +63,20 @@ RETU Self
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD View( cFile, ... ) CLASS MC_Controller
+METHOD View( cFile, nCode, ... ) CLASS MC_Controller
 
 	LOCAL oView 			:= MC_Viewer():New()
 	
 	//oView:oRoute		:= ::oRouter
 	//oView:oResponse	:= ::oResponse 		
 	
-	oView:Exec( cFile, ... )
+	oView:Exec( cFile, nCode, ... )
 
 RETU ''
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD Middleware( cVia, cType, cErrorRoute, aExceptionMethods, hError, lJson, cMsg,  aParams ) CLASS MC_Controller
+METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hError, lJson, cMsg,  aParams ) CLASS MC_Controller
 
 	local nPos := 0
 	local lAccess
@@ -85,6 +85,7 @@ METHOD Middleware( cVia, cType, cErrorRoute, aExceptionMethods, hError, lJson, c
 	DEFAULT cVia					:= 'cookie'
 	DEFAULT cType					:= 'jwt'
 	DEFAULT cErrorRoute 			:= ''
+	DEFAULT nErrorCode 			:= 401
 	DEFAULT aExceptionMethods  	:= array()
 	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
 	DEFAULT lJson  				:= .F.
@@ -101,7 +102,7 @@ METHOD Middleware( cVia, cType, cErrorRoute, aExceptionMethods, hError, lJson, c
 		
 	//	
 
-	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, hError, lJson, cMsg, aParams )
+	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, nErrorCode,  hError, lJson, cMsg, aParams )
 
 	
 retu lAccess 

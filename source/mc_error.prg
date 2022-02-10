@@ -1,4 +1,5 @@
 
+
 FUNCTION MC_ErrorSys( oError, cCode, cCodePP )
 
 	LOCAL hError
@@ -31,6 +32,8 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 	local hError	:= {=>}
     local n, aLines, nLine, cLine, nPos, nErrorLine, nL  	
 	local nLin, nOffSet, lReview, ts_block, cProc
+	local lSearch, cSearch
+	local lSearchTag := .f. 
 
 	//	Init hError info 
 	
@@ -75,7 +78,7 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 
 		
 	//		
-    
+ _d( oError )   
 		
 	hError[ 'description' ]	:= oError:description		
 	
@@ -89,15 +92,13 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 		hError[ 'filename' ] := oError:filename 
     endif  
    
-	if ! Empty( oError:subsystem )
-	
-		hError[ 'subsystem' ] := oError:subsystem 
-		
-		if !empty( oError:subcode ) 
-			hError[ 'subcode' ] :=  mh_valtochar(oError:subcode)
-		endif
-		
+	if ! Empty( oError:subsystem )	
+		hError[ 'subsystem' ] := oError:subsystem 				
 	endif  
+	
+	if !empty( oError:subcode ) 
+		hError[ 'subcode' ] :=  mh_valtochar(oError:subcode)
+	endif
 
 	//	En el código preprocesado, buscamos tags #line (#includes,#commands,...)
 
@@ -276,35 +277,52 @@ _d( 'A4-->', hError[ 'line' ] )
 	
 		if valtype( oError:subcode ) == 'N'
 		
-_d( oError:subcode )		
+_d( oError:subcode )	
+			lSearch 	:= .f. 
+			lSearchTag	:= .f. 
+			cSearch 	:= ''
 		
 			do case
-			case oError:subcode == 6101 	//Unknown or unregistered symbol
-
+				case oError:subcode == 1004 	//	Message not found
+					lSearch := .t. 
+					nPos := At( ':', oError:operation )
+					if nPos > 0 
+						cSearch := Substr( oError:operation, nPos )
+					endif
+				case oError:subcode == 6101 	//	Unknown or unregistered symbol
+					lSearch := .t. 
+					cSearch := oError:operation
+					
+				case oError:subcode == 100 	//	MC Error. Doesn't exist method
+						hError[ 'line' ] := 0								
+			endcase
+_d( 'SEARCH', lSearch, cSearch )			
+			if lSearch 
+			
 				aLines 	:= hb_ATokens( hError[ 'code' ], chr(10) )
-				
 				for n = 1 to Len( aLines )
 
 					cLine := upper(aLines[ n ] )
+_d( cLine )				
 					
-					if At( oError:operation, cLine ) > 0
+					if At( cSearch, cLine ) > 0
 			
 						hError[ 'line' ] := n 
+						lSearchTag := .t. 
+_d( 'FOUND', hError[ 'line' ])						
 						exit
 					endif 
 
 				next
-				
-			case oError:subcode == 100 	//	MC Error. Doesn't exist method
-					hError[ 'line' ] := 0
-					
 			
-			endcase
+			endif
 		
 		
 		endif 
 _d( 'A5-->', hError[ 'line' ] )	
 	//	--------------------------------------
+	
+	if ! lSearchTag 
 
 		nL := hError[ 'line' ]
 		for n := 1  to len( aTagLine ) 
@@ -314,7 +332,9 @@ _d( 'A5-->', hError[ 'line' ] )
 				hError[ 'line' ]	:= nL + nOffset 
 			endif		
 		
-		next 	
+		next 
+
+	endif
 				
 _d( 'A6-->', hError[ 'line' ] )	
 
@@ -457,7 +477,11 @@ function MC_ErrorView( hError )
 		cHtml += '<tr><td class="description">Line</td><td class="value">' + ltrim(str(hError[ 'line' ])) + '</td><tr>'
 	endif
 	
-	cHtml += '<tr><td class="description">System</td><td class="value">' + hError[ 'subsystem' ] + if( !empty(hError[ 'subcode' ]), '/' + hError[ 'subcode' ], '') +  '</td><tr>'
+	if hError[ 'subcode' ] == '99999'
+		cHtml += '<tr><td class="description">System</td><td class="value">' + hError[ 'subsystem' ]  +  '</td><tr>'
+	else
+		cHtml += '<tr><td class="description">System</td><td class="value">' + hError[ 'subsystem' ] + if( !empty(hError[ 'subcode' ]), '/' + hError[ 'subcode' ], '') +  '</td><tr>'
+	endif
 	
 	if !empty( hError[ 'args' ] )		
 	
@@ -480,62 +504,64 @@ function MC_ErrorView( hError )
 
 				</table>
 			</div>		
-	ENDTEXT 	
+	ENDTEXT 
+
+	if hError[ 'subcode' ] != '99999'	
 	
 	
-	do case
-	
-		case hError[ 'type' ] == 'block' 					
-
-			cTitle 	:= 'Code Block'
-			cInfo 		:= '<div class="mc_block_error"><b>Error => </b><span class="mc_line_error">' + hError[ 'block_error' ] + '</span></div>'								
-			aLines 	:= hb_ATokens( hError[ 'block_code' ], chr(10) )
-	
-		case hError[ 'type' ] == '' 		
-
-			cTitle 	:= 'Code'
-			cInfo 	:= ''
-			aLines 	:= hb_ATokens( hError[ 'code' ], chr(10) )
-			
-		case hError[ 'type' ] == 'initprocess' 					
-
-			cTitle 	:= 'InitProcess'
-			cInfo 	:= '<div class="mc_block_error"><b>Filename => </b><span class="mc_line_error">' + hError[ 'filename' ] + '</span></div>'
-			aLines 	:= {}	
-
-		otherwise 
+		do case
 		
-			cTitle 	:= hError[ 'type' ]
-			cInfo 	:= ''
-			aLines 	:= hb_ATokens( hError[ 'block_code' ], chr(10) )			
-	endcase	
-	
-	
+			case hError[ 'type' ] == 'block' 					
 
-	
-	for n = 1 to Len( aLines )
+				cTitle 	:= 'Code Block'
+				cInfo 		:= '<div class="mc_block_error"><b>Error => </b><span class="mc_line_error">' + hError[ 'block_error' ] + '</span></div>'								
+				aLines 	:= hb_ATokens( hError[ 'block_code' ], chr(10) )
+		
+			case hError[ 'type' ] == '' 		
 
-		cLine := aLines[ n ] 
-		cLine := hb_HtmlEncode( cLine )
-		cLine := StrTran( cLine, chr(9), '&nbsp;&nbsp;&nbsp;' )			  
-	  
-	  
-	  if hError[ 'line' ] > 0 .and. hError[ 'line' ] == n
-		cInfo += '<b>' + StrZero( n, 4 ) + ' <span class="mc_line_error">' + cLine + '</span></b>'
-	  else			
-		cInfo += StrZero( n, 4 ) + ' ' + cLine 
-	  endif 
-	  
-	  cInfo += '<br>'
+				cTitle 	:= 'Code'
+				cInfo 	:= ''
+				aLines 	:= hb_ATokens( hError[ 'code' ], chr(10) )
+				
+			case hError[ 'type' ] == 'initprocess' 					
 
-	next	
+				cTitle 	:= 'InitProcess'
+				cInfo 	:= '<div class="mc_block_error"><b>Filename => </b><span class="mc_line_error">' + hError[ 'filename' ] + '</span></div>'
+				aLines 	:= {}	
 
-	cHtml += '<div class="mc_container_code">'
-	cHtml += ' <div class="mc_code_title">' + cTitle + '</div>'
-	cHtml += ' <div class="mc_code_source">' + cInfo + '</div>'
-	cHtml += '</div>' 	
+			otherwise 
+			
+				cTitle 	:= hError[ 'type' ]
+				cInfo 	:= ''
+				aLines 	:= hb_ATokens( hError[ 'block_code' ], chr(10) )			
+		endcase	
+		
+		
+
+		
+		for n = 1 to Len( aLines )
+
+			cLine := aLines[ n ] 
+			cLine := hb_HtmlEncode( cLine )
+			cLine := StrTran( cLine, chr(9), '&nbsp;&nbsp;&nbsp;' )			  
+		  
+		  
+		  if hError[ 'line' ] > 0 .and. hError[ 'line' ] == n
+			cInfo += '<b>' + StrZero( n, 4 ) + ' <span class="mc_line_error">' + cLine + '</span></b>'
+		  else			
+			cInfo += StrZero( n, 4 ) + ' ' + cLine 
+		  endif 
+		  
+		  cInfo += '<br>'
+
+		next	
+
+		cHtml += '<div class="mc_container_code">'
+		cHtml += ' <div class="mc_code_title">' + cTitle + '</div>'
+		cHtml += ' <div class="mc_code_source">' + cInfo + '</div>'
+		cHtml += '</div>' 	
 	
-	
+	endif
 			
 	BLOCKS TO cHtml 
 			<h3>Send mail to administrator: <a href="mailto:admin@mh.com">admin@mh.net</a></h3>

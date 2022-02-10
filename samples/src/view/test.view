@@ -89,7 +89,13 @@
 					<li><a href={{ mc_Route( 'token.crea' ) }}	>Send Token</a></li>
 					<li><a href={{ mc_Route( 'token.del' ) }}	>Delete Token</a></li>
 					<li><a href={{ mc_Route( 'token.hello' ) }}	>Hello from Token</a></li>
-				  </ul>			  
+				  </ul>	
+
+				  <br><h5>JWT (Json Web Token)</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'jwt' ) }}	>Create JWT</a></li>
+					<li><a href={{ mc_Route( 'jwt.valid' ) }}>Valid JWT</a></li>					
+				  </ul>						  
 					
 
 				  <br><h5>Error</h5>			  

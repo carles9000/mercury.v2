@@ -1,3 +1,5 @@
+//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}
+
 function main()
 
 	local oApp
@@ -48,6 +50,11 @@ function main()
 			DEFINE ROUTE 'err.nofile' 	 URL 'nofile'		CONTROLLER 'nofile.prg' 				METHOD 'GET' OF oApp
 			DEFINE ROUTE 'err.check' 	 URL 'crash'		CONTROLLER 'crash@testerror.prg' 		METHOD 'GET' OF oApp
 			
+		//	Test JWT	
+		
+			DEFINE ROUTE 'jwt'				URL 'jwt' 			CONTROLLER 'create@test_jwt.prg'	METHOD 'GET'	OF oApp
+			DEFINE ROUTE 'jwt.valid'		URL 'jwt/valid' 	CONTROLLER 'valid@test_jwt.prg'	METHOD 'POST'	OF oApp			
+			
 		//	Test Validator					
 
 			DEFINE ROUTE 'token.crea'		URL 'tk_crea' 		CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
@@ -79,15 +86,6 @@ function main()
 			DEFINE ROUTE 'z2'		URL 'get/name/(id)' 		CONTROLLER 'test1@route.prg'		OF oApp				
 			DEFINE ROUTE 'route1'	URL 'route1' 	CONTROLLER 'test1@route.prg'		OF oApp		
 			*/
-
-		//	Test Validator
-		
-			
-			//DEFINE ROUTE 'v1'		URL 'valid' 				VIEW  'validator/v1.view'			OF oApp					
-			DEFINE ROUTE 'valid.view'	URL 'valid' 				CONTROLLER  'view@validator.prg'	OF oApp					
-			
-			DEFINE ROUTE 'valid.test'	URL 'valid/test' 			CONTROLLER  'test@validator.prg'	METHOD 'POST' OF oApp					
-
 
 			
 		

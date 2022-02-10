@@ -47,7 +47,7 @@ METHOD Test( oController ) CLASS Validator
 	RUN VALIDATOR oV 
 	
 	if oV:lError
-		oController:View( 'error.view', oV:ErrorString() )				
+		oController:View( 'error.view', 200, oV:ErrorString() )				
 		retu 
 	endif			
 	

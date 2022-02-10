@@ -41,9 +41,9 @@ RETU NIL
 
 METHOD html( o ) CLASS Response
 
-	LOCAL cHtml
+	LOCAL cHtml := ''
 
-TEMPLATE PARAMS cHtml
+BLOCKS TO cHtml  
 
 <!DOCTYPE html>
 <html lang="en">
