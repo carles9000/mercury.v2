@@ -1,0 +1,29 @@
+<html>
+<body>
+	
+	<h2>Validate token</h2><hr>	
+
+	<form action="{{ MC_Route( 'token.crea' ) }}" method="GET">
+
+		<br>Type:  {{ pvalue(1) }} 
+		<br>Is Valid ?  {{ pvalue(2) }} 
+		
+		<br>
+		<br>Token
+		<br>
+		<textarea name="token" rows="4" cols="80" readonly>{{ pvalue(3) }}</textarea>
+		
+		<br>
+		<br>Data 
+		<br>
+		
+		<textarea name="token" rows="6" cols="80" readonly>{{ pvalue(4) }}</textarea>
+
+		<br><br><button type="submit">Back Token</button>
+		
+		<hr>
+		
+	</form>		
+
+</body>
+</html>

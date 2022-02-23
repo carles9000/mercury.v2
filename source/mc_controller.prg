@@ -90,6 +90,10 @@ METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hErr
 	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
 	DEFAULT lJson  				:= .F.
 	DEFAULT cMsg  					:= ''
+	
+	
+	::oMiddleware:cVia := cVia 
+	::oMiddleware:cType := cType 
 
 	
 	//	If exist some exception, don't autenticate

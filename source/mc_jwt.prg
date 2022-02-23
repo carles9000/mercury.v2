@@ -39,7 +39,7 @@ CLASS MC_JWT
 	METHOD GetVar( cVar, uDefault )
 	METHOD GetExp()						//	Exp = Expires 
 	
-	METHOD GetData()					INLINE ::aPayload
+	METHOD GetData()					
 	METHOD GetError()					INLINE ::cError
 
 ENDCLASS
@@ -98,9 +98,9 @@ METHOD Encode() CLASS MC_JWT
 		cSignature64 	:= hb_base64Encode( cSignature )
 		cSignature64 	:= hb_StrReplace( cSignature64, '+/=', '-_ ' )
 		
-	//	Make JWT
-	
-		cJWT := cHeader64 + '.' + cPayload64 + '.' + cSignature64	
+	//	Make JWT	
+		
+		cJWT := cHeader64 + '.' + cPayload64 + '.' + cSignature64
 		
 RETU cJWT
 
@@ -175,6 +175,24 @@ METHOD Decode( cJWT ) CLASS MC_JWT
 
 RETU .T.
 
+
+METHOD GetData( lClaims ) CLASS MC_JWT
+
+	local hData 
+
+	__defaultNIL( @lClaims, .f. )
+	
+	if lClaims 
+		retu ::aPayLoad
+	else 
+		hData := HB_HClone( ::aPayLoad )
+		HB_HDel( hData, 'exp' )
+		HB_HDel( hData, 'iss' )
+		HB_HDel( hData, 'lap' )
+		retu hData
+	endif 
+	
+retu nil 
 
 METHOD SetData( hData ) CLASS MC_JWT
 	LOCAL nI, h 

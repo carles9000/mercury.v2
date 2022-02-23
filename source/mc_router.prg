@@ -449,12 +449,11 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 
 	oHrb 	:= MC_Compile( @cCode, @cCodePP )
 
-	WHILE !hb_mutexLock( MH_Mutex() )
-	ENDDO	
+	mh_startmutex()	
 	
 	pSym := hb_hrbLoad( 2, oHrb )	//HB_HRB_BIND_OVERLOAD							
 	
-	hb_mutexUnlock( MH_Mutex() )	
+	mh_endmutex()	
 	
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
 	oClass := Eval( &( cClass ), oController )

@@ -27,6 +27,11 @@ METHOD Load( cFile ) CLASS MC_Viewer
 
 	__defaultNIL( @cFile, '' )
 	
+	if Valtype( cFile ) != 'C'
+		MC_MsgError( 'View', "View wrong" )	
+		retu nil
+	endif
+	
 	cProg 	:= cPath + cFile
 	
 	IF File ( cProg )

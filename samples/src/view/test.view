@@ -84,11 +84,11 @@
 					<li><a href={{ mc_Route( 'valid.view' ) }}	>Check Validator</a></li>
 				  </ul>
 				  
-				  <br><h5>Tokens</h5>			  
+				  <br><h5>Middleware</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'token.crea' ) }}	>Send Token</a></li>
-					<li><a href={{ mc_Route( 'token.del' ) }}	>Delete Token</a></li>
-					<li><a href={{ mc_Route( 'token.hello' ) }}	>Hello from Token</a></li>
+					<li><a href={{ mc_Route( 'token.creajwt' ) }}	>Authentication via cookie and JWT</a></li>
+					
+					
 				  </ul>	
 
 				  <br><h5>JWT (Json Web Token)</h5>			  

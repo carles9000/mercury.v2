@@ -2,54 +2,67 @@ CLASS TestAccess
 
 	METHOD New()	CONSTRUCTOR 
 	
-	METHOD CreaToken()
-	METHOD DelToken()
+	METHOD CreaJWT()
+	METHOD ValidJWT()
+	METHOD DelJWT()
 	
-	METHOD Hello_Access()
-
-
 ENDCLASS 
 
 METHOD New( oController ) CLASS TestAccess 
 	
-	//AUTENTICATE CONTROLLER oController 	
-	//AUTENTICATE CONTROLLER oController  ERROR CODE 401
-	//AUTENTICATE CONTROLLER oController  ERROR ROUTE 'xxx'
-	//AUTENTICATE CONTROLLER oController  ERROR ROUTE 'unathorized'
+	//AUTENTICATE CONTROLLER oController 	;
+		
+	
+	AUTENTICATE CONTROLLER oController ;
+		ERROR ROUTE 'unathorized' ;
+		EXCEPTION 'CreaJwt'				
+	
+	//	ERROR CODE 401		//	Default 401
+	
 
-	AUTENTICATE CONTROLLER oController VIA 'cookie' TYPE 'jwt' ;
-		ERROR ROUTE 'unathorized' EXCEPTION 'creatoken', 'deltoken'
+	//oController:oMiddleware:cargo 	:= 'pol'	+ str(hb_milliseconds())
 		
 RETU Self 
 
-METHOD CreaToken( oController ) CLASS TestAccess 
+METHOD CreaJWT( oController ) CLASS TestAccess 
 
+	local hData 	:= {=>}
+	local nTime	:= 10 	
+	local cJwt 	
 	
-	oController:oMiddleware:SendToken()
+	hData[ 'id' ] 		:= 1234
+	hData[ 'name' ] 	:= 'Carla Guttemberg'
+	hData[ 'date' ] 	:= date()
+	hData[ 'admin' ] 	:= .t.
 
-	?  'SendToken', time()
+	cJWT 	:= oController:oMiddleware:SetTokenJWT( hData, nTime )	
 	
+	
+	?? '<h3>Authentication JWT Created!</h3><hr>' 
+	? 'Time(sec) validate: ', nTime 
+	? 'Token', cJWT 
+	? '<hr>'
+	? '<a href="' + mc_Route( 'token.validjwt' ) + '">Valid Token JWT</a>'
+	? '<a href="' + mc_Route( 'token.deljwt' ) + '">Delete Token JWT</a>'
 
 RETU nil 
 
 
-METHOD DelToken( oController ) CLASS TestAccess 
+METHOD ValidJWT( oController ) CLASS TestAccess 
 
+	?? '<h3>Authentication JWT Validated!</h3><hr>'
+	
+	_w( oController:oMiddleware:GetData() )	
+	
+	? 'cargo', oController:oMiddleware:cargo
+
+RETU nil 
+
+
+METHOD DelJWT( oController ) CLASS TestAccess 
 	
 	oController:oMiddleware:DeleteToken()
 
-	?  'DeleteToken', time()
-	
+	?? '<h3>Authentication JWT Deleted!</h3><hr>'
 
-RETU nil 
-
-
-METHOD Hello_Access( oController ) CLASS TestAccess 
-
-
-	?? '<h2>Hello access...</h2><hr>'
-	
-	? 'Now: ' + Time()
-	
-
-RETU nil 
+retu nil 

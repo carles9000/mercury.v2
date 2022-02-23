@@ -1,0 +1,27 @@
+<html>
+<body>
+	<h2>Token Tests - You can try to modify token<hr></h2>
+	
+	
+	<form action="{{ MC_Route( 'token.check.jwt' ) }}" method="POST">
+
+		<textarea name="token" rows="4" cols="80" >{{ pvalue(1) }}</textarea>
+
+		<br><br><button type="submit">Validate JWT</button>
+		
+		<hr>
+		
+	</form>	
+
+	<form action="{{ MC_Route( 'token.check.token' ) }}" method="POST">
+
+		<textarea name="token" rows="4" cols="80" >{{ pvalue(2) }}</textarea>
+
+		<br><br><button type="submit">Validate Token</button>
+		
+		<hr>
+		
+	</form>		
+
+</body>
+</html>

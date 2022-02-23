@@ -55,11 +55,18 @@ function main()
 			DEFINE ROUTE 'jwt'				URL 'jwt' 			CONTROLLER 'create@test_jwt.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'jwt.valid'		URL 'jwt/valid' 	CONTROLLER 'valid@test_jwt.prg'	METHOD 'POST'	OF oApp			
 			
-		//	Test Validator					
-
-			DEFINE ROUTE 'token.crea'		URL 'tk_crea' 		CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.del'		URL 'tk_del' 		CONTROLLER  'deltoken@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.hello'		URL 'tk_hello' 		CONTROLLER  'hello_access@testaccess.prg'	OF oApp						
+		//	Test Middleware
+		
+			DEFINE ROUTE 'token.creajwt'		URL 'tk_creajwt' 		CONTROLLER  'creajwt@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.validjwt'		URL 'tk_validjwt' 		CONTROLLER  'validjwt@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.deljwt'		URL 'tk_deljwt' 		CONTROLLER  'deljwt@testaccess.prg'	OF oApp						
+/*
+			DEFINE ROUTE 'token.crea'			URL 'tk_crea' 			CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.del'			URL 'tk_del' 			CONTROLLER  'deltoken@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.hello'			URL 'tk_hello' 			CONTROLLER  'hello_access@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.check.jwt'		URL 'tk_check_jwt'		CONTROLLER  'check_jwt@testaccess.prg'	METHOD 'POST'	OF oApp									
+			DEFINE ROUTE 'token.check.token'	URL 'tk_check_token'	CONTROLLER  'check_token@testaccess.prg'	METHOD 'POST'	OF oApp						
+*/			
 			
 			
 		//	Restes

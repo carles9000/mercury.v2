@@ -198,6 +198,11 @@ RETU NIL
 
 METHOD SetCookie( cName, cValue, nSecs, cPath, cDomain, lHttps, lOnlyHttp ) CLASS MC_Response
 
+
+	MH_SetCookie( cName, cValue, nSecs, cPath, cDomain, lHttps, lOnlyHttp )
+	
+	/*
+	
 	LOCAL cCookie := ''
 
 		__defaultNIL( @cName		, '' )
@@ -225,9 +230,8 @@ METHOD SetCookie( cName, cValue, nSecs, cPath, cDomain, lHttps, lOnlyHttp ) CLAS
 
 		//AP_HeadersOutSet( "Set-Cookie", cCookie )
 		::SetHeader( "Set-Cookie", cCookie )
-		
-	
-	
+
+	*/
 
 RETU NIL
 

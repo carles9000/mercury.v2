@@ -158,13 +158,12 @@ FUNCTION MC_Execute( cCode, ... )
 
    IF ! Empty( oHrb )
    
-	  WHILE !hb_mutexLock( mh_Mutex() )
-	  ENDDO	  
+	  mh_startmutex()
 
 	  pSym := hb_hrbLoad( HB_HRB_BIND_OVERLOAD, oHrb )
 	  
 
-	  hb_mutexUnlock( mh_Mutex() )
+	  mh_endmutex()
 
       uRet := hb_hrbDo( pSym, ... )
 
