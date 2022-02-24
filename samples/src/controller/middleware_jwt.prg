@@ -1,4 +1,4 @@
-CLASS TestAccess 
+CLASS Middleware_JWT 
 
 	METHOD New()	CONSTRUCTOR 
 	
@@ -8,7 +8,7 @@ CLASS TestAccess
 	
 ENDCLASS 
 
-METHOD New( oController ) CLASS TestAccess 
+METHOD New( oController ) CLASS Middleware_JWT 
 	
 	//AUTENTICATE CONTROLLER oController 	;
 		
@@ -24,7 +24,7 @@ METHOD New( oController ) CLASS TestAccess
 		
 RETU Self 
 
-METHOD CreaJWT( oController ) CLASS TestAccess 
+METHOD CreaJWT( oController ) CLASS Middleware_JWT 
 
 	local hData 	:= {=>}
 	local nTime	:= 10 	
@@ -48,7 +48,7 @@ METHOD CreaJWT( oController ) CLASS TestAccess
 RETU nil 
 
 
-METHOD ValidJWT( oController ) CLASS TestAccess 
+METHOD ValidJWT( oController ) CLASS Middleware_JWT 
 
 	?? '<h3>Authentication JWT Validated!</h3><hr>'
 	
@@ -59,7 +59,7 @@ METHOD ValidJWT( oController ) CLASS TestAccess
 RETU nil 
 
 
-METHOD DelJWT( oController ) CLASS TestAccess 
+METHOD DelJWT( oController ) CLASS Middleware_JWT 
 	
 	oController:oMiddleware:DeleteToken()
 

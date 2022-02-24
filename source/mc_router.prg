@@ -457,7 +457,7 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
 	oClass := Eval( &( cClass ), oController )
-	
+
 
 	if valtype( oClass ) != 'O' 
 		retu nil
@@ -471,7 +471,7 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 		MC_MsgError( 'Router',"Method doesn't exist: " + hInfo[ 'method' ] + ', Controller: ' + hInfo[ 'file' ]  )
 
 	endif 
-	
+
  	
 	//ErrorBlock( hError )
 

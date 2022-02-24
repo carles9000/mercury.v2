@@ -101,7 +101,6 @@ METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, lJson, cMsg ) CLASS M
 			case ::cType =='token'	; ::lAutenticate := ::Validate( cToken )		
 		endcase 			
 
-
 	if !::lAutenticate 
 		::Unauthorized()
 	endif 
@@ -187,27 +186,32 @@ retu .t.
 
 //	--------------------------------------------------------------------------
 
-METHOD Validate( cToken ) CLASS MC_Middleware
+METHOD Validate( cRealToken ) CLASS MC_Middleware
 	
-	local cData, lValid, nLapsus	, lValidate 
+	local cData, lValid, nLapsus	, lValidate, cToken  
+	
 
 	//::hData := {=>}	
 	::hData := nil
 
-	if empty( cToken )
+	if empty( cRealToken )
 		RETU .F.		
 	endif	
 	
-	cToken 	:= hb_StrReplace( cToken, '-_',  '+/' )
+	cToken 	:= hb_StrReplace( cRealToken, '-_',  '+/' )
 	cToken := hb_base64Decode( cToken )
 	
 	cData := hb_blowfishDecrypt( hb_blowfishKey( ::cPsw ), cToken )		
-	
-	
+
+
 	lValidate := if( cData == nil, .f., .t. )
 
 	if lValidate
+	
 		::hData := hb_jsondecode( cData )
+		//	HEM DE FER RENEW !!!!
+		MH_SetCookie( ::cId_Cookie, cRealToken, ::nTime )
+
 	endif	
 
 retu lValidate
@@ -315,11 +319,13 @@ retu cToken
 
 //	--------------------------------------------------------------------------
 
-METHOD SetToken( uData ) CLASS MC_Middleware
+METHOD SetToken( uData, nTime ) CLASS MC_Middleware
 	
 	local cKey 		:= hb_blowfishKey( ::cPsw )		
 	local cToken 	
 
+	DEFAULT nTime := ::nTime
+	
 	if valtype( uData ) != 'H'
 		uData := { 'data' => uData }
 	endif 
@@ -329,6 +335,8 @@ METHOD SetToken( uData ) CLASS MC_Middleware
 	cToken 	:= hb_base64Encode( hb_blowfishEncrypt( cKey, uData )	)
 	cToken 	:= hb_StrReplace( cToken, '+/', '-_' )
 
+	::SendToken( cToken )
+	
 retu cToken  
 
 //	--------------------------------------------------------------------------

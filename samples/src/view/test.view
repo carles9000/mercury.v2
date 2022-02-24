@@ -87,6 +87,7 @@
 				  <br><h5>Middleware</h5>			  
 				  <ul>
 					<li><a href={{ mc_Route( 'token.creajwt' ) }}	>Authentication via cookie and JWT</a></li>
+					<li><a href={{ mc_Route( 'token.creatoken' ) }}	>Authentication via cookie and Token</a></li>
 					
 					
 				  </ul>	

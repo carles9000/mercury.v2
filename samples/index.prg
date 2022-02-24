@@ -57,9 +57,14 @@ function main()
 			
 		//	Test Middleware
 		
-			DEFINE ROUTE 'token.creajwt'		URL 'tk_creajwt' 		CONTROLLER  'creajwt@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.validjwt'		URL 'tk_validjwt' 		CONTROLLER  'validjwt@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.deljwt'		URL 'tk_deljwt' 		CONTROLLER  'deljwt@testaccess.prg'	OF oApp						
+			DEFINE ROUTE 'token.creajwt'		URL 'tk_creajwt' 		CONTROLLER  'creajwt@middleware_jwt.prg'	OF oApp						
+			DEFINE ROUTE 'token.validjwt'		URL 'tk_validjwt' 		CONTROLLER  'validjwt@middleware_jwt.prg'	OF oApp						
+			DEFINE ROUTE 'token.deljwt'		URL 'tk_deljwt' 		CONTROLLER  'deljwt@middleware_jwt.prg'	OF oApp						
+			
+			DEFINE ROUTE 'token.creatoken'		URL 'tk_creatoken' 		CONTROLLER  'creatoken@middleware_token.prg'		OF oApp						
+			DEFINE ROUTE 'token.validtoken'	URL 'tk_validtoken'		CONTROLLER  'validtoken@middleware_token.prg'	OF oApp						
+			DEFINE ROUTE 'token.deltoken'		URL 'tk_deltoken' 		CONTROLLER  'deltoken@middleware_token.prg'		OF oApp					
+			
 /*
 			DEFINE ROUTE 'token.crea'			URL 'tk_crea' 			CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
 			DEFINE ROUTE 'token.del'			URL 'tk_del' 			CONTROLLER  'deltoken@testaccess.prg'	OF oApp						
