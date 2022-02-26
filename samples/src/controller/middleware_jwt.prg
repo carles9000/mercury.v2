@@ -35,7 +35,8 @@ METHOD CreaJWT( oController ) CLASS Middleware_JWT
 	hData[ 'date' ] 	:= date()
 	hData[ 'admin' ] 	:= .t.
 
-	cJWT 	:= oController:oMiddleware:SetTokenJWT( hData, nTime )	
+	
+	CREATE JWT cJWT OF oController WITH hData TIME nTime 
 	
 	
 	?? '<h3>Authentication JWT Created!</h3><hr>' 
@@ -50,9 +51,13 @@ RETU nil
 
 METHOD ValidJWT( oController ) CLASS Middleware_JWT 
 
+	local hData 
+	
+	GET TOKEN DATA hData OF oController
+	
 	?? '<h3>Authentication JWT Validated!</h3><hr>'
 	
-	_w( oController:oMiddleware:GetData() )	
+	_w( hData  )	
 	
 	? 'cargo', oController:oMiddleware:cargo
 
@@ -60,8 +65,8 @@ RETU nil
 
 
 METHOD DelJWT( oController ) CLASS Middleware_JWT 
-	
-	oController:oMiddleware:DeleteToken()
+
+	CLOSE TOKEN OF oController
 
 	?? '<h3>Authentication JWT Deleted!</h3><hr>'
 

@@ -5,7 +5,8 @@ function main()
 	local oApp
 
 	
-	DEFINE APP oApp 
+	DEFINE APP oApp TITLE 'App Mercury 1.00'  ON INIT TestInit() ;
+		CREDENTIALS NAME 'CHARLES-2022' PSW 'Babe2022' TIME 1234
 
 	
 		DEFINE ROUTE 'root'	URL '/' 				VIEW 'test.view' 				OF oApp
@@ -113,4 +114,10 @@ function main()
 
 retu nil
 
-
+function TestInit()
+	
+	SET DATE TO ITALIAN 
+	
+	//_d( mc_getapp() )
+	
+retu 

@@ -16,12 +16,13 @@ METHOD New( oController ) CLASS Middleware_Token
 	AUTENTICATE CONTROLLER oController ;
 		VIA 'cookie' TYPE 'token' ;
 		ERROR ROUTE 'unathorized' ;
-		EXCEPTION 'CreaToken'				
+		EXCEPTION 'CreaToken'	;
+		TIME 5
 
 	//	ERROR CODE 401		//	Default 401
 	
 
-	//oController:oMiddleware:cargo 	:= 'pol'	+ str(hb_milliseconds())
+	oController:oMiddleware:cargo 	:= 'MY-CARGO'	+ str(hb_milliseconds())
 
 
 RETU Self 
@@ -37,7 +38,8 @@ METHOD CreaToken( oController ) CLASS Middleware_Token
 	hData[ 'date' ] 	:= date()
 	hData[ 'admin' ] 	:= .t.
 
-	cToken 	:= oController:oMiddleware:SetToken( hData )	
+	
+	CREATE TOKEN cToken OF oController WITH hData TIME nTime 
 	
 	
 	?? '<h3>Authentication Token Created!</h3><hr>' 
@@ -52,19 +54,22 @@ RETU nil
  
 METHOD ValidToken( oController ) CLASS Middleware_Token 
 
+	local hData
 
-	?? '<h3>Authentication Token Validated!</h3><hr>'
+	GET TOKEN DATA hData OF oController
 	
-	_w( oController:oMiddleware:GetData() )	
+	?? '<h3>Authentication Token Validated!</h3><hr>'	
 	
-	//? 'cargo', oController:oMiddleware:cargo
+	_w( hData )	
+	
+	? 'cargo', oController:oMiddleware:cargo
 
 RETU nil 
 
 
 METHOD DelToken( oController ) CLASS Middleware_Token 
-	
-	oController:oMiddleware:DeleteToken()
+
+	CLOSE TOKEN OF oController
 
 	?? '<h3>Authentication Token Deleted!</h3><hr>'
 

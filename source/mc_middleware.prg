@@ -39,7 +39,7 @@ CLASS MC_Middleware
 	
 	METHOD Unauthorized()
 	
-	METHOD SetTokenJWT( hData, nTime )
+	METHOD SetJWT( hData, nTime )
 	METHOD SetToken( uData )
 	
 	METHOD SendToken( cToken )
@@ -58,7 +58,7 @@ METHOD New( oRequest, oResponse ) CLASS MC_Middleware
 RETU Self
 
 
-METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, lJson, cMsg ) CLASS MC_Middleware
+METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, aParams, nTime ) CLASS MC_Middleware
 
 	local lValidate 	:= .F.
 	local cToken
@@ -69,15 +69,13 @@ METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, lJson, cMsg ) CLASS M
 	__defaultNIL( @cErrorRoute, '' )		
 	__defaultNIL( @nErrorCode, 401 )		
 	__defaultNIL( @hError, { 'success' => .f., 'error' => 'Error autentication' } )		
-	__defaultNIL( @lJson, .F. )		
-	__defaultNIL( @cMsg, '' )		
+	__defaultNIL( @nTime, 3600 )		
 	
 	::cVia 			:= lower( cVia )
 	::cType 		:= lower( cType )
 	::cErrorRoute	:= lower( cErrorRoute )
 	::nErrorCode	:= nErrorCode
-	::cMsg			:= cMsg
-	
+	::nTime			:= nTime	
 
 	::lAutenticate := .f.
 	
@@ -97,12 +95,19 @@ METHOD Exec( cVia, cType, cErrorRoute, nErrorCode, hError, lJson, cMsg ) CLASS M
 	//	Validate 	
 	
 		do case
-			case ::cType =='jwt'  	; ::lAutenticate := ::ValidateJWT( cToken )		
-			case ::cType =='token'	; ::lAutenticate := ::Validate( cToken )		
+			case ::cType =='jwt'  	; ::lAutenticate := ::ValidateJWT( @cToken )		
+			case ::cType =='token'	; ::lAutenticate := ::Validate( @cToken )		
 		endcase 			
 
 	if !::lAutenticate 
 		::Unauthorized()
+	else
+		do case
+			case ::cVia == 'cookie' 
+				mh_SetCookie( ::cId_Cookie, cToken, ::nTime )				
+				
+			case ::cVia == 'header' ; cToken := ::GetTokenHeader()
+		endcase			
 	endif 
 	
 retu ::lAutenticate			
@@ -171,16 +176,7 @@ METHOD ValidateJWT( cToken ) CLASS MC_Middleware
 
 	//	Si el Token es correcto, prepararemos el sistema para que lo refresque cuando genere una nueva salida
 
-		cToken 	:= oJWT:Refresh()		//	Vuelve a crear el Token teniendo en cuenta el lapsus
-		
-	//	Crearemos una cookie con el JWT, con el mismo periodo			
-	
-	
-	// ULL !!!! POTSER HO TENIM DE TREURE D AQUI-------------------------------------------------------
-	//	VALIDAATE ES VALIDATE
-	
-		//::oResponse:SetCookie( ::cId_Cookie, cToken, nLapsus )
-		MH_SetCookie( ::cId_Cookie, cToken, nLapsus )		
+		cToken 	:= oJWT:Refresh()		//	Vuelve a crear el Token teniendo en cuenta el lapsus		
 
 retu .t. 
 
@@ -209,8 +205,6 @@ METHOD Validate( cRealToken ) CLASS MC_Middleware
 	if lValidate
 	
 		::hData := hb_jsondecode( cData )
-		//	HEM DE FER RENEW !!!!
-		MH_SetCookie( ::cId_Cookie, cRealToken, ::nTime )
 
 	endif	
 
@@ -287,7 +281,7 @@ retu nil
 
 //	--------------------------------------------------------------------------
 
-METHOD SetTokenJWT( hData, nTime ) CLASS MC_Middleware
+METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
 
 	local oJWT 		:= MC_JWT():New( ::cPsw )	
 	local cToken 
@@ -312,7 +306,7 @@ METHOD SetTokenJWT( hData, nTime ) CLASS MC_Middleware
 	//	Preparamos la Cookie. NO se envia aun, hasta que haya un sendhtml()...
 
 
-		::SendToken( cToken )
+		::SendToken( cToken, nTime )
 		
 
 retu cToken  
@@ -335,7 +329,7 @@ METHOD SetToken( uData, nTime ) CLASS MC_Middleware
 	cToken 	:= hb_base64Encode( hb_blowfishEncrypt( cKey, uData )	)
 	cToken 	:= hb_StrReplace( cToken, '+/', '-_' )
 
-	::SendToken( cToken )
+	::SendToken( cToken, nTime )
 	
 retu cToken  
 
@@ -343,6 +337,7 @@ retu cToken
 
 METHOD SendToken( cToken , nTime, cVia, cType  ) CLASS MC_Middleware	
 	
+			
 	DEFAULT nTime 	:= ::nTime
 	DEFAULT cVia 	:= 'cookie'
 	DEFAULT cType	:= 'jwt'
@@ -366,7 +361,7 @@ METHOD SendToken( cToken , nTime, cVia, cType  ) CLASS MC_Middleware
 	do case
 		case ::cVia == 'cookie' 
 			
-			MH_SetCookie( ::cId_Cookie, cToken, ::nTime ) 
+			MH_SetCookie( ::cId_Cookie, cToken, nTime ) 
 
 		case ::cVia == 'header' 
 		

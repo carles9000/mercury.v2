@@ -51,13 +51,21 @@ ENDCLASS
 //AQUI POSAR EL MAP SENCER--------
 
 METHOD New( cAction, hParam  ) CLASS MC_Controller
+
+	local oApp 		:= mc_GetApp()
 		
 	::cAction 			:= cAction
 	::hParam 			:= hParam	
 	
 	::oRequest 		:= MC_Request():New( hParam )
 	::oResponse 		:= MC_Response():New()
+	
 	::oMiddleware 		:= MC_Middleware():New( ::oRequest , ::oResponse )
+		::oMiddleware:cVia 		:= oApp:cVia
+		::oMiddleware:cType 		:= oApp:cType
+		::oMiddleware:cId_Cookie	:= oApp:cName
+		::oMiddleware:cPsw		:= oApp:cPsw
+		::oMiddleware:nTime		:= oApp:nTime
 
 RETU Self
 
@@ -76,11 +84,10 @@ RETU ''
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hError, lJson, cMsg,  aParams ) CLASS MC_Controller
+METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hError, aParams, nTime ) CLASS MC_Controller
 
 	local nPos := 0
 	local lAccess
-
 
 	DEFAULT cVia					:= 'cookie'
 	DEFAULT cType					:= 'jwt'
@@ -88,8 +95,7 @@ METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hErr
 	DEFAULT nErrorCode 			:= 401
 	DEFAULT aExceptionMethods  	:= array()
 	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
-	DEFAULT lJson  				:= .F.
-	DEFAULT cMsg  					:= ''
+	DEFAULT nTime 					:= 3600
 	
 	
 	::oMiddleware:cVia := cVia 
@@ -106,67 +112,13 @@ METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hErr
 		
 	//	
 
-	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, nErrorCode,  hError, lJson, cMsg, aParams )
+	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, nErrorCode,  hError, aParams, nTime )
 
 
 	
 retu lAccess 
-	/*
-	
-	cType := lower( cType )
-	
-	//	Lo mismo 'jwt' que 'token', lo se, lo se...
-	
-	DO CASE
-		CASE cType == 'jwt'
-			retu ::lAutenticate := ::oMiddleware:Exec( SELF, cType, cRoute, hError, lJson, aParams )
-			
-		CASE cType == 'token'
-			retu ::lAutenticate := ::oMiddleware:Exec( SELF, cType, cRoute, hError, lJson, aParams )			
-	
-		CASE cType == 'rool'				
-		
-	ENDCASE
 
-RETU .F.
-	*/
 
-/*
-METHOD Middleware( cType, cRoute, aExceptionMethods, hError, lJson, aParams ) CLASS MC_Controller
-
-	local nPos := 0
-
-	DEFAULT cType					:= 'jwt'
-	DEFAULT cRoute 				:= ''
-	DEFAULT aExceptionMethods  	:= array()
-	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
-	DEFAULT lJson  				:= .F.
-	
-	//	If exist some exception, don't autenticate
-
-		nPos := Ascan( aExceptionMethods, {|x,y| lower(x) == lower( ::cAction )} )
-		
-		if nPos > 0
-			retu .t.
-		endif
-
-	cType := lower( cType )
-	
-	//	Lo mismo 'jwt' que 'token', lo se, lo se...
-	
-	DO CASE
-		CASE cType == 'jwt'
-			retu ::lAutenticate := ::oMiddleware:Exec( SELF, cType, cRoute, hError, lJson, aParams )
-			
-		CASE cType == 'token'
-			retu ::lAutenticate := ::oMiddleware:Exec( SELF, cType, cRoute, hError, lJson, aParams )			
-	
-		CASE cType == 'rool'				
-		
-	ENDCASE
-
-RETU .F.
-*/
 
 
 /*

@@ -1,20 +1,6 @@
+thread STATIC oApp
 
-
-FUNCTION MC_GetApp()
-	
-	thread STATIC oApp
-	
-	IF oApp == NIL
-//_d( 'MC_GETAPP() inicio amb threaid ' + str( hb_threadID()) )	
-		oApp := MC_App():New()
-		//oApp := TApp():New( cTitle, uInit , cPsw, cId_Cookie, nTime )
-else 
-//_d( 'MC_GETAPP() YA Esta inicialitzat !' + str( hb_threadID()) )	
-
-		
-	ENDIF
-
-RETU oApp
+FUNCTION MC_GetApp() ;  RETU oApp
 
 FUNCTION MC_Set( key, value )
 
@@ -60,12 +46,13 @@ CLASS MC_App
 	CLASSDATA cPathController						INIT '/src/controller/'
 	CLASSDATA cPathModel							INIT '/src/model/'   
    
-	DATA cTitle 
-	DATA bInit
-	
-	
-	
-
+	CLASSDATA cTitle 
+	CLASSDATA bInit			
+	CLASSDATA cVia
+	CLASSDATA cName
+	CLASSDATA cType
+	CLASSDATA cPsw 
+	CLASSDATA nTime
 
    METHOD New() 			CONSTRUCTOR
    METHOD Init()
@@ -73,17 +60,23 @@ CLASS MC_App
    
 ENDCLASS
 
-METHOD New( cTitle, bInit ) CLASS MC_App
+METHOD New( cTitle, bInit, cVia, cName, cType, cPsw, nTime ) CLASS MC_App
 
+	
+	
 	::cTitle 		:= IF( valtype( cTitle ) == 'C', cTitle, AP_GETENV( 'APP_TITLE' ) )
 	::bInit 		:= bInit
+	::cVia 			:= IF( valtype( cVia ) == 'C', lower(cVia), 'cookie' )
+	::cName			:= IF( valtype( cName ) == 'C', cName, 'MC_APP' )
+	::cType			:= IF( valtype( cType ) == 'C', cType, 'jwt' )
+	::cPsw			:= IF( valtype( cPsw ) == 'C', cPsw, 'McApP@2022!' )
+	::nTime			:= IF( valtype( nTime ) == 'N', nTime, 3600 )
 
-	
 	::oRouter 		:= MC_Router():New( self )
 	::oResponse	:= MC_Response():New()
-	//::oRequest		:= MC_Request():New( self )
-
 	
+
+	oApp := SELF
 
 RETU Self
 

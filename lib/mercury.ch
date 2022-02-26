@@ -27,9 +27,10 @@
 
 /*	-----------------------------------------------	*/
 
-#xcommand DEFINE APP <oApp> ;
+#xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;
+	[ CREDENTIALS  [ VIA <cVia> ] [ NAME <cName>] [ TYPE <cType> ] [ PSW <cPsw> ] [ <time:LAPSUS, TIME> <nTime> ] ] ;
 => ;
-	<oApp> := MC_App():New()
+	<oApp> := MC_App():New( [<cTitle>], [\{|| <uInit>\}], [cVia], [<cName>], [<cType>], [<cPsw>], [<nTime>] )
 	
 
 #xcommand INIT APP <oApp> => <oApp>:Init()	
@@ -55,27 +56,30 @@
 	
 #xcommand RUN VALIDATOR <oValidator> => <oValidator>:Run()
 
+
 //	Middleware	-------------------------------------------------------------------
 
-
-#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] [<err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
-	[ <exc: EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ] ;
+#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] ;
+    [ <err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
+	[ <exc:EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ];
+	[ TIME <nTime> ];
 => ;
-	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>] ) ;;
+	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>], [<nTime>] ) ;;	
 		return nil ;;
 	endif;;
 	
-//	Token JWT 	-------------------------------------------------------------------
-
-#xcommand CREATE JWT <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
-	<cToken> := <oController>:oMiddleware:SetAutenticationJWT( [<hTokenData>], [<nTime>] )
 #xcommand CREATE TOKEN <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
-	<cToken> := <oController>:oMiddleware:SetAutenticationToken( [<hTokenData>], [<nTime>] )
+	<cToken> := <oController>:oMiddleware:SetToken( [<hTokenData>], [<nTime>] )	
+	
+#xcommand CREATE JWT <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
+	<cToken> := <oController>:oMiddleware:SetJWT( [<hTokenData>], [<nTime>] )	
 
-#xcommand GET JWT <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetDataJWT()
-#xcommand GET TOKEN <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetDataToken()
-
-#xcommand CLOSE JWT OF <oController> => <oController>:oMiddleware:CloseJWT()
+#xcommand CLOSE JWT OF <oController> => <oController>:oMiddleware:DeleteToken()
+#xcommand CLOSE TOKEN OF <oController> => <oController>:oMiddleware:DeleteToken()
+	
+#xcommand GET JWT DATA <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetData()	
+#xcommand GET TOKEN DATA <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetData()	
+	
 
 
 #endif /* _MERCURY_CH */

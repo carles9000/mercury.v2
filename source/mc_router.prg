@@ -456,6 +456,8 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	mh_endmutex()	
 	
 	cClass := '{|oController| ' + hInfo[ 'class' ] + '():New( oController ) }' 								
+	
+
 	oClass := Eval( &( cClass ), oController )
 
 
