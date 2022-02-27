@@ -74,7 +74,7 @@ RETU NIL
 
 METHOD redirect( o ) CLASS Response
 
-	local cUrl := MC_App_Url() + MC_Route( 'hello' ) 		
+	local cUrl := MC_Route( 'hello' ) 		
 
 	//? cUrl 
 	o:oResponse:redirect( cUrl  )

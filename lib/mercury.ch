@@ -1,17 +1,17 @@
 #ifndef _MERCURY_CH
 #define _MERCURY_CH
 
-#define MERCURY_PATH 			'lib/mercury/'
-
+/*
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
                   If( <uVar1> == nil, <uVar1> := <uVal1>, ) ;;
                 [ If( <uVarN> == nil, <uVarN> := <uValN>, ); ]
-				
-
+*/				
+/*
 #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
 #xcommand FINALLY => ALWAYS
+*/
 
 #xcommand ? [<explist,...>] => AP_Echo( '<br>' [,<explist>] )
 #xcommand ?? [<explist,...>] => AP_Echo( [<explist>] )
@@ -23,9 +23,8 @@
 => #pragma __cstream | <b>+=mh_ReplaceBlocks( %s, "<$", "$>" [,<(v1)>][+","+<(vn)>] [, @<v1>][, @<vn>] )
 
 
-#define CRLF 			hb_OsNewLine()
 
-/*	-----------------------------------------------	*/
+//	App 		-------------------------------------------------------------------
 
 #xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;
 	[ CREDENTIALS  [ VIA <cVia> ] [ NAME <cName>] [ TYPE <cType> ] [ PSW <cPsw> ] [ <time:LAPSUS, TIME> <nTime> ] ] ;
@@ -42,6 +41,18 @@
 	<oApp>:oRouter:Map( <cId>, <cRule>, [<cController>], [<cView>], [<cMethod>] )
 
 #xcommand INIT APP <oApp> => <oApp>:Init()
+
+//	Request		-------------------------------------------------------------------	
+
+#xcommand DEFINE <cVar> POST <cParameter> [TYPE <cType>] [DEFAULT <cDefault>] OF <oController> ;
+=> ;
+	<cVar> := <oController>:oRequest:Post( <cParameter>, [<cDefault>], [<cType>] )
+	
+#xcommand DEFINE <cVar> GET  <cParameter> [TYPE <cType>] [DEFAULT <cDefault>] OF <oController> ;
+=> ;
+	<cVar> := <oController>:oRequest:Get( <cParameter>, [<cDefault>], [<cType>] )	
+
+
 
 //	Validator	-------------------------------------------------------------------	
 

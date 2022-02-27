@@ -118,6 +118,6 @@ function TestInit()
 	
 	SET DATE TO ITALIAN 
 	
-	//_d( mc_getapp() )
+	_d( mc_getapp():Version() )
 	
 retu 

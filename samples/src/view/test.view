@@ -65,9 +65,9 @@
 				  
 				  <br><h5>Request</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'req.1' ) }}>get/[id]</a></li>
-					<li><a href={{ mc_Route( 'req.2' ) }}>post/[id]</a></li>
-					<li><a href={{ mc_Route( 'req.3' ) }}>request/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.1' ) + '/756' }}>get/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.2' ) + '/756' }}>post/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.3' ) + '/756' }}>request/[id]</a></li>
 				  </ul>
 				  
 				  <br><h5>Response</h5>			  

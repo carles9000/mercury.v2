@@ -56,6 +56,8 @@ CLASS MC_App
 
    METHOD New() 			CONSTRUCTOR
    METHOD Init()
+   
+   METHOD Version()								INLINE MC_VERSION
  
    
 ENDCLASS
@@ -92,4 +94,19 @@ METHOD Init() CLASS MC_App
 	
 retu nil
 
+
+
+//	Init proc is executed one time, the same as exit proc 
+
+init procedure Mercury_Init()	
+
+	_d( 'Mercury_Init' )
+	
+retu 
+
+exit procedure Mercury_End()	
+
+	_d( 'Mercury_End' )
+
+retu
 
