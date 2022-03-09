@@ -6,7 +6,7 @@
 	si en un futuro	creamos un buffer per-salida...
 	----------------------------------------------------------- */	
 
-#define REDIRECTION  302
+
 
 CLASS MC_Response
 

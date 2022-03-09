@@ -352,6 +352,8 @@ function MC_ErrorView( hError )
 	local cTitle, aLines, cLine
 
 
+	
+
 	BLOCKS TO cHtml 
 
 		<style>
@@ -457,7 +459,9 @@ function MC_ErrorView( hError )
 				</tr>	
 	ENDTEXT 
 	
-	if !empty( hError[ 'view' ] )
+	
+	
+	if HB_HHasKey( hError, 'view' ) .and. !empty( hError[ 'view' ] )
 		cHtml += '<tr><td class="description">View</td><td class="value">' + hError[ 'view' ] + '</td><tr>'	
 	endif
 	

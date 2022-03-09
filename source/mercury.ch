@@ -1,6 +1,8 @@
 #ifndef _MERCURY_CH
 #define _MERCURY_CH
 
+#xcommand INIT MERCURY => MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
+
 /*
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;

@@ -79,6 +79,88 @@ METHOD Exec( cFile, nCode, ... ) CLASS MC_Viewer
 
 RETU ''
 
+FUNCTION mc_View( cFile )
+
+	//	Por defecto la carpeta de los views estaran en src/view
+
+	LOCAL cPath 		:= MC_GetApp():cApp_Path + MC_GetApp():cPathView
+	LOCAL cCode 		:= ''
+	LOCAL cFileView
+
+	__defaultNIL( @cFile, '' )
+	
+	cFileView 			:= cPath + cFile
+	
+	_d( cFileView )
+	
+	IF File ( cFileView )	
+		
+		cCode := hb_MemoRead( cFileView )		
+		
+	ELSE			
+		
+		MC_MsgError( 'View', 'File not found: ' + cFile )		
+	
+	ENDIF				
+
+RETU cCode
+
+FUNCTION mc_Css( cFile )
+
+	//	Por defecto la carpeta de los views estaran en src/css
+
+	LOCAL cPath 		:= MC_GetApp():cApp_Path + MC_GetApp():cPathCss
+	LOCAL cCode 		:= ''
+	LOCAL cFileCss
+
+	__defaultNIL( @cFile, '' )
+	
+	cFileCss 			:= cPath + cFile
+	
+	_d( cFileCss )
+	
+	IF File ( cFileCss )
+	
+		cCode := '<style>' 
+		cCode += hb_MemoRead( cFileCss )
+		cCode += '</style>'
+		
+	ELSE			
+		
+		MC_MsgError( 'Css', 'File not found: ' + cFile )		
+	
+	ENDIF				
+
+RETU cCode
+
+
+FUNCTION mc_JS( cFile )
+
+	//	Por defecto la carpeta de los views estaran en src/css
+
+	LOCAL cPath 		:= MC_GetApp():cApp_Path + MC_GetApp():cPathJS
+	LOCAL cCode 		:= ''
+	LOCAL cFileJS
+
+	__defaultNIL( @cFile, '' )
+	
+	cFileJS 			:= cPath + cFile
+	
+	_d( cFileJS )
+	
+	IF File ( cFileJS )
+	
+		cCode := '<script>' 
+		cCode += hb_MemoRead( cFileJS )
+		cCode += '</script>'
+		
+	ELSE			
+		
+		MC_MsgError( 'Jss', 'File not found: ' + cFile )		
+	
+	ENDIF				
+
+RETU cCode
 
 //	-----------------------------------------------------------	//
 //	Funcion para usar en los views...

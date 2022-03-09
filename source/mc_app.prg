@@ -2,6 +2,12 @@ thread STATIC oApp
 
 FUNCTION MC_GetApp() ;  RETU oApp
 
+FUNCTION MC_InitApp()
+
+	
+
+retu nil 
+
 FUNCTION MC_Set( key, value )
 
 	local cType := valtype( key  )
@@ -95,18 +101,6 @@ METHOD Init() CLASS MC_App
 retu nil
 
 
+ 
 
-//	Init proc is executed one time, the same as exit proc 
-
-init procedure Mercury_Init()	
-
-	_d( 'Mercury_Init' )
-	
-retu 
-
-exit procedure Mercury_End()	
-
-	_d( 'Mercury_End' )
-
-retu
 

@@ -286,6 +286,7 @@ METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
 	local oJWT 		:= MC_JWT():New( ::cPsw )	
 	local cToken 
 
+
 	__defaultNIL( @hData, {=>} )		
 	
 	DEFAULT nTime := ::nTime
@@ -293,9 +294,10 @@ METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
 	//	Crearemos un JWT. Default system 3600
 		
 		oJWT:SetTime( nTime )			
+	
 		
 	//	Añadimos datos al token...
-
+	
 		oJWT:SetData( hData )										
 		
 	//	Cremos Token
@@ -305,9 +307,7 @@ METHOD SetJWT( hData, nTime ) CLASS MC_Middleware
 	
 	//	Preparamos la Cookie. NO se envia aun, hasta que haya un sendhtml()...
 
-
-		::SendToken( cToken, nTime )
-		
+		::SendToken( cToken, nTime )				
 
 retu cToken  
 

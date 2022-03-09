@@ -106,6 +106,25 @@ retu hParam
 function MC_IsMail( cMail )
 retu len( hb_regex( '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', alltrim( cMail ), .F. ) ) == 1
 
+function MC_IsMobile()
+
+	local lMobile 	:= .f. 	
+	local cAgent 	:= AP_GetEnv( 'HTTP_USER_AGENT' )
+	local aTag		:= { "Mobile", "iPhone", "iPod", "BlackBerry", "Opera mini", "Sony", "MOT (Motorola)", "Nokia", "samsung" }
+	local nLen 	:= len( aTag )
+	local nI 
+	
+	for nI := 1 to len( aTag )	
+	
+		if aTag[nI] $ cAgent			
+			lMobile := .t.		
+			exit
+		endif				
+		
+	next 						
+
+retu lMobile
+
 
 //	-------------------------------------------------------	//
 //	From Fivewin.lib

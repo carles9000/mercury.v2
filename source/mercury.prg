@@ -5,7 +5,7 @@
 	Date: 			28/11/21
 -------------------------------------------------------------------------------- */
 
-#define MC_VERSION 			'Mercury V2.001'
+#define MC_VERSION 			'Mercury V2.1.001'
 
 
 //	-------------------------------------------------------------------------------- 
@@ -19,6 +19,7 @@
 
 //	-------------------------------------------------------------------------------- 
 
+static _hCredentials
 static _hBlock 
 
 #include "mc_app.prg"			//	App System
@@ -36,5 +37,11 @@ static _hBlock
 #include "mc_viewerror.prg"		//	Funcs. View Error
 #include "mc_prepro.prg"		//	Funcs. Prepro
 #include "mc_middleware.prg"	//	Funcs. Middleware
+#include "mc_auth.prg"			//	Funcs. Auth
 
 //	---------------------------------------------------------------------------- //
+
+function mc_InitMercury()
+	//_d( 'mc_InitMercury')
+	MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
+retu nil 

@@ -21,3 +21,6 @@
 
 
 #define CRLF 			hb_OsNewLine()
+
+#define CODE_REDIRECTION	302
+#define CODE_UNAUTHORIZED  	401
