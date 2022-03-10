@@ -54,31 +54,20 @@ CLASS MC_App
    
 	CLASSDATA cTitle 
 	CLASSDATA bInit			
-	CLASSDATA cVia
-	CLASSDATA cName
-	CLASSDATA cType
-	CLASSDATA cPsw 
-	CLASSDATA nTime
 
-   METHOD New() 			CONSTRUCTOR
-   METHOD Init()
+	METHOD New() 			CONSTRUCTOR
+	METHOD Init()
    
-   METHOD Version()								INLINE MC_VERSION
+	METHOD Version()								INLINE MC_VERSION
  
    
 ENDCLASS
 
-METHOD New( cTitle, bInit, cVia, cName, cType, cPsw, nTime ) CLASS MC_App
-
+METHOD New( cTitle, bInit ) CLASS MC_App
 	
 	
 	::cTitle 		:= IF( valtype( cTitle ) == 'C', cTitle, AP_GETENV( 'APP_TITLE' ) )
-	::bInit 		:= bInit
-	::cVia 			:= IF( valtype( cVia ) == 'C', lower(cVia), 'cookie' )
-	::cName			:= IF( valtype( cName ) == 'C', cName, 'MC_APP' )
-	::cType			:= IF( valtype( cType ) == 'C', cType, 'jwt' )
-	::cPsw			:= IF( valtype( cPsw ) == 'C', cPsw, 'McApP@2022!' )
-	::nTime			:= IF( valtype( nTime ) == 'N', nTime, 3600 )
+	::bInit 		:= bInit	
 
 	::oRouter 		:= MC_Router():New( self )
 	::oResponse	:= MC_Response():New()

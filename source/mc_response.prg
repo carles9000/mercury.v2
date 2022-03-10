@@ -257,64 +257,75 @@ return cExpire
 
 //	-------------------------------------------------------------------	//
 
-
-function MC_Response_Output( oController, cType, hData )
-
-	local n, nLen, aPair, cKey, uValue, cXml
+function MC_Response_Output( oController, cType, uValue )
+	
+	
+	cType := lower( cType )
 
 	do case
 	
+		case cType == 'html'
+		
+			oController:oResponse:SendHtml( uValue )		
+	
 		case cType == 'json'
 		
-			oController:oResponse:SendJson( hData )					
+			oController:oResponse:SendJson( uValue )					
 			
-		case cType == 'xml'
-		
-			nLen := len( hData )
+		case cType == 'xml'				
 			
-			cXml := '<xml>'			
-		
-			for n := 1 to nLen 
-			
-				aPair 	:= HB_HPairAt( hData, n )
-				cKey	:= aPair[1]
-				uValue 	:= aPair[2]
-				cType 	:= valtype( uValue )
-				
-				do case 
-				
-					case uValue == 'C'
-				
-						cXml += '<' + cKey + '>' + uValue + '</' + cKey + '>'
-						
-					case uValue == 'N'
-					
-						cXml += '<' + cKey + '>' + ltrim(str(uValue)) + '</' + cKey + '>'
-						
-					case uValue == 'D'
-					
-						cXml += '<' + cKey + '>' + DToC(uValue) + '</' + cKey + '>'
-						
-					case uValue == 'L'
-					
-						cXml += '<' + cKey + '>' + if(uValue, 'true', 'false') + '</' + cKey + '>'
-						
-					otherwise 
-					
-						cXml += '<' + cKey + '>' + mh_valtochar(uValue) + '</' + cKey + '>'
-						
-				endcase 											
-			
-			next 
-		
-			cXml += '</xml>'			
-			
-			oController:oResponse:SendXml( cXml )
+			oController:oResponse:SendXml( uValue )
 			
 		otherwise 
 		
-			oController:oResponse:SendJson( { 'success' => .f., 'error' => 'Format ' + cType + ', not yet' } )							
+			oController:oResponse:SendJson( { 'success' => .f., 'error' => 'Format ' + cType + ', not supported' } )							
 	endcase 				
 
 retu nil 
 
+//	-------------------------------------------------------------------	//
+
+function mc_Hash2Xml( hData )
+
+	local cXml := ''	
+	local nLen := len( hData )
+	local n, aPair, cKey, uValue, cType 
+		
+	cXml := '<xml>'			
+
+	for n := 1 to nLen 
+	
+		aPair 	:= HB_HPairAt( hData, n )
+		cKey	:= aPair[1]
+		uValue 	:= aPair[2]
+		cType 	:= valtype( uValue )
+		
+		do case 
+		
+			case uValue == 'C'
+		
+				cXml += '<' + cKey + '>' + uValue + '</' + cKey + '>'
+				
+			case uValue == 'N'
+			
+				cXml += '<' + cKey + '>' + ltrim(str(uValue)) + '</' + cKey + '>'
+				
+			case uValue == 'D'
+			
+				cXml += '<' + cKey + '>' + DToC(uValue) + '</' + cKey + '>'
+				
+			case uValue == 'L'
+			
+				cXml += '<' + cKey + '>' + if(uValue, 'true', 'false') + '</' + cKey + '>'
+				
+			otherwise 
+			
+				cXml += '<' + cKey + '>' + mh_valtochar(uValue) + '</' + cKey + '>'
+				
+		endcase 											
+	
+	next 
+
+	cXml += '</xml>'			
+
+retu cXml 

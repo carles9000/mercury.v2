@@ -9,15 +9,6 @@ CLASS MC_Controller
 	DATA oMiddleware
 	DATA hParam													INIT {=>}
 	
-	//	---------------------------
-	/*
-	DATA oView
-	DATA lAutenticate												INIT .T.
-	DATA aRouteSelect												INIT {=>}
-
-	
-	CLASSDATA oRoute					
-	*/
 	
 	METHOD New( cMethod, hPar ) 									CONSTRUCTOR
 	
@@ -29,27 +20,13 @@ CLASS MC_Controller
 	METHOD PostAll()												INLINE ::oRequest:PostAll()
 	METHOD GetAll()												INLINE ::oRequest:GetAll()
 	METHOD RequestAll()											INLINE ::oRequest:RequestAll()
-	
-	METHOD Middleware()
+
 	METHOD Auth()
 
-/*	
-	METHOD InitView()
-	
-	METHOD ListController()
-	METHOD ListRoute()												INLINE ::oRoute:ListRoute()
-	
-	
-	METHOD Middleware		( cType, cRoute, aExceptionMethods, hError  )					
 
-	METHOD Redirect		( cRoute )
-*/
-	
 ENDCLASS 
 
 //	-------------------------------------------------------------------------	//	
-
-//AQUI POSAR EL MAP SENCER--------
 
 METHOD New( cAction, hParam  ) CLASS MC_Controller
 
@@ -61,15 +38,7 @@ METHOD New( cAction, hParam  ) CLASS MC_Controller
 	::oRequest 		:= MC_Request():New( hParam )
 	::oResponse 		:= MC_Response():New()
 	
-	::oMiddleware 		:= MC_Middleware():New( ::oRequest , ::oResponse )
-	
-	/*
-		::oMiddleware:cVia 		:= oApp:cVia
-		::oMiddleware:cType 		:= oApp:cType
-		::oMiddleware:cName		:= oApp:cName
-		::oMiddleware:cPsw		:= oApp:cPsw
-		::oMiddleware:nTime		:= oApp:nTime
-	*/	
+	::oMiddleware 		:= MC_Middleware():New( ::oRequest , ::oResponse )	
 
 RETU Self
 
@@ -111,180 +80,9 @@ retu lAccess
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD Middleware( cVia, cType, cErrorRoute, nErrorCode, aExceptionMethods, hError, aParams, nTime ) CLASS MC_Controller
-
-	local nPos := 0
-	local lAccess
-
-	DEFAULT cVia					:= 'cookie'
-	DEFAULT cType					:= 'jwt'
-	DEFAULT cErrorRoute 			:= ''
-	DEFAULT nErrorCode 			:= 401
-	DEFAULT aExceptionMethods  	:= array()
-	DEFAULT hError  				:= { 'success' => .f., 'error' => 'Error autentication' }
-	DEFAULT nTime 					:= 3600
-	
-	
-	::oMiddleware:cVia := cVia 
-	::oMiddleware:cType := cType 
-
-	
-	//	If exist some exception, don't autenticate
-
-		nPos := Ascan( aExceptionMethods, {|x,y| lower(x) == lower( ::cAction )} )
-		
-		if nPos > 0
-			retu .t.
-		endif
-		
-	//	
-
-	lAccess := ::oMiddleware:Exec( cVia, cType, cErrorRoute, nErrorCode,  hError, aParams, nTime )
-
-
-	
-retu lAccess 
-
-
-
-
-/*
-METHOD InitView( ) CLASS MC_Controller
-
-	::oView 			:= TView():New()
-	::oView:oRoute		:= ::oRoute					//	Xec oApp():oRoute !!!!
-	::oView:oResponse	:= App():oResponse 			//::oResponse
-	
-RETU NIL
-*/
-/*
-METHOD View( cFile, ... ) CLASS MC_Controller
-
-	if _IsLog()
-		_l( '[MERCURY] Execute view: ' + cFile )
-	endif
-
-	::oView:Exec( cFile, ... )
-
-RETU ''
-*/
 
 /*	
 	Como mod harbour aun no podemos crear un redirect correctamente, simularemos de esta manera
 	https://stackoverflow.com/questions/503093/how-do-i-redirect-to-another-webpage/506004#506004
 */
 
-/*
-METHOD Redirect( cRoute ) CLASS MC_Controller
-
-	local oResponse 	:= App():oResponse
-	local cHtml := ''
-
-	cHtml += '<script>'
-	cHtml += "window.location.replace( '" + cRoute + "'); "
-	cHtml += '</script>'
-	
-	//	Ejecutamos el metodo SendHtml y si hay alguna cookie la enviare previamente...
-	
-		oResponse:SendHtml( cHtml )	
-
-RETU NIL
-*/
-
-/*
-METHOD ListController(o) CLASS MC_Controller
-
-	LOCAL oThis := SELF		
-	local cHtml := MC_Info_Style()
-
-	BLOCKS VIEW cHtml PARAMS oThis 
-	
-		<div class="mc-info">
-	
-			<h3>ListController</h3><hr>
-			
-			<table class="mc_info" border="1" cellpadding="3" >
-			
-				<thead>
-					<tr>
-						<th>Description</th>
-						<th>Parameter</th>
-						<th>Value</th>							
-					</tr>									
-				</thead>
-				
-				<tbody>
-				
-					<tr>
-						<td>ClassName Name</td>
-						<td>ClassName()</td>
-						<td><$ oThis:ClassName() $></td>
-					</tr>
-					
-					<tr>
-						<td>Action</td>
-						<td>cAction</td>
-						<td><$ oThis:cAction $></td>
-					</tr>				
-				
-					<tr>
-						<td>Parameters</td>
-						<td>hParam</td>
-						<td><$ ValToChar( oThis:hParam ) $></td>
-					</tr>				
-					
-					<tr>
-						<td>Method</td>
-						<td>oRequest:method()</td>
-						<td><$ oThis:oRequest:method() $></td>
-					</tr>
-					
-					<tr>
-						<td>Query</td>
-						<td>oRequest:GetQuery()</td>
-						<td><$ oThis:oRequest:getquery() $></td>
-					</tr>				
-
-					<tr>
-						<td>Parameters GET</td>
-						<td>oRequest:CountGet()</td>
-						<td><$ ValToChar(oThis:oRequest:countget()) $></td>
-					</tr>	
-
-					<tr>
-						<td>Value GET</td>
-						<td>oRequest:Get( cKey )</td>
-						<td><$ ValToChar(oThis:oRequest:getall()) $></td>
-					</tr>
-
-					<tr>
-						<td>Parameters POST</td>
-						<td>oRequest:CountPost()</td>
-						<td><$ ValToChar(oThis:oRequest:countpost()) $></td>
-					</tr>	
-
-					<tr>
-						<td>Value POST</td>
-						<td>oRequest:Post( cKey )</td>
-						<td><$ ValToChar(oThis:oRequest:postall()) $></td>
-					</tr>	
-
-					<tr>
-						<td>Route Select</td>
-						<td>aRouteSelect</td>
-						<td><$ ValToChar(oThis:aRouteSelect) $></td>
-					</tr>								
-				
-				</tbody>		
-				
-			</table>
-		
-		</div>
-		
-	ENDTEXT 
-	
-	? cHtml 	
-
-RETU ''
-*/
-//	-----------------------------------------------------------	//

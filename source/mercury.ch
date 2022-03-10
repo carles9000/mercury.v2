@@ -28,10 +28,9 @@
 
 //	App 		-------------------------------------------------------------------
 
-#xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;
-	[ CREDENTIALS  [ VIA <cVia> ] [ NAME <cName>] [ TYPE <cType> ] [ PSW <cPsw> ] [ <time:LAPSUS, TIME> <nTime> ] ] ;
+#xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;	
 => ;
-	<oApp> := MC_App():New( [<cTitle>], [\{|| <uInit>\}], [cVia], [<cName>], [<cType>], [<cPsw>], [<nTime>] )
+	<oApp> := MC_App():New( [<cTitle>], [\{|| <uInit>\}] )
 	
 
 #xcommand INIT APP <oApp> => <oApp>:Init()	
@@ -71,17 +70,6 @@
 
 
 //	Middleware	-------------------------------------------------------------------
-/*
-#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] ;
-    [ <err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
-	[ <exc:EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ];
-	[ TIME <nTime> ];
-=> ;
-	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>], [<nTime>] ) ;;	
-		return nil ;;
-	endif;;
-	
-*/
 
 /*
 DEFINE CREDENTIALS ;
@@ -89,7 +77,7 @@ DEFINE CREDENTIALS ;
 		TYPE 'jwt' ;				//	Default: jwt. Values: jwt, token, func
 		NAME 'CHARLES-2022';		// 
 		PSW 'Babe@2022';			// 
-		TIME 3600 ;				//	Default: 3600 sec.
+		TIME 3600 ;					//	Default: 3600 sec.
 		OUT 'html' ;				//	Default: html. Values: html, json 
 		REDIRECT 'unathorized' ;	//	Output via html if OUT == 'html'
 		JSON { 'error' => .t. } ; 	//	Output via json if OUT == 'json'
@@ -125,5 +113,12 @@ DEFINE CREDENTIALS ;
 #xcommand GET TOKEN DATA <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetData()	
 	
 
+//	Output Response --------------------------------------------------------------
+
+#xcommand OUTPUT <cType> WITH <uValue> OF <oController> ;
+=>;
+	MC_Response_Output( <oController>, <cType>, <uValue> )
+	
+	
 
 #endif /* _MERCURY_CH */

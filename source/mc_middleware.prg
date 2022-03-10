@@ -76,8 +76,19 @@ METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bVa
 	DEFAULT cOut			:= 'html'
 	DEFAULT cUrl_Redirect	:= ''
 	DEFAULT hError			:= { 'error' => .t., 'msg' => 'unauthorized.' }
+	
+	
 
 	::cVia 					:=	lower(cVia)
+	
+	if 	cVia == 'bearer token' .or. ;
+		cVia == 'basic auth' .or. ;
+		cVia == 'api key'
+	
+		cType := 'func'
+		
+	endif			
+	
 	::cType 				:=  cType 		
 	::cName 				:=  cName 		
 	::cPsw 					:=  cPsw 			
@@ -379,6 +390,7 @@ METHOD SetToken( uData, nTime ) CLASS MC_Middleware
 	
 	cToken 	:= hb_base64Encode( hb_blowfishEncrypt( cKey, uData )	)
 	cToken 	:= hb_StrReplace( cToken, '+/', '-_' )
+
 
 	::SendToken( cToken, nTime )
 	

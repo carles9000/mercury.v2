@@ -19,7 +19,7 @@
 
 //	-------------------------------------------------------------------------------- 
 
-static _hCredentials
+
 static _hBlock 
 
 #include "mc_app.prg"			//	App System
