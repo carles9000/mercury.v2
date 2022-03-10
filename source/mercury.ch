@@ -71,7 +71,7 @@
 
 
 //	Middleware	-------------------------------------------------------------------
-
+/*
 #xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] ;
     [ <err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
 	[ <exc:EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ];
@@ -80,6 +80,37 @@
 	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>], [<nTime>] ) ;;	
 		return nil ;;
 	endif;;
+	
+*/
+
+/*
+DEFINE CREDENTIALS ;
+		VIA 'cookie' ;				//	Default: cookie. Values: cookie, query, bearer token, basic auth, api key
+		TYPE 'jwt' ;				//	Default: jwt. Values: jwt, token, func
+		NAME 'CHARLES-2022';		// 
+		PSW 'Babe@2022';			// 
+		TIME 3600 ;				//	Default: 3600 sec.
+		OUT 'html' ;				//	Default: html. Values: html, json 
+		REDIRECT 'unathorized' ;	//	Output via html if OUT == 'html'
+		JSON { 'error' => .t. } ; 	//	Output via json if OUT == 'json'
+		VALID bFunc				//	Eval bFunc if TYPE == 'func'. Send token to bfunc to validate it								
+		
+*/	
+
+#xcommand DEFINE CREDENTIALS ;
+	[VIA <cVia>] [TYPE <cType>] [NAME <cName>] [PSW <cPsw>] [TIME <nTime>] ;
+	[OUT <cOut>] [REDIRECT <cRoute>] [JSON <hError>] [VALID <bValid>] ;
+=> ;
+	MC_Middleware():Define( [<cVia>], [<cType>], [<cName>], [<cPsw>], [<nTime>], [<cOut>], [<cRoute>], [<hError>], [<bValid>] )
+
+	
+#xcommand AUTENTICATE CONTROLLER <oController> [ <exc:EXCEPTION> <cMethod,...> ] ;
+=> ;
+	if ! <oController>:Auth( [\{<cMethod>\}] ) ;;	
+		return nil ;;
+	endif;;	
+	
+	
 	
 #xcommand CREATE TOKEN <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
 	<cToken> := <oController>:oMiddleware:SetToken( [<hTokenData>], [<nTime>] )	

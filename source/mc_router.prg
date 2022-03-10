@@ -429,7 +429,9 @@ retu nil
 
 METHOD ExecuteCode( hInfo, cCode, hParam ) CLASS MC_Router
 
-	mh_Execute( cCode, hParam  )
+	local oController	:= MC_Controller():New( '', hParam )
+
+	mh_Execute( cCode, oController, hParam  )
 
 retu nil 
 

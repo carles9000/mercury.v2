@@ -31,6 +31,7 @@ CLASS MC_Controller
 	METHOD RequestAll()											INLINE ::oRequest:RequestAll()
 	
 	METHOD Middleware()
+	METHOD Auth()
 
 /*	
 	METHOD InitView()
@@ -61,11 +62,14 @@ METHOD New( cAction, hParam  ) CLASS MC_Controller
 	::oResponse 		:= MC_Response():New()
 	
 	::oMiddleware 		:= MC_Middleware():New( ::oRequest , ::oResponse )
+	
+	/*
 		::oMiddleware:cVia 		:= oApp:cVia
 		::oMiddleware:cType 		:= oApp:cType
-		::oMiddleware:cId_Cookie	:= oApp:cName
+		::oMiddleware:cName		:= oApp:cName
 		::oMiddleware:cPsw		:= oApp:cPsw
 		::oMiddleware:nTime		:= oApp:nTime
+	*/	
 
 RETU Self
 
@@ -81,6 +85,29 @@ METHOD View( cFile, nCode, ... ) CLASS MC_Controller
 	oView:Exec( cFile, nCode, ... )
 
 RETU ''
+
+//	-------------------------------------------------------------------------	//	
+
+METHOD Auth( aExceptionMethods ) CLASS MC_Controller
+
+	local nPos := 0
+	local lAccess
+
+	DEFAULT aExceptionMethods := {=>}
+	
+	//	If exist some exception, don't autenticate
+
+		nPos := Ascan( aExceptionMethods, {|x,y| lower(x) == lower( ::cAction )} )
+		
+		if nPos > 0
+			retu .t.
+		endif
+		
+	//	
+
+	lAccess := ::oMiddleware:Valid()
+	
+retu lAccess 
 
 //	-------------------------------------------------------------------------	//	
 
