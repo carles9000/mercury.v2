@@ -1,0 +1,12 @@
+<html>
+<body>
+	<h2>Test1 screen...<hr></h2>
+	
+	<form action="{{ mc_Route( 'menu' ) }}" method="GET">
+
+		<br><br><button type="submit">Menu Screen</button>
+		
+	</form>		
+
+</body>
+</html>

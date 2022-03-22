@@ -1,0 +1,15 @@
+<html>
+<body>
+
+	<h2>About app...<hr></h2>
+	
+	<br>App: {{  mc_GetApp():cTitle }}
+	
+	<br>Version App: {{ App_Version() }}
+		
+	<br>Version modHarbour: {{ mh_ModVersion() }}
+	
+	<br>Version Mercury: {{ mc_Version() }}
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<html>
+<body>
+
+	<h2>{{ mc_GetApp():cTitle }}<hr></h2>
+	
+	<a href="{{ mc_Route( 'menu' ) }}">Menu</a>
+	
+	<br><br>
+	
+	<a href="{{ mc_Route( 'app.login' ) }}">Login</a>
+		
+</body>
+</html>

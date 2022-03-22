@@ -51,59 +51,72 @@
 				  
 				  <br><h5>View</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'hello' ) }}>View</a></li>
-					<li><a href={{ mc_Route( 'view' ) }} >Friendly url -> view/[id]</a></li>
-					<li><a href={{ mc_Route( 'bootstrap' ) }} >Bootstrap example</a></li>
+					<li><a href={{ mc_Route( 'hello' ) }} target="_blank">View</a></li>
+					<li><a href={{ mc_Route( 'view' ) }} target="_blank">Friendly url -> view/[id]</a></li>
+					<li><a href={{ mc_Route( 'bootstrap' ) }} target="_blank">Bootstrap example</a></li>
 				  </ul>	
 
 				  <br><h5>Router</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'rt.1' ) }}>user 				</a></li>
-					<li><a href={{ mc_Route( 'rt.2' ) + '/123' }}>user/name/(id) 	</a></li>								
-					<li><a href={{ mc_Route( 'rt.3' ) + '/123/info/salary' }}>user/(id)/info/[what]</a></li>
+					<li><a href={{ mc_Route( 'rt.1' ) }} target="_blank">user 				</a></li>
+					<li><a href={{ mc_Route( 'rt.2' ) + '/123' }} target="_blank">user/name/(id) 	</a></li>								
+					<li><a href={{ mc_Route( 'rt.3' ) + '/123/info/salary' }} target="_blank">user/(id)/info/[what]</a></li>
 				  </ul>				  
 				  
 				  <br><h5>Request</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'req.1' ) + '/756' }}>get/[id]</a></li>
-					<li><a href={{ mc_Route( 'req.2' ) + '/756' }}>post/[id]</a></li>
-					<li><a href={{ mc_Route( 'req.3' ) + '/756' }}>request/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.1' ) + '/756' }} target="_blank">get/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.2' ) + '/756' }} target="_blank">post/[id]</a></li>
+					<li><a href={{ mc_Route( 'req.3' ) + '/756' }} target="_blank">request/[id]</a></li>
 				  </ul>
 				  
 				  <br><h5>Response</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'response.json' ) }}	>response/json 	</a></li>
-					<li><a href={{ mc_Route( 'response.xml' ) }}	>response/xml 	</a></li>
-					<li><a href={{ mc_Route( 'response.html' ) }}	>response/html	</a></li>
-					<li><a href={{ mc_Route( 'response.401' ) }}	>response/401	</a></li>
-					<li><a href={{ mc_Route( 'response.redirect')}}	>response/redirect</a></li>						
+					<li><a href={{ mc_Route( 'response.json' ) }}	target="_blank">response/json 	</a></li>
+					<li><a href={{ mc_Route( 'response.xml' ) }}	target="_blank">response/xml 	</a></li>
+					<li><a href={{ mc_Route( 'response.html' ) }}	target="_blank">response/html	</a></li>
+					<li><a href={{ mc_Route( 'response.401' ) }}	target="_blank">response/401	</a></li>
+					<li><a href={{ mc_Route( 'response.redirect')}}	target="_blank">response/redirect</a></li>						
 				  </ul>	
 				  
 				  <br><h5>Validator</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'valid.view' ) }}	>Check Validator</a></li>
+					<li><a href={{ mc_Route( 'valid.view' ) }}	target="_blank">Check Validator</a></li>
 				  </ul>
+				  
+				  <br><h5>Controller</h5>			  
+				  <ul>
+					<li><a href={{ mc_Route( 'jwt_cookiejwt' ) }}	target="_blank">Create Authentication for next examples</a>&nbsp;(Check cookie inspector)</li>
+					<li><a href={{ mc_Route( 'myfunc' ) }}	target="_blank">Type Function</a>&nbsp;(You need create authentication)</li>
+					<li><a href={{ mc_Route( 'myclass' ) }}	target="_blank">Type Class</a>&nbsp;(You need create authentication)</li>				
+				  </ul>					  
 				  
 				  <br><h5>Middleware</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'token.creajwt' ) }}	>Authentication via cookie and JWT</a></li>
-					<li><a href={{ mc_Route( 'token.creatoken' ) }}	>Authentication via cookie and Token</a></li>
+					<li><a href={{ mc_Route( 'token.createjwt' ) }}	target="_blank">Authentication via cookie and JWT</a></li>
+					<li><a href={{ mc_Route( 'token.createtoken')}}	target="_blank">Authentication via cookie and Token</a></li>
+					<li><i>ENDPOINT</i> {{ MC_App_Url() + 'tk_validatebearer' }} - Authentication "Bearer token". Check it with postman. token = 1234</li>
+					<li><i>ENDPOINT</i> {{ MC_App_Url() + 'tk_validatebasic' }} - Authentication "Basic auth". Check it with postman. user = 'charly' , psw = 1234</li>
+					<li><i>ENDPOINT</i> {{ MC_App_Url() + 'tk_validateapi' }} - Authentication "Api key". Check it with postman. key = 'charly' , value = 1234</li>
 					
 					
 				  </ul>	
 
 				  <br><h5>JWT (Json Web Token)</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'jwt' ) }}	>Create JWT</a></li>
-					<li><a href={{ mc_Route( 'jwt.valid' ) }}>Valid JWT</a></li>					
+					<li><a href={{ mc_Route( 'jwt' ) }}	target="_blank">Create JWT</a></li>
+					<li><a href={{ mc_Route( 'jwt_cookiejwt' ) }}	target="_blank">Create Cookie JWT</a></li>
+					<li><a href={{ mc_Route( 'jwt_cookietoken' ) }}	target="_blank">Create Cookie Token</a></li>					
+					<li><a href={{ mc_Route( 'jwt_delcookie' ) }} target="_blank">Delete Cookie JWT</a></li>
+					<li><a href={{ mc_Route( 'jwt.valid' ) }} target="_blank">Valid JWT</a></li>					
 				  </ul>						  
 					
 
 				  <br><h5>Error</h5>			  
 				  <ul>
-					<li><a href={{ mc_Route( 'err.nomethod' ) }}	>No method 	</a></li>
-					<li><a href={{ mc_Route( 'err.nofile' ) }}		>No file	</a></li>
-					<li><a href={{ mc_Route( 'err.check' ) }}		>Check...	</a></li>
+					<li><a href={{ mc_Route( 'err.nomethod' ) }}	target="_blank">No method 	</a></li>
+					<li><a href={{ mc_Route( 'err.nofile' ) }}		target="_blank">No file	</a></li>
+					<li><a href={{ mc_Route( 'err.check' ) }}		target="_blank">Check...	</a></li>
 				  </ul>				  
 
 				

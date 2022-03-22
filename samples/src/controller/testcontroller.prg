@@ -28,13 +28,13 @@ METHOD Get( oController ) CLASS TestController
 	
 	? '<hr>' 	
 	
-	DEFINE cId GET 'id' DEFAULT 'my_default_parameter' TYPE 'N' OF oController 
+	DEFINE cId GET 'id' DEFAULT '100' TYPE 'N' OF oController 
 	
-	? "DEFINE id GET 'id' DEFAULT 'my_default_parameter' TYPE 'N' => ", cId, 'Type: ' + valtype( cId )
+	? "DEFINE id GET 'id' DEFAULT '100' TYPE 'N' => ", cId, 'Type: ' + valtype( cId )
 	
-	DEFINE cId GET 'id' DEFAULT 'my_default_parameter' OF oController 
+	DEFINE cId GET 'id' DEFAULT '100' OF oController 
 	
-	? "DEFINE id GET 'id' DEFAULT 'my_default_parameter' => ", cId, 'Type: ' + valtype( cId )
+	? "DEFINE id GET 'id' DEFAULT '100' => ", cId, 'Type: ' + valtype( cId )
 
 RETU nil 
 

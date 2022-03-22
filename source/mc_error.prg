@@ -78,7 +78,7 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 
 		
 	//		
- _d( oError )   
+ 
 		
 	hError[ 'description' ]	:= oError:description		
 	
@@ -118,7 +118,7 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 			endif 	  
 
 		next 
-_d( aTagLine )
+
 
 	//	Buscamos si oError nos da Linea
 	
@@ -178,7 +178,7 @@ _d( aTagLine )
 		hError[ 'args' ] := oError:Args
     endif	
 	
-_d( 'A1', hError[ 'line' ] )	
+
 	
 
     n = 2 
@@ -250,14 +250,12 @@ _d( 'A1', hError[ 'line' ] )
 		
 	endcase 
 	
-_d( 'A3', hError[ 'line' ] )	
 
 	//	--------------------------------------
 
-_d( oError:subsystem )	
-_d( oError:filename )	
+
 		if oError:subsystem  == 'COMPILER'
-_d( oError:operation )	
+
 
 			if substr( oError:operation, 1, 4 ) == 'line' 
 
@@ -272,12 +270,12 @@ _d( oError:operation )
 		
 		endif 	
 
-_d( 'A4-->', hError[ 'line' ] )		
+	
 	//	--------------------------------------
 	
 		if valtype( oError:subcode ) == 'N'
 		
-_d( oError:subcode )	
+
 			lSearch 	:= .f. 
 			lSearchTag	:= .f. 
 			cSearch 	:= ''
@@ -296,20 +294,20 @@ _d( oError:subcode )
 				case oError:subcode == 100 	//	MC Error. Doesn't exist method
 						hError[ 'line' ] := 0								
 			endcase
-_d( 'SEARCH', lSearch, cSearch )			
+		
 			if lSearch 
 			
 				aLines 	:= hb_ATokens( hError[ 'code' ], chr(10) )
 				for n = 1 to Len( aLines )
 
 					cLine := upper(aLines[ n ] )
-_d( cLine )				
+				
 					
 					if At( cSearch, cLine ) > 0
 			
 						hError[ 'line' ] := n 
 						lSearchTag := .t. 
-_d( 'FOUND', hError[ 'line' ])						
+					
 						exit
 					endif 
 
@@ -319,7 +317,7 @@ _d( 'FOUND', hError[ 'line' ])
 		
 		
 		endif 
-_d( 'A5-->', hError[ 'line' ] )	
+	
 	//	--------------------------------------
 	
 	if ! lSearchTag 
@@ -336,7 +334,7 @@ _d( 'A5-->', hError[ 'line' ] )
 
 	endif
 				
-_d( 'A6-->', hError[ 'line' ] )	
+
 
 	//MC_ViewError( hError )
 	

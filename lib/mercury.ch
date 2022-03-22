@@ -1,6 +1,8 @@
 #ifndef _MERCURY_CH
 #define _MERCURY_CH
 
+#xcommand INIT MERCURY => MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
+
 /*
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
@@ -26,10 +28,9 @@
 
 //	App 		-------------------------------------------------------------------
 
-#xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;
-	[ CREDENTIALS  [ VIA <cVia> ] [ NAME <cName>] [ TYPE <cType> ] [ PSW <cPsw> ] [ <time:LAPSUS, TIME> <nTime> ] ] ;
+#xcommand DEFINE APP <oApp> [ TITLE <cTitle> ] [ ON INIT <uInit> ] ;	
 => ;
-	<oApp> := MC_App():New( [<cTitle>], [\{|| <uInit>\}], [cVia], [<cName>], [<cType>], [<cPsw>], [<nTime>] )
+	<oApp> := MC_App():New( [<cTitle>], [\{|| <uInit>\}] )
 	
 
 #xcommand INIT APP <oApp> => <oApp>:Init()	
@@ -70,14 +71,34 @@
 
 //	Middleware	-------------------------------------------------------------------
 
-#xcommand AUTENTICATE CONTROLLER <oController> [ VIA <cVia> ] [ TYPE <cType> ] ;
-    [ <err:ERROR ROUTE, DEFAULT> <cErrorRoute> [WITH <aParams>] ] ;
-	[ <exc:EXCEPTION> <cMethod,...> ] [ <json:ERROR JSON> [<hError>]] [ <code:ERROR CODE> [<nErrorCode>] ];
-	[ TIME <nTime> ];
+/*
+DEFINE CREDENTIALS ;
+		VIA 'cookie' ;				//	Default: cookie. Values: cookie, query, bearer token, basic auth, api key
+		TYPE 'jwt' ;				//	Default: jwt. Values: jwt, token, func
+		NAME 'CHARLES-2022';		// 
+		PSW 'Babe@2022';			// 
+		TIME 3600 ;					//	Default: 3600 sec.
+		OUT 'html' ;				//	Default: html. Values: html, json 
+		REDIRECT 'unathorized' ;	//	Output via html if OUT == 'html'
+		JSON { 'error' => .t. } ; 	//	Output via json if OUT == 'json'
+		VALID bFunc				//	Eval bFunc if TYPE == 'func'. Send token to bfunc to validate it								
+		
+*/	
+
+#xcommand DEFINE CREDENTIALS ;
+	[VIA <cVia>] [TYPE <cType>] [NAME <cName>] [PSW <cPsw>] [TIME <nTime>] ;
+	[OUT <cOut>] [REDIRECT <cRoute>] [JSON <hError>] [VALID <bValid>] ;
 => ;
-	if ! <oController>:Middleware( [<cVia>], [<cType>], [<cErrorRoute>], [<nErrorCode>], [\{<cMethod>\}], [<hError>], [<aParams>], [<nTime>] ) ;;	
+	MC_Middleware():Define( [<cVia>], [<cType>], [<cName>], [<cPsw>], [<nTime>], [<cOut>], [<cRoute>], [<hError>], [<bValid>] )
+
+	
+#xcommand AUTENTICATE CONTROLLER <oController> [ <exc:EXCEPTION> <cMethod,...> ] ;
+=> ;
+	if ! <oController>:Auth( [\{<cMethod>\}] ) ;;	
 		return nil ;;
-	endif;;
+	endif;;	
+	
+	
 	
 #xcommand CREATE TOKEN <cToken> OF <oController> [ WITH <hTokenData> ] [ TIME <nTime> ] => ;
 	<cToken> := <oController>:oMiddleware:SetToken( [<hTokenData>], [<nTime>] )	
@@ -92,5 +113,12 @@
 #xcommand GET TOKEN DATA <hData> OF <oController> => <hData> := <oController>:oMiddleware:GetData()	
 	
 
+//	Output Response --------------------------------------------------------------
+
+#xcommand OUTPUT <cType> WITH <uValue> OF <oController> ;
+=>;
+	MC_Response_Output( <oController>, <cType>, <uValue> )
+	
+	
 
 #endif /* _MERCURY_CH */
