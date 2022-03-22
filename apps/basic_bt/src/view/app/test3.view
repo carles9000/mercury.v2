@@ -1,0 +1,53 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Test3 screen...' ) }}
+
+<div class="content">
+
+	<div class="col text-center">
+
+	<?prg
+		LOCAL hResponse := PValue(1)
+		LOCAL nI, h
+		LOCAL cHtml 	:= ''
+
+		IF ValType( hResponse ) == 'H'		
+		
+			cHtml += '<h3>Token Data</h3>'
+			cHtml += '<table class="table table-dark">'
+			
+			FOR nI := 1 TO len( hResponse )
+			
+				h := HB_HPairAt( hResponse, nI )
+				
+				cHtml += '<tr><td>' + h[1] + '</td><td>' + mh_valtochar(h[2]) + '</td></tr>'
+	
+			NEXT
+			
+			cHtml += '</table>'							
+			
+		ENDIF
+	
+		
+		RETU cHtml
+	?>	
+	
+	<form action="{{ mc_Route( 'menu' ) }}" method="GET">		
+		
+	  <br>	
+	  <div class="row">
+		<div class="col text-center">
+		  <button class="btn btn-primary" type="submit">Menu Screen</button>
+		</div>
+	  </div>		
+		
+	</form>
+
+</div>	
+
+</body>
+</html>

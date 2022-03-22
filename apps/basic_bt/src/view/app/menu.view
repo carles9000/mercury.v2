@@ -1,0 +1,26 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Menu Screen...' ) }}
+
+<div class="content">
+
+	<br>
+	
+	<ul>
+		<a href="{{ mc_Route( 'test1' ) }}">Test 1</a>
+		<br>
+		<a href="{{ mc_Route( 'test2' ) }}">Test 2</a>
+		<br>
+		<a href="{{ mc_Route( 'test3' ) }}">Test 3</a>
+		<br><br>
+		<a href="{{ mc_Route( 'about' ) }}">About</a>	
+	</ul>
+	
+</div>
+	
+</body>
+</html>

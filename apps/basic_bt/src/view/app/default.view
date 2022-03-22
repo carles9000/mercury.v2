@@ -1,0 +1,28 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+<body>
+
+	<nav class="navbar navbar-dark bg-dark">
+	  <a class="navbar-brand" href="#">{{ mc_GetApp():cTitle }}</a>
+	</nav>				
+	
+	<div class="content">
+
+		<div class="col p-3">
+			<a href="{{ mc_Route( 'menu' ) }}">Menu</a>
+			
+			<br>
+			
+			<a href="{{ mc_Route( 'app.login' ) }}">Login</a>
+			
+			<br><br><br>
+			<a href="{{ mc_Route( 'splash' ) }}">Splash...</a>
+			
+		</div>
+		
+	</div>	
+
+</body>
+</html>

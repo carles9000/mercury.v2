@@ -1,0 +1,7 @@
+<nav class="navbar navbar-dark bg-dark">
+
+  <a class="navbar-brand" href="#">{{ pValue(1) }}</a>
+  
+  <a href="{{ mc_Route( 'app.logout' ) }}">Logout</a>  
+
+</nav>				

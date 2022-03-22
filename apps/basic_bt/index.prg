@@ -1,6 +1,6 @@
 //	------------------------------------------------------------------------------
-//	Title......: Basic
-//	Description: Basic app example
+//	Title......: Basic_Bt
+//	Description: Basic app example with bootstrap
 //	Date.......: 09/07/2019
 //	Last Upd...: 22/03/2022
 //	------------------------------------------------------------------------------
@@ -15,17 +15,18 @@ FUNCTION Main()
 
 	local oApp
 	
-		DEFINE APP oApp TITLE 'My First App'
+		DEFINE APP oApp TITLE 'My First App (Bootstrap)'
 		
 		//	Credentials / Security 	
 		
-			DEFINE CREDENTIALS NAME 'APP-2022' PSW 'MCbaSIc@2022' REDIRECT 'app.login'	
+			DEFINE CREDENTIALS NAME 'APP-2022' PSW 'MCbaSIcBT@2022' REDIRECT 'app.login'	
 
 		//	Config Routes	------------------------------------------------------------------
 		
 		//	Basic pages...		
 			
-			DEFINE ROUTE 'default' 		URL '/' 				CONTROLLER 'default@myapp.prg' 	METHOD 'GET' OF oApp			
+			DEFINE ROUTE 'splash' 			URL '/' 					VIEW 'splash.view' 				METHOD 'GET' OF oApp			
+			DEFINE ROUTE 'default' 		URL 'default' 				CONTROLLER 'default@myapp.prg' METHOD 'GET' OF oApp			
 			
 		//	Auth				
 			

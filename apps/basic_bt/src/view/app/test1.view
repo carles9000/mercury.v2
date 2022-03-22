@@ -1,0 +1,23 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Test1 screen...' ) }}
+
+<div class="content">
+	
+	<form action="{{ mc_Route( 'menu' ) }}" method="GET">		
+		
+	  <br>	
+	  <div class="row">
+		<div class="col text-center">
+		  <button class="btn btn-primary" type="submit">Menu Screen</button>
+		</div>
+	  </div>		
+		
+	</form>		
+
+</body>
+</html>

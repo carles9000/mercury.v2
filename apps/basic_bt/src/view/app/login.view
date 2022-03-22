@@ -1,0 +1,83 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Login' ) }}
+<body>
+
+
+	<?prg
+		LOCAL hResponse := PValue(1)
+		LOCAL nI
+		LOCAL cHtml 	:= ''
+		
+		IF ValType( hResponse ) == 'H'
+		
+			IF ! hResponse[ 'success' ]
+			
+				DO CASE 
+				
+					CASE hResponse[ 'type' ] == 'validator'
+					
+						aMsgError := hResponse[ 'error' ]
+			
+						FOR nI := 1 TO len( aMsgError )
+						
+							h := aMsgError[nI] 
+								
+							cHtml += '<br>Field: ' + h[ 'field' ] + ', ' + h[ 'msg' ] + ', value ==> ' + h[ 'value' ]					
+				
+						NEXT	
+
+					CASE hResponse[ 'type' ] == 'user'	
+
+						cHtml +=  hResponse[ 'error' ]
+						
+				ENDCASE
+
+				RETU cHtml
+				
+			ENDIF						
+			
+		ENDIF
+		
+		RETU ''	
+	?>			
+	
+	<div class="content">
+	
+		<div class="d-flex row justify-content-center p-5" align="center">
+		
+			<form action="{{ mc_Route( 'app.auth' ) }}" method="POST">
+				<div class="mb-3">
+					<label for="user">User Name</label><br>
+					<input class="form-control" name="user" id="user" value="dummy">
+				</div>
+				
+				<br>
+					
+				<div class="mb-3">
+					<label for="psw">Password</label><br>
+					<input class="form-control" type="password" name="psw" id="psw" placeholder="Password is 1234"> 
+				</div>
+				
+				<br><br>
+				
+				<input class="btn btn-primary" type="submit" value="Login">	
+				
+			</form>
+			
+		</div>				
+		
+		<br><br>
+		
+		<div class="justify-content-center" align="center">
+		  <a href="{{ mc_Route( 'default' ) }}">Default screen...</a>	
+		</div>		
+	
+	</div>
+	
+</body>
+</html>

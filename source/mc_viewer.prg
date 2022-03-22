@@ -79,7 +79,7 @@ METHOD Exec( cFile, nCode, ... ) CLASS MC_Viewer
 
 RETU ''
 
-FUNCTION mc_View( cFile )
+FUNCTION mc_View( cFile, ... )
 
 	//	Por defecto la carpeta de los views estaran en src/view
 
@@ -95,7 +95,9 @@ FUNCTION mc_View( cFile )
 	
 	IF File ( cFileView )	
 		
-		cCode := hb_MemoRead( cFileView )		
+		cCode := hb_MemoRead( cFileView )	
+
+		mc_ReplaceBlocks( @cCode, "{{", "}}", nil, ... )				
 		
 	ELSE			
 		
