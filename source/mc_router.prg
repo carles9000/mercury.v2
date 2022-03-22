@@ -609,7 +609,10 @@ FUNCTION  MC_Route( cRoute, aParams )
 		
 		next 	
 	
-		cUrl := Substr( cUrl, 2 )		//	Eliminamos primera /
+		while substr( cUrl, 1, 1 ) == '/'
+			cUrl := Substr( cUrl, 2 )		//	Eliminamos primera /
+		end		
+		
 		cUrl := oApp:cApp_Url + cUrl 
 
 retu cUrl  
