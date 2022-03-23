@@ -265,7 +265,7 @@ METHOD Formatter( cKey, cFormat ) CLASS MC_Validator
 		
 
 		DO CASE
-			CASE cFunc == 'upper'
+			CASE cFunc == 'upper' .or. cFunc == 'toupper'
 			
 				IF valtype( uValue ) == 'C' .and. !empty( uValue )			
 					::hData[ cKey ] := Upper( uValue )						

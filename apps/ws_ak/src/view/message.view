@@ -1,0 +1,23 @@
+<h2>Welcome to ws example (API Key)</h2><hr>
+
+<p>Esto es un ejemplo de Webservice usando API Key. En orden a poder usarlo, puedes testearlo 
+usando postman.</p>
+
+<p>Deberemos especificar el nombre la key y especificar el valor. key:mercury y value:1234 </p>
+
+<p>El servicio disponible es wsstate, pasandole de parametros state con posibles valores 
+(NY,IL,WI,DE,NE,...). El servicio delvolverá todos los usarios de un estado</p>
+
+<p>El formato de datos es json</p>
+
+<hr>
+
+<p>This is an example of WebService using API Key. In order to be able to use it, you can test it
+using postman.</p>
+
+<p>We must specify the name of the key and specify the value. key:mercury and value:1234</p>
+
+<p>The available service is wsstate, passing it state parameters with possible values
+(NY,IL,WI,DE,NE,...). The return service will return all users of a state</p>
+
+<p>The data format is json</p>

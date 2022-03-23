@@ -20,6 +20,7 @@ CLASS MC_Middleware
 	CLASSDATA cPsw 			          					INIT 'mcV2!2022@'				
 	CLASSDATA nTime			     						INIT 3600
 	CLASSDATA bValid 
+	CLASSDATA lDbg										INIT .T. 
 	
 	DATA lAuth											INIT .F. 
 	DATA hData											INIT {=>}
@@ -31,7 +32,7 @@ CLASS MC_Middleware
 	DATA oResponse				
 	
 	METHOD New( cAction, hPar ) 						CONSTRUCTOR
-	METHOD Define( cVia, cType, cName, cPsw, cOut, cUrl_Redirect, hError, bValid ) CONSTRUCTOR 
+	METHOD Define( cVia, cType, cName, cPsw, cOut, cUrl_Redirect, hError, bValid, lDbg ) CONSTRUCTOR 
 	
 	
 	
@@ -65,7 +66,7 @@ RETU Self
 
 //	--------------------------------------------------------------------------
 
-METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bValid ) CLASS MC_Middleware
+METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bValid, lDbg ) CLASS MC_Middleware
 
 	
 	DEFAULT cVia 			:= 'cookie'
@@ -76,14 +77,14 @@ METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bVa
 	DEFAULT cOut			:= 'html'
 	DEFAULT cUrl_Redirect	:= ''
 	DEFAULT hError			:= { 'error' => .t., 'msg' => 'unauthorized.' }
+	DEFAULT lDbg			:= .f.
 	
 	
 
 	::cVia 					:=	lower(cVia)
 	
-	if 	cVia == 'bearer token' .or. ;
-		cVia == 'basic auth' .or. ;
-		cVia == 'api key'
+	if 	::cVia == 'basic auth' .or. ;
+		::cVia == 'api key'
 	
 		cType := 'func'
 		
@@ -97,6 +98,7 @@ METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bVa
 	::cUrl_Redirect		:=  cUrl_Redirect
 	::hError				:=  hError		
 	::bValid 				:=  bValid
+	::lDbg	 				:=  lDbg
 
 
 RETU Self 
@@ -106,15 +108,15 @@ RETU Self
 
 METHOD Dbg() CLASS MC_Middleware 
 
-	_d( ::cVia 			)
-	_d( ::cType 		)
-	_d( ::cName 		)
-	_d( ::cPsw 			)
-	_d( ::nTime 		)
-	_d( ::cOut			)
-	_d( ::cUrl_Redirect)
-	_d( ::hError		)
-    _d( ::bValid 		)
+	_d( 'Via: ' + ::cVia 		)
+	_d( 'Type: ' + ::cType 		)
+	_d( 'Name: ' + ::cName 		)
+	_d( 'Psw: ' + ::cPsw 		)
+	_d( 'Time: ' + mh_valtochar( ::nTime )		)
+	_d( 'Out: ' + ::cOut			)
+	_d( 'Redirect: '  + ::cUrl_Redirect)
+	_d( 'Error', ::hError		)
+    _d( 'Dbg: ', mh_valtochar( ::lDbg )		)
 
 RETU NIL 
 
@@ -132,6 +134,8 @@ METHOD Valid() CLASS MC_Middleware
 	::hData := {=>}
 	::lAuth := .f.
 
+	if( ::lDbg, _d( 'VALID() -----------------' ), nil )
+	if( ::lDbg, _d( ::dbg() ), nil )
 
 	do case
 		case ::cVia == 'cookie' 
@@ -156,11 +160,9 @@ METHOD Valid() CLASS MC_Middleware
 
 	endcase
 	
-//_d( 'VALID' )
-//	::Dbg()
-//_d( 'VIA ' + ::cVia  )
-//_d( 'TYPE ' + ::cType  )
-//_d( 'TOKEN', cToken  )
+	if( ::lDbg, _d( 'VIA ' + ::cVia  ), nil )
+	if( ::lDbg, _d( 'TYPE ' + ::cType  ), nil )
+	if( ::lDbg, _d( 'TOKEN ' + cToken ), nil )
 	
 	if !empty( cToken )
 	
@@ -206,11 +208,10 @@ METHOD Valid() CLASS MC_Middleware
 		endcase  
 	
 	endif 
-
-
-	if !::lAuth 
 	
-		
+	if( ::lDbg, _d( 'AUTH', ::lAuth  ), nil )
+
+	if !::lAuth 	
 		
 		do case
 			case ::cVia == 'cookie' 	

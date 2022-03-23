@@ -1,0 +1,23 @@
+<h2>Welcome to ws example (Basic Auth)</h2><hr>
+
+<p>Esto es un ejemplo de Webservice usando Basic Auth. En orden a poder usarlo, puedes testearlo 
+usando postman.</p>
+
+<p>Simplemente usa protocolo Basic Auth para poderlo utilizar. Credenciales son user:mercury y psw:1234 </p>
+
+<p>El servicio disponible es wsstate, pasandole de parametros state con posibles valores 
+(NY,IL,WI,DE,NE,...). El servicio delvolverá todos los usarios de un estado</p>
+
+<p>El formato de datos es json</p>
+
+<hr>
+
+<p>This is an example of WebService using Bearer token. In order to be able to use it, you can test it
+using postman.</p>
+
+<p>It simply uses Basic Auth protocol to be able to use it. Credentials are user:mercury and psw:1234</p>
+
+<p>The available service is wsstate, passing it state parameters with possible values
+(NY,IL,WI,DE,NE,...). The return service will return all users of a state</p>
+
+<p>The data format is json</p>

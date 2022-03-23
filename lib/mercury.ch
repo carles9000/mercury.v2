@@ -3,6 +3,11 @@
 
 #xcommand INIT MERCURY => MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
 
+#xcommand DEFAULT <uVar1> TO <uVal1> ;
+               [, <uVarN> TO <uValN> ] => ;
+                  If( <uVar1> == nil, <uVar1> := <uVal1>, ) ;;
+                [ If( <uVarN> == nil, <uVarN> := <uValN>, ); ]
+
 /*
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
@@ -87,9 +92,9 @@ DEFINE CREDENTIALS ;
 
 #xcommand DEFINE CREDENTIALS ;
 	[VIA <cVia>] [TYPE <cType>] [NAME <cName>] [PSW <cPsw>] [TIME <nTime>] ;
-	[OUT <cOut>] [REDIRECT <cRoute>] [JSON <hError>] [VALID <bValid>] ;
+	[OUT <cOut>] [REDIRECT <cRoute>] [JSON <hError>] [VALID <bValid>] [ <lDbg: DBG> ];
 => ;
-	MC_Middleware():Define( [<cVia>], [<cType>], [<cName>], [<cPsw>], [<nTime>], [<cOut>], [<cRoute>], [<hError>], [<bValid>] )
+	MC_Middleware():Define( [<cVia>], [<cType>], [<cName>], [<cPsw>], [<nTime>], [<cOut>], [<cRoute>], [<hError>], [<bValid>], [<.lDbg.>] )
 
 	
 #xcommand AUTENTICATE CONTROLLER <oController> [ <exc:EXCEPTION> <cMethod,...> ] ;
