@@ -1,8 +1,15 @@
 <style>
 
 	.nav_top {
-		z-index:9000;
+		/*z-index:9000;*/
+		z-index:5;
 	}
+	
+@media (min-width: 768px) {
+    .dropdown-menu {
+        width: 300px !important;  /* change the number to whatever that you need */
+    }
+}
 	
 </style>
 
@@ -19,28 +26,31 @@
       <li class="nav-item active">
         <a class="nav-link" href="{{ mc_Route( 'o.show' ) }}">Order</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Tables
+           Tables
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ mc_Route( 't.cliente' ) }}">Customer</a>
-          <a class="dropdown-item" href="{{ mc_Route( 't.cliente2' ) }}">Cliente 2</a>
-          <a class="dropdown-item" href="#">Another action</a>
-		 
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a class="dropdown-item" href="{{ mc_Route( 't.cliente' ) }}">Test SlickGrid</a>
+         <a class="dropdown-item" href="{{ mc_Route( 't.cliente2' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Client</a>
+
         </div>
       </li>
+	  <div class="dropdown-divider"></div>
       <li class="nav-item">
-        <a class="nav-link" href="{{ mc_Route( 'app.logout' ) }}">Logout</a>
+        <a class="nav-link" onclick="MsgYesNo( 'Exit ?', 'System', null, Logout )"  href="#" ><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
       </li>	  
     </ul>
   </div> 
 
 </nav>				
+
+
+<script>
+
+	function Logout() {
+	
+		window.location.href = '{{ mc_Route( "splash" ) }}'						
+	}
+
+</script>

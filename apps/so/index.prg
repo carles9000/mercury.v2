@@ -73,8 +73,8 @@ function MyConfig()
 	
 retu 	
 
-function AppUrlImg(); 	retu MC_App_Url() + '/images/'
-function AppUrlLib(); 	retu MC_App_Url() + '/lib/'
-function AppUrlCss(); 	retu MC_App_Url() + '/css/'
+function AppUrlImg(); 	retu MC_App_Url() + 'images/'
+function AppUrlLib(); 	retu MC_App_Url() + 'lib/'
+function AppUrlCss(); 	retu MC_App_Url() + 'css/'
 function AppPathData() ;	retu if(  empty( AP_GetEnv( "PATH_DATA" ) ), MC_App_Path() + '/data/', AP_GetEnv( "PATH_DATA" ) )
 function App_Version() ; 	retu APP_VERSION 

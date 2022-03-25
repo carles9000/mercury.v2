@@ -51,7 +51,7 @@
 	<div class="logo" align="center">		
 
 		<a href="{{ mc_Route( 'default' ) }}">
-			<img src="images/car_mini.png" align=”middle”>
+			<img src="{{ AppUrlImg() + 'logo.png' }}" align=”middle”>
 		
 			<p style="font-size: 38px;">{{ mc_GetApp():cTitle }}</p>
 		</a>
