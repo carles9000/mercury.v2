@@ -1,0 +1,16 @@
+<html>
+
+{{ mc_View( 'app/header.view' ) }}
+
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Main' ) }}
+
+<div class="content main red ">
+
+	
+</div>
+
+</body>
+</html>

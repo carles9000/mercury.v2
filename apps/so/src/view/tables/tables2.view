@@ -1,0 +1,203 @@
+{{ mc_View( 'app/header_tables.view' ) }}
+
+<style>
+
+	.container_table { 
+	
+		border: 5px solid yellow;
+		bottom: 10px;
+		top: 10px;
+		position: absolute;
+		right: 10px;
+		left: 10px;
+		
+	}
+	
+	.myid {
+		background-color: lightgray;
+		font-weight: bold;
+		text-align: center;
+		border-left: 2px solid gray !important;
+		border-right: 2px solid gray !important;
+		border-top: 0px solid !important;
+		border-bottom: 0px solid !important;
+	}
+
+	.mybtnbar {
+		border-radius:0px;
+	}
+
+	.myrow {
+		background-color: #ff000040;
+		color: black;
+		border: 2px solid #e91e1e;
+		font-weight: bold;
+	}	
+
+
+
+</style>
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Tables' ) }}
+
+<div class="content main green">
+
+	<div class="container_table">			
+	
+	<?prg
+
+		local aRows := pValue(1)
+		local o, oCol, oBrw
+
+		DEFINE FORM o
+
+			HTML o INLINE '<h3>Client</h3><hr>'
+			
+		INIT FORM o  
+
+			DIV o ID 'bar' CLASS 'btn-group'
+				BUTTON LABEL ' New' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Add()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Edit' 	ICON '<i class="far fa-edit"></i>' 				ACTION 'Edit()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Delete' 	ICON '<i class="far fa-trash-alt"></i>' 		ACTION 'Delete()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Save' 	ICON '<i class="far fa-save"></i>' 				ACTION 'Save()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+			ENDDIV o 		
+
+			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
+				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> My ABM...' POSTEDIT 'TestPostEdit' ;
+				ROWSTYLE 'MyRowStyle' ;
+				TOOLBAR "bar" ;
+				SEARCH TOOLS EXPORT PRINT  ;
+				ONCHANGE 'MyChange' OF o	
+
+				//oBrw:lDark = .t.
+				//oBrw:lStripped := .t.
+				oBrw:lVirtualScroll := .t.
+				oBrw:cLocale := 'es-ES'				
+			
+
+				ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				ADD oCol TO oBrw ID 'nom_cli' 	HEADER 'Name' 		EDIT SORT
+				ADD oCol TO oBrw ID 'cont_nom' 	HEADER 'Nom'		EDIT 
+				ADD oCol TO oBrw ID 'cont_ape' 	HEADER 'Apellido' 	EDIT HIDDEN
+				ADD oCol TO oBrw ID 'cont_tit'	HEADER 'Titul' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'cont_carg'	HEADER 'Cargo' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'vent_last'	HEADER 'Ult. Venta' EDIT HIDDEN
+				ADD oCol TO oBrw ID 'dir1'		HEADER 'Dir 1' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'dir2'		HEADER 'Dir 2' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'ciudad'	HEADER 'Ciudad' 	EDIT HIDDEN
+				ADD oCol TO oBrw ID 'region'	HEADER 'Region' 	EDIT HIDDEN
+				ADD oCol TO oBrw ID 'pais'		HEADER 'Pais' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'cp'		HEADER 'CP' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'mail'		HEADER 'Mail' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'url'		HEADER 'Url' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'tlf'		HEADER 'Tlf' 		EDIT HIDDEN
+				ADD oCol TO oBrw ID 'fax'		HEADER 'Fax' 		EDIT HIDDEN
+				
+			INIT BROWSE oBrw DATA aRows	
+			
+			HTML o 
+		
+			<script>
+
+				var oBrw = new TWebBrowse( 'ringo' )		
+				
+				function Edit() 	{ oBrw.Edit() }	
+				function Add()  	{ oBrw.AddRow() }	
+				function Delete() 	{ oBrw.DeleteRow() }
+				function Reset() 	{ oBrw.Reset() }	
+
+				function Save() 	{ 
+				
+					var cUrl 	= '{{ mc_route('t.cliente2_save') }}'
+					var oParam = new Object()
+						oParam[ 'action' ] = 'save'
+						oParam[ 'data'   ] = oBrw.GetDataChanges()
+				
+					
+					console.log( 'SAVE', oParam )
+					console.log( 'SAVE2',cUrl )
+					MsgServer( cUrl, oParam, Post_Save )				
+				}				
+				
+				function Post_Save( dat ) {
+				
+					console.log( 'POSTSAVE', dat )
+					
+					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
+					
+					if ( dat.error.length > 0 ) {
+				
+						cTxt += '<b><u>Error</u></b> ' + '<br>'
+						cTxt += dat.errortxt + '<br>'					
+
+					} else {
+						console.log( 'UPDATED ROWS', dat.rows_updated )
+						oBrw.ResetChanges( dat.rows_updated )						
+						oBrw.RefreshAll()
+					}
+					
+					MsgInfo( cTxt )
+					
+					
+				}
+
+				function MyRowStyle(row, index) {
+					//console.log( row )
+					
+					
+					//if ( row.cont_nom == 'Gary') {
+					if ( oBrw.IsRowIdUpdated( row._recno ) == true ) {
+					console.log( 'changed')
+						return { classes: 'myrow' }	
+					} else {
+						return {}			
+					}
+					
+					
+				}				
+
+				function MyCssId( value, row, index ) {			
+							
+					return { classes: 'myid' }
+				}
+
+				function MyId( value ) {													
+					
+					if ( typeof value == 'string' && value.substring(0, 1) == '$' ) {
+						return '<i class="far fa-edit"></i>'					
+					} else
+						return value 
+				}				
+				
+				function MyChange( e, row, element) {
+					console.log( 'MyChange', row )
+					
+				}
+
+				function TestPostEdit( rows, lUpdate ) {
+					
+					if ( lUpdate ) {
+						console.log( 'Rows Updated', rows )
+						
+						MsgNotify( 'Row modified, but not saved !' )
+						
+						oBrw.RefreshAll()
+					}									
+				}				
+				
+			</script>
+						
+			ENDTEXT
+			
+		END FORM o	RETURN
+
+
+	?>			
+	
+	</div>	
+	
+
+</body>
+</html>
