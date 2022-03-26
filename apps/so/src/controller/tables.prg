@@ -6,6 +6,9 @@ CLASS Tables
 	METHOD Cliente2()	
 	METHOD Cliente2_Save()	
 	
+	METHOD Prod()
+	METHOD Prod_Load()
+	
 ENDCLASS
 
 //	---------------------------------------------------------------	//
@@ -70,6 +73,34 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
+METHOD Prod( oController ) CLASS Tables	
+
+	local oProd	:= ProdModel():New()	
+	local hData 	:= oProd:GetAll()
+
+	oController:View( 'tables/prod.view', 200, hData )	
+
+RETU NIL
+
+//	---------------------------------------------------------------	//
+
+METHOD Prod_Load( oController ) CLASS Tables	
+
+	
+	local hParam 		:= GetMsgServer()	
+	local oProd 		:= ProdModel():New()	
+	local aRows 		:= oProd:Search( hParam[ 'tag'],  hParam[ 'search' ] )
+
+	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
+	
+	oController:oResponse:SendJson( { 'rows' => aRows } )
+
+RETU NIL
+
+
+//	---------------------------------------------------------------	//
+
 //	Load datamodel		---------------------------------------------
 
 	{% mh_LoadFile( "/src/model/clientemodel.prg" ) %}
+	{% mh_LoadFile( "/src/model/prodmodel.prg" ) %}

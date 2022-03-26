@@ -33,6 +33,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="{{ mc_Route( 't.cliente' ) }}">Test SlickGrid</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.cliente2' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Client</a>
+         <a class="dropdown-item" href="{{ mc_Route( 't.prod' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Producto</a>
 
         </div>
       </li>

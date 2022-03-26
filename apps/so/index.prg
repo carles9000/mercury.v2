@@ -41,6 +41,9 @@ FUNCTION Main()
 			DEFINE ROUTE 't.cliente'		URL 't/cliente'				CONTROLLER 'cliente@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2'		URL 't/cliente2'				CONTROLLER 'cliente2@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2_save'	URL 't/cliente2_save'				CONTROLLER 'cliente2_save@tables.prg'	METHOD 'POST'	OF oApp
+			
+			DEFINE ROUTE 't.prod'			URL 't/prod'				CONTROLLER 'prod@tables.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.prod_load'		URL 't/prod_load'			CONTROLLER 'prod_load@tables.prg'	METHOD 'POST'	OF oApp
 /*			
 		//	Auth				
 			

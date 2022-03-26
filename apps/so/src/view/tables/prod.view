@@ -1,0 +1,275 @@
+{{ mc_View( 'app/header_tables.view' ) }}
+
+<style>
+
+	.container_table { 
+	
+		border: 5px solid yellow;
+		bottom: 10px;
+		top: 10px;
+		position: absolute;
+		right: 10px;
+		left: 10px;
+		
+	}
+	
+	.myid {
+		background-color: lightgray;
+		font-weight: bold;
+		text-align: center;
+		border-left: 2px solid gray !important;
+		border-right: 2px solid gray !important;
+		border-top: 0px solid !important;
+		border-bottom: 0px solid !important;
+	}
+
+	.mybtnbar {
+		border-radius:0px;
+	}
+
+	.myrow {
+		background-color: #ff000040;
+		color: black;
+		border: 2px solid #e91e1e;
+		font-weight: bold;
+	}	
+
+
+
+</style>
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Tables' ) }}
+
+<div class="content main green">
+
+	<div class="container_table">			
+	
+	<?prg
+
+		local aRows := pValue(1)
+		local o, oCol, oBrw
+
+		DEFINE FORM o
+		
+			o:cSizing := 'sm'
+
+			HTML o INLINE '<h3>Product</h3><hr>'
+			
+		INIT FORM o  
+
+			DIV o ID 'bar' CLASS 'btn-group'
+				BUTTON LABEL ' New' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Add()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Edit' 	ICON '<i class="far fa-edit"></i>' 				ACTION 'Edit()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Delete' 	ICON '<i class="far fa-trash-alt"></i>' 		ACTION 'Delete()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Save' 	ICON '<i class="far fa-save"></i>' 				ACTION 'Save()' 		CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+			ENDDIV o 
+
+			HTML o 
+			
+				<div class="input-group">
+				  <input id="search" type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+				  
+				  <div class="input-group-append">				   					
+					<span id="search_total" class="input-group-text" id="inputGroup-sizing-default">0</span>
+					<button id="search_btn" type="button" class="btn btn-outline-secondary" onclick="Load()"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+					<span id="search_name" class="input-group-text" id="inputGroup-sizing-default"></span>
+					<button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  
+					</button>
+					<div class="dropdown-menu">
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'ID' )">ID</a>
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Nombre' )">Nombre</a>
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Tamano' )">Tamano</a>
+					</div>
+				  </div>
+				</div>					
+			
+			ENDTEXT
+
+
+			
+
+			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
+				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				ROWSTYLE 'MyRowStyle' ;
+				TOOLBAR "bar" ;
+				SEARCH TOOLS EXPORT PRINT  ;
+				ONCHANGE 'MyChange' OF o	
+
+				//oBrw:lDark = .t.
+				//oBrw:lStripped := .t.
+				//oBrw:lVirtualScroll := .t.
+				oBrw:cLocale := 'es-ES'							
+
+				ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				ADD oCol TO oBrw ID 'id_prod' 	HEADER 'id_prod' 		EDIT
+				ADD oCol TO oBrw ID 'nombre'  	HEADER 'nombre'  		EDIT
+				ADD oCol TO oBrw ID 'color' 	HEADER 'color' 	 		EDIT
+				ADD oCol TO oBrw ID 'tamano'  	HEADER 'tamano'  		EDIT
+				ADD oCol TO oBrw ID 'precio'  	HEADER 'precio'  		EDIT
+				
+			INIT BROWSE oBrw DATA aRows	
+			
+			HTML o 
+		
+			<script>
+			
+				function Search_Select_Tag( cTag ) {				
+					$( '#search_name').data( 'tag', cTag )		
+					$( '#search_total').html( '0' )
+					$( '#search_name').html( cTag )
+					$( '#search').focus()
+				}
+				
+			
+				var oBrw = new TWebBrowse( 'ringo' )		
+				
+				function Edit() 	{ oBrw.Edit() }	
+				function Add()  	{ oBrw.AddRow() }	
+				function Delete() 	{ oBrw.DeleteRow() }
+				function Reset() 	{ oBrw.Reset() }
+
+				//	Load data...
+				
+				function Load() {									
+					
+					var cSearch = $('#search').val()
+
+					/*
+					if ( cSearch == '' ){ 
+						$( '#search').focus()
+						return null 
+					}
+					*/
+					
+					var cUrl 	= '{{ mc_route('t.prod_load') }}'
+					var oParam 	= new Object()
+						oParam[ 'action' ] 	= 'load'
+						oParam[ 'tag'] 		= $( '#search_name').data( 'tag' )			
+						oParam[ 'search'] 	= cSearch 				
+						
+						MsgServer( cUrl, oParam, Post_Load )					
+				}
+				
+				function Post_Load( dat ){
+				
+					console.log( dat )	
+					if (dat.rows.length > 0){
+					}
+					oBrw.SetData( dat.rows )
+					$( '#search_total').html( dat.rows.length )
+				}
+				
+				
+				
+				//	Save Data...
+
+				function Save() 	{ 
+				
+					var cUrl 	= '{{ mc_route('t.cliente2_save') }}'
+					var oParam = new Object()
+						oParam[ 'action' ] = 'save'
+						oParam[ 'data'   ] = oBrw.GetDataChanges()
+						
+						
+					if ( oParam[ 'data' ].length == 0 )
+						return null 
+					
+				
+					
+					console.log( 'SAVE', oParam )
+					console.log( 'SAVE2',cUrl )
+					MsgServer( cUrl, oParam, Post_Save )				
+				}				
+				
+				function Post_Save( dat ) {
+				
+					console.log( 'POSTSAVE', dat )
+					
+					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
+					
+					if ( dat.error.length > 0 ) {
+				
+						cTxt += '<b><u>Error</u></b> ' + '<br>'
+						cTxt += dat.errortxt + '<br>'					
+
+					} else {
+						console.log( 'UPDATED ROWS', dat.rows_updated )
+						oBrw.ResetChanges( dat.rows_updated )						
+						oBrw.RefreshAll()
+					}
+					
+					MsgInfo( cTxt )
+					
+					
+				}
+
+				function MyRowStyle(row, index) {
+					//console.log( row )
+					
+					
+					//if ( row.cont_nom == 'Gary') {
+					if ( oBrw.IsRowIdUpdated( row._recno ) == true ) {
+					console.log( 'changed')
+						return { classes: 'myrow' }	
+					} else {
+						return {}			
+					}
+					
+					
+				}				
+
+				function MyCssId( value, row, index ) {			
+							
+					return { classes: 'myid' }
+				}
+
+				function MyId( value ) {													
+					
+					if ( typeof value == 'string' && value.substring(0, 1) == '$' ) {
+						return '<i class="far fa-edit"></i>'					
+					} else
+						return value 
+				}				
+				
+				function MyChange( e, row, element) {
+					console.log( 'MyChange', row )
+					
+				}
+
+				function TestPostEdit( rows, lUpdate ) {
+					
+					if ( lUpdate ) {
+						console.log( 'Rows Updated', rows )
+						
+						MsgNotify( 'Row modified, but not saved !' )
+						
+						oBrw.RefreshAll()
+					}									
+				}		
+
+				//	----------------------------------
+				
+					$( document ).ready(function() {	
+					
+						Search_Select_Tag( 'Nombre' ) 
+						
+						console.log( 'Tables ready !')			
+					});				
+				
+			</script>
+						
+			ENDTEXT
+			
+		END FORM o	RETURN
+
+
+	?>			
+	
+	</div>	
+	
+
+</body>
+</html>
