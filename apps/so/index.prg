@@ -41,9 +41,18 @@ FUNCTION Main()
 			DEFINE ROUTE 't.cliente'		URL 't/cliente'				CONTROLLER 'cliente@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2'		URL 't/cliente2'				CONTROLLER 'cliente2@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2_save'	URL 't/cliente2_save'				CONTROLLER 'cliente2_save@tables.prg'	METHOD 'POST'	OF oApp
-			
+			/*
 			DEFINE ROUTE 't.prod'			URL 't/prod'				CONTROLLER 'prod@tables.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.prod_save'		URL 't/prod_save'			CONTROLLER 'prod_save@tables.prg'	METHOD 'POST'	OF oApp
 			DEFINE ROUTE 't.prod_load'		URL 't/prod_load'			CONTROLLER 'prod_load@tables.prg'	METHOD 'POST'	OF oApp
+			*/
+			
+			DEFINE ROUTE 't.prod'			URL 't/prod'				CONTROLLER 'show@tables/prod.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.prod_action'	URL 't/prod_action'			CONTROLLER 'action@tables/prod.prg'	METHOD 'POST'	OF oApp
+			
+			DEFINE ROUTE 't.tipo_pro'			URL 't/tipo_pro'				CONTROLLER 'show@tables/tipo_pro.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.tipo_pro_action'	URL 't/tipo_pro_action'			CONTROLLER 'action@tables/tipo_pro.prg'	METHOD 'POST'	OF oApp
+						
 /*			
 		//	Auth				
 			
@@ -73,7 +82,7 @@ function MyConfig()
 	SET DATE TO ITALIAN 
 	SET DELETED ON 
 
-	
+	_d( 'APP_URL->', MC_App_Url() )
 retu 	
 
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'

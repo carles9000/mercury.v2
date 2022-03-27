@@ -8,6 +8,7 @@ CLASS Tables
 	
 	METHOD Prod()
 	METHOD Prod_Load()
+	METHOD Prod_Save()
 	
 ENDCLASS
 
@@ -77,8 +78,35 @@ METHOD Prod( oController ) CLASS Tables
 
 	local oProd	:= ProdModel():New()	
 	local hData 	:= oProd:GetAll()
+	
+	//	Si es una tabla que se puede cargar toda, la pasamos,
+	//	sino, no pasaremos nada...
 
 	oController:View( 'tables/prod.view', 200, hData )	
+
+RETU NIL
+
+//	---------------------------------------------------------------	//
+
+METHOD Prod_Save( oController ) CLASS Tables	
+
+	
+	local hParam 		:= GetMsgServer()	
+	local aData 		:= hParam[ 'data' ]
+	local oProd		:= ProdModel():New()	
+	local nUpdated 		:= 0
+	local aUpdated 		:= 0
+	local hResponse 
+	
+	//	Process data...	
+	
+		aUpdated := oProd:oDataset:Save( aData )
+		nUpdated := len( aUpdated )		
+
+		
+		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oProd:oDataset:GetError(), 'errortxt' => oProd:oDataset:GetErrorString() }
+				
+	oController:oResponse:SendJson( hResponse )
 
 RETU NIL
 

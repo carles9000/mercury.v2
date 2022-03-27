@@ -55,7 +55,7 @@
 		
 			o:cSizing := 'sm'
 
-			HTML o INLINE '<h3>Product</h3><hr>'
+			HTML o INLINE '<h3>Tipo Product</h3><hr>'
 			
 		INIT FORM o  
 
@@ -80,8 +80,7 @@
 					</button>
 					<div class="dropdown-menu">
 					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Id' )">ID</a>
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Nombre' )">Nombre</a>
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Tamano' )">Tamano</a>
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Nombre' )">Nombre</a>					  
 					</div>
 				  </div>
 				</div>					
@@ -100,12 +99,10 @@
 				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
 
-				ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_prod' 	HEADER 'id_prod' 		EDIT
-				ADD oCol TO oBrw ID 'nombre'  	HEADER 'nombre'  		EDIT
-				ADD oCol TO oBrw ID 'color' 	HEADER 'color' 	 		EDIT
-				ADD oCol TO oBrw ID 'tamano'  	HEADER 'tamano'  		EDIT
-				ADD oCol TO oBrw ID 'precio'  	HEADER 'precio'  		EDIT
+				ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				ADD oCol TO oBrw ID 'id_type' 		HEADER 'id_prod' 		EDIT
+				ADD oCol TO oBrw ID 'nombre'  		HEADER 'nombre'  		EDIT
+				ADD oCol TO oBrw ID 'descripcio' 	HEADER 'Descripcion'	TYPE 'M' EDIT								
 				
 			INIT BROWSE oBrw DATA aRows	
 			
@@ -130,7 +127,7 @@
 				
 				function Load() {									
 					
-					var cUrl 	= '{{ mc_route('t.prod_action') }}'
+					var cUrl 	= '{{ mc_route('t.tipo_pro_action') }}'
 							
 					var oParam 	= new Object()
 						oParam[ 'action' ] 	= 'load'
@@ -154,7 +151,7 @@
 
 				function Save() 	{ 
 				
-					var cUrl 	= '{{ mc_route('t.prod_action') }}'
+					var cUrl 	= '{{ mc_route('t.tipo_pro_action') }}'
 					var oParam = new Object()
 						oParam[ 'action' ] = 'save'
 						oParam[ 'data'   ] = oBrw.GetDataChanges()

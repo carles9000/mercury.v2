@@ -1880,7 +1880,7 @@ function TWebBrowseForm( bBeforeEdit, bAfterEdit, index, oBrw, aCfgCols) {
 							className: 'btn-outline-danger'
 						},
 					confirm: {
-							label: '<i class="fa fa-check"></i> Accept.',
+							label: '<i class="fa fa-check"></i> Accept',
 							className: 'btn-outline-success',
 							callback: function(result) { 
 							

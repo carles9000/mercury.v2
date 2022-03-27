@@ -1,6 +1,6 @@
 #include {% TWebInclude() %}
 
-CLASS ProdModel FROM DbfCdxProvider 
+CLASS Tipo_ProModel FROM DbfCdxProvider 
 
 	METHOD New()             		CONSTRUCTOR	
 	
@@ -9,24 +9,21 @@ ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New() CLASS ProdModel
+METHOD New() CLASS Tipo_ProModel
 
-	::Open( AppPathData() + 'producto.dbf', AppPathData() + 'producto.cdx')
+	::Open( AppPathData() + 'tipo_pro.dbf', AppPathData() + 'tipo_pro.cdx')
 	
 	//	Define main tag cdx index
 
-		::cId 		:= 'id_prod'
+		::cId 		:= 'id_type'
 
 	//	Define data Dataset. These will be the only fields that I will allow to work
 	
 		DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-			FIELD 'id_prod' 	UPDATE  OF ::oDataset
+			FIELD 'id_type' 	UPDATE  OF ::oDataset
 			FIELD 'nombre' 		UPDATE  OF ::oDataset
-			FIELD 'color' 		UPDATE  OF ::oDataset
-			FIELD 'tamano' 		UPDATE  OF ::oDataset
-			FIELD 'precio' 		UPDATE  OF ::oDataset
-
+			FIELD 'descripcio'	UPDATE  OF ::oDataset						
 		
 	//	Define if can Loading all records...  (for small tables)
 	
@@ -35,10 +32,8 @@ METHOD New() CLASS ProdModel
 	
 	//	Define Searchs by Tag 
 	
-		::hSearch[ 'id' ] 		:= { 'id_prod' }
-		::hSearch[ 'nombre' ] 	:= { 'nombre', {|u| lower(u) } }
-		::hSearch[ 'tamano' ] 	:= { 'tamano' }
-
+		::hSearch[ 'id' ] 		:= { 'id_type' }
+		::hSearch[ 'nombre' ] 	:= { 'nombre', {|u| lower(u) } }		
 
 RETU SELF
 
