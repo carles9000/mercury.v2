@@ -1,16 +1,10 @@
 #include {% TWebInclude() %}
 
 
-CLASS ClienteModel 
-
-	DATA cAlias	
-	DATA oDataset	
+CLASS ClienteModel  FROM DbfCdxProvider
 
 	METHOD New()             		CONSTRUCTOR
 
-	METHOD GetAll()
-
-	METHOD Count()					INLINE (::cAlias)->( RecCount() )
 				
 	
 ENDCLASS
@@ -19,10 +13,10 @@ ENDCLASS
 
 METHOD New() CLASS ClienteModel
 
-	USE ( AppPathData() + 'cliente.dbf' ) SHARED NEW VIA 'DBFCDX'
-	SET INDEX TO 'cliente.cdx'
+	::Open( AppPathData() + 'cliente.dbf', AppPathData() + 'cliente.cdx')
 	
-	::cAlias := Alias()
+
+	//	Define data Dataset. These will be the only fields that I will allow to work
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
@@ -44,34 +38,18 @@ METHOD New() CLASS ClienteModel
 		FIELD 'tlf'			UPDATE  OF ::oDataset
 		FIELD 'fax'			UPDATE  OF ::oDataset
 
+		
+	//	Define if can Loading all records...  (for small tables)
+	
+		::lCanLoadAll := .T. 
+	
+	//	Define main tag cdx index
+
+		::cId 		:= 'id'
+	
+	//	Define Searchs by Tag 
+	
+		::hSearch[ 'id' ] 		:= { 'id_cli', 'id_cli' }
+		::hSearch[ 'nombre' ] := { 'nombre', 'nombre' }		
 
 RETU SELF
-
-
-//	-----------------------------------------------
-
-
-METHOD GetAll() CLASS ClienteModel
-
-	local aRows	:= {}	
-		
-	(::cAlias)->( OrdSetFocus( 'id_cli' ) )
-	(::cAlias)->( DbGoTop() )
-
-		while (::cAlias)->( !eof() )									
-		
-			Aadd( aRows, ::oDataset:Row() )	
-
-			(::cAlias)->( DbSkip() )			
-			
-	
-		end
-
-RETU aRows
-
-//	-----------------------------------------------
-
-
-//	-----------------------------------------------
-
-

@@ -9,12 +9,17 @@ CLASS DbfCdxProvider
 	DATA lCanLoadAll				INIT .t.
 	DATA nMax						INIT 1000
 	
+	DATA bLoadRow 					
+	
 	METHOD New()             		CONSTRUCTOR	
 	
 	METHOD Open() 
 	
+	METHOD GetId()
 	METHOD GetAll()
 	METHOD Search()
+	METHOD SearchExact( cKey_Search, uValue )
+	
 	METHOD Count()					INLINE (::cAlias)->( RecCount() )
 	
 	
@@ -32,15 +37,63 @@ RETU SELF
 
 METHOD Open( cDbf, cCdx ) CLASS DbfCdxProvider
 
-	//USE ( AppPathData() + 'producto.dbf' ) SHARED NEW VIA 'DBFCDX'
-	//SET INDEX TO )'producto.cdx'
-	USE ( cDbf ) SHARED NEW VIA 'DBFCDX'
+	USE ( cDbf ) SHARED NEW VIA 'DBFCDX' ALIAS (NewAlias())
 	SET INDEX TO ( cCdx )
 	
 	::cAlias 	:= Alias()
 	
+	::bLoadRow := {|| ::oDataset:Row() }
+	
 
 RETU SELF
+//----------------------------------------------------------------------------//
+
+
+METHOD GetId( uValue ) CLASS DbfCdxProvider
+
+	local hRow	:= {}	
+	local n 		:= 0
+	local uSearch	:= ''
+	local nPos 
+	local cType
+
+_d( 'Alias:' + ::cAlias )	
+_d( 'Id:' + ::cId )	
+
+	aInfo 		:= ::hSearch[ ::cId ]
+	
+	cTag 		:= aInfo[1]
+	nPos 		:= (::cAlias)->( FieldPos( aInfo[2] ) )
+	cType 		:= valtype( (::cAlias)->( FieldGet(nPos)) )
+	
+_d( 'Tag:' + cTag )	
+_d( 'Pos:', nPos )	
+_d( 'Type:', cType )	
+	
+	bPrepare 	:= if( len( aInfo ) > 2 , aInfo[3], nil )	
+
+	if valtype( bPrepare ) == 'B' 
+		uSearch := Eval( bPrepare, uValue )
+	else
+		uSearch := uValue
+	endif	
+	
+_d( 'SEARCH', uSearch )	
+
+		
+	(::cAlias)->( OrdSetFocus( cTag ) )
+	(::cAlias)->( dbGoTop() )
+	(::cAlias)->( dbSeek( uSearch, .f. ) )
+	
+	IF ( ::cAlias )->( FieldGet( nPos ) ) == uValue
+	
+		Aadd( hRow, eval( ::bLoadRow )  )					
+
+	endif
+	
+_d( hRow )	
+	
+retu hRow
 
 //----------------------------------------------------------------------------//
 
@@ -54,7 +107,7 @@ METHOD GetAll() CLASS DbfCdxProvider
 
 		while n <= ::nMax .and. (::cAlias)->( !eof() )									
 		
-			Aadd( aRows, ::oDataset:Row() )	
+			Aadd( aRows, eval( ::bLoadRow ) )	
 
 			(::cAlias)->( DbSkip() )			
 			
@@ -70,7 +123,7 @@ METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 
 	local aRows	:= {}	
 	local n 		:= 0
-
+_d( 'SEARCH....' )
 	if empty( cSearch )
 		retu if( ::lCanLoadAll, ::GetAll(), aRows )
 	endif
@@ -86,15 +139,16 @@ METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 	
 	cTag 		:= aInfo[1]
 	
-	bPrepare 	:= if( len( aInfo ) > 1 , aInfo[2], nil )
+	bPrepare 	:= if( len( aInfo ) > 2 , aInfo[3], nil )
 	
 
 	if valtype( bPrepare ) == 'B' 
 		cSearch := Eval( bPrepare, cSearch )
 	endif	
 	
-//_d( 'Tag:' + cTag )	
-//_d( 'Search:' + cSearch )	
+_d( 'Alias:' + ::cAlias )	
+_d( 'Tag:' + cTag )	
+_d( 'Search:' + cSearch )	
 		
 	(::cAlias)->( OrdSetFocus( cTag ) )
 	(::cAlias)->( dbGoTop() )
@@ -105,7 +159,7 @@ METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 			 n <= ::nMax 
 						
 	
-		Aadd( aRows, ::oDataset:Row() )			
+		Aadd( aRows, eval( ::bLoadRow )  )			
 		
 		n++
 
@@ -113,6 +167,59 @@ METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 	
 retu aRows
 
+
+
+METHOD SearchExact( cKey_Search, uValue ) CLASS DbfCdxProvider
+
+	local aRows	:= {}	
+	local n 		:= 0
+	
+_d( 'SEARCHEXACT....' )
+
+	if empty( uValue )
+		retu aRows 
+	endif
+	
+	cKey_Search := lower( cKey_Search )
+	
+
+	if ! HB_HHasKey( ::hSearch, cKey_Search )		
+		retu aRows
+	endif 
+	
+	aInfo 		:= ::hSearch[ cKey_Search ]	
+	cTag 		:= aInfo[1]
+	nPos 		:= (::cAlias)->( FieldPos( aInfo[2] ) )
+	cType 		:= valtype( (::cAlias)->( FieldGet(nPos)) )
+	
+_d( 'Tag:' + cTag )	
+_d( 'Pos:', nPos )	
+_d( 'Type:', cType )	
+	
+	bPrepare 	:= if( len( aInfo ) > 2 , aInfo[3], nil )	
+
+	if valtype( bPrepare ) == 'B' 
+		uSearch := Eval( bPrepare, uValue )
+	else
+		uSearch := uValue
+	endif	
+	
+_d( 'SEARCH', uSearch )	
+
+		
+	(::cAlias)->( OrdSetFocus( cTag ) )
+	(::cAlias)->( dbGoTop() )
+	(::cAlias)->( dbSeek( uSearch, .f. ) )
+	
+	while ( ::cAlias )->( FieldGet( nPos ) ) == uValue .and. (::cAlias)->( !eof() )
+	
+		Aadd( aRows, eval( ::bLoadRow ) )	
+
+		(::cAlias)->( DbSkip() )
+
+	end 
+	
+retu aRows
 
 
 //	-----------------------------------------------
@@ -131,4 +238,16 @@ Return lMatch
 
 //	-----------------------------------------------
 
+function NewAlias( cPrefix ) 
 
+   local cAlias
+   local nAliasNo := 0
+
+   DEFAULT cPrefix   	TO "tmp"
+   
+   cPrefix := Left( cPrefix, 3 )
+
+   do while Select( cAlias := cPrefix + StrZero( ++nAliasNo, 5 ) ) > 0
+   enddo
+   
+return cAlias

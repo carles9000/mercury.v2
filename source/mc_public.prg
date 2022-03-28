@@ -2,7 +2,7 @@
 
 function MC_Version()	;		retu MC_VERSION
 
-function MC_App_Url(); 		retu cFilePath( AP_GetEnv( 'SCRIPT_NAME' ) )
+function MC_App_Url(); 		retu lower( cFilePath( AP_GetEnv( 'SCRIPT_NAME' ) )  )
 function MC_App_Path(); 		retu HB_Getenv( 'PRGPATH' )
 
 function MC_Script_Url(); 	retu AP_GetEnv( 'SCRIPT_NAME' )
