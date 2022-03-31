@@ -36,19 +36,30 @@ FUNCTION Main()
 		
 			DEFINE ROUTE 'o.show'		URL 'o/show'					CONTROLLER 'show@order.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'o.action'	URL 'o/action'					CONTROLLER 'action@order.prg'		METHOD 'POST'	OF oApp
+			DEFINE ROUTE 'o.upd'		URL 'o/upd/(id)'				CONTROLLER 'upd@order.prg'			METHOD 'GET'	OF oApp
 			
 		//	Tables 
 		
 			DEFINE ROUTE 't.cliente'		URL 't/cliente'				CONTROLLER 'cliente@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2'		URL 't/cliente2'				CONTROLLER 'cliente2@tables.prg'	METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cliente2_save'	URL 't/cliente2_save'				CONTROLLER 'cliente2_save@tables.prg'	METHOD 'POST'	OF oApp
-
+			
+			DEFINE ROUTE 't.cli'			URL 't/cli'					CONTROLLER 'show@tables/cli.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.cli_action'	URL 't/cli_action'			CONTROLLER 'action@tables/cli.prg'		METHOD 'POST'	OF oApp			
+			DEFINE ROUTE 't.cli_search'	URL 't/cli_search'			CONTROLLER 'search@tables/cli.prg'		METHOD 'POST'	OF oApp			
+			
 			
 			DEFINE ROUTE 't.prod'			URL 't/prod'				CONTROLLER 'show@tables/prod.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.prod_action'	URL 't/prod_action'			CONTROLLER 'action@tables/prod.prg'	METHOD 'POST'	OF oApp
+			DEFINE ROUTE 't.prod_search'	URL 't/prod_search'			CONTROLLER 'search@tables/prod.prg'	METHOD 'POST'	OF oApp
 			
 			DEFINE ROUTE 't.tipo_pro'			URL 't/tipo_pro'				CONTROLLER 'show@tables/tipo_pro.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.tipo_pro_action'	URL 't/tipo_pro_action'			CONTROLLER 'action@tables/tipo_pro.prg'	METHOD 'POST'	OF oApp
+			
+			DEFINE ROUTE 't.emp'			URL 't/emp'					CONTROLLER 'show@tables/emp.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.emp_action'	URL 't/emp_action'			CONTROLLER 'action@tables/emp.prg'		METHOD 'POST'	OF oApp			
+			DEFINE ROUTE 't.emp_search'	URL 't/emp_search'			CONTROLLER 'search@tables/emp.prg'		METHOD 'POST'	OF oApp			
+			
 						
 /*			
 		//	Auth				

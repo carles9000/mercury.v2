@@ -1,4 +1,4 @@
-CLASS Prod
+CLASS Emp
 
 	METHOD New() 	CONSTRUCTOR
 	
@@ -8,14 +8,14 @@ CLASS Prod
 	METHOD Load()
 	METHOD Save()
 	
-	METHOD Search( oController )
-	METHOD GetId()		
+	METHOD Search()	//	Browse Search...
+	METHOD GetId()	
 	
 ENDCLASS
 
 //	---------------------------------------------------------------	//
 
-METHOD New( oController ) CLASS Prod
+METHOD New( oController ) CLASS Emp
 
 	//AUTENTICATE CONTROLLER oController
 	
@@ -23,22 +23,21 @@ RETU SELF
 
 //	---------------------------------------------------------------	//
 
-METHOD Show( oController ) CLASS Prod	
+METHOD Show( oController ) CLASS Emp	
+	local oEmp		:= EmpleadoModel():New()	
+	local hData 	:= oEmp:GetAll()
 
-	local oProd	:= ProdModel():New()	
-	local hData 	:= oProd:GetAll()
-	
 	//	Si es una tabla que se puede cargar toda, la pasamos,
 	//	sino, no pasaremos nada...
 
-	oController:View( 'tables/prod.view', 200, hData )	
+	oController:View( 'tables/emp.view', 200, hData )	
 
 RETU NIL
 
 
 //	---------------------------------------------------------------	//
 
-METHOD Action( oController ) CLASS Prod	
+METHOD Action( oController ) CLASS Emp	
 
 	local hParam 		:= GetMsgServer()	
 	
@@ -52,21 +51,21 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Save( oController, hParam ) CLASS Prod		
+METHOD Save( oController, hParam ) CLASS Emp		
 	
 	local aData 		:= hParam[ 'data' ]
-	local oProd		:= ProdModel():New()	
+	local oEmp			:= EmpleadoModel():New()	
 	local nUpdated 	:= 0
 	local aUpdated 	:= 0
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oProd:oDataset:Save( aData )
+		aUpdated := oEmp:oDataset:Save( aData )
 		nUpdated := len( aUpdated )		
 
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oProd:oDataset:GetError(), 'errortxt' => oProd:oDataset:GetErrorString() }
+		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oEmp:oDataset:GetError(), 'errortxt' => oEmp:oDataset:GetErrorString() }
 				
 	oController:oResponse:SendJson( hResponse )
 
@@ -74,11 +73,11 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Load( oController, hParam ) CLASS Prod	
+METHOD Load( oController, hParam ) CLASS Emp	
 	
 	
-	local oProd 		:= ProdModel():New()	
-	local aRows 		:= oProd:Search( hParam[ 'tag'],  hParam[ 'search' ] )
+	local oEmp 		:= EmpleadoModel():New()	
+	local aRows 		:= oEmp:Search( hParam[ 'tag'],  hParam[ 'search' ] )
 
 	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
 	
@@ -89,16 +88,24 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Search( oController ) CLASS Prod			
+METHOD Search( oController ) CLASS Emp	
 	
-	local oProd 		:= ProdModel():New()		
+	
+	local oEmp 		:= EmpleadoModel():New()	
 	local hParam		:= GetMsgServer()
 	local aRows		:= {}
-
+	
+	/*
+	if empty( hParam[ 'search' ] )
+		oController:oResponse:SendJson( { 'success' => .f., 'rows' => aRows } )
+		retu nil
+	endif
+	*/
 
 	//	Buscamos en modelo --------------------------------
 	
-		aRows 		:= oProd:Search( 'nombre', hParam[ 'search' ] )
+		oEmp 		:= EmpleadoModel():New()		
+		aRows 		:= oEmp:Search( 'apellido', hParam[ 'search' ] )
 		
 	//	Respuesta -----------------------------------------		
 	
@@ -106,13 +113,12 @@ METHOD Search( oController ) CLASS Prod
 
 RETU NIL
 
-
 //	---------------------------------------------------------------	//
 
-METHOD GetId( oController, hParam ) CLASS Prod		
+METHOD GetId( oController, hParam ) CLASS Emp		
 	
-	local oProd 		:= ProdModel():New()		
-	local aRows 		:= oProd:GetId( val( hParam[ 'search' ] ) )
+	local oEmp 		:= EmpleadoModel():New()	
+	local aRows 		:= oEmp:GetId( val( hParam[ 'search' ] ) )
 		
 	if len( aRows) > 0
 		oController:oResponse:SendJson( { 'success' => .t. , 'row' => aRows[1] } )
@@ -123,6 +129,8 @@ METHOD GetId( oController, hParam ) CLASS Prod
 RETU NIL
 
 
+
+
 //	Load datamodel		---------------------------------------------
 
-	{% mh_LoadFile( "/src/model/prodmodel.prg" ) %}
+	{% mh_LoadFile( "/src/model/empleadomodel.prg" ) %}

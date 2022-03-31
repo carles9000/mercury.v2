@@ -15,7 +15,7 @@ METHOD New() CLASS ProdModel
 	
 	//	Define main tag cdx index
 
-		::cId 		:= 'id_prod'
+		::cId 		:= 'id'
 
 	//	Define data Dataset. These will be the only fields that I will allow to work
 	
@@ -35,9 +35,9 @@ METHOD New() CLASS ProdModel
 	
 	//	Define Searchs by Tag 
 	
-		::hSearch[ 'id' ] 		:= { 'id_prod' }
-		::hSearch[ 'nombre' ] 	:= { 'nombre', {|u| lower(u) } }
-		::hSearch[ 'tamano' ] 	:= { 'tamano' }
+		::hSearch[ 'id' ] 		:= { 'id_prod', 'id_prod' }
+		::hSearch[ 'nombre' ] 	:= { 'nombre', 'nombre', {|u| lower(u) } }
+		::hSearch[ 'tamano' ] 	:= { 'tamano', 'tamano' }
 
 
 RETU SELF

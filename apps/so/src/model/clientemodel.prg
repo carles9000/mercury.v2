@@ -5,7 +5,6 @@ CLASS ClienteModel  FROM DbfCdxProvider
 
 	METHOD New()             		CONSTRUCTOR
 
-				
 	
 ENDCLASS
 
@@ -27,7 +26,7 @@ METHOD New() CLASS ClienteModel
 		FIELD 'cont_tit'	UPDATE  OF ::oDataset
 		FIELD 'cont_carg'	UPDATE  OF ::oDataset
 		FIELD 'vent_last'	UPDATE  OF ::oDataset
-		FIELD 'dir1'		UPDATE   OF ::oDataset
+		FIELD 'dir1'		UPDATE  OF ::oDataset
 		FIELD 'dir2'		UPDATE  OF ::oDataset
 		FIELD 'ciudad'		UPDATE  OF ::oDataset
 		FIELD 'region'		UPDATE  OF ::oDataset
@@ -50,6 +49,10 @@ METHOD New() CLASS ClienteModel
 	//	Define Searchs by Tag 
 	
 		::hSearch[ 'id' ] 		:= { 'id_cli', 'id_cli' }
-		::hSearch[ 'nombre' ] := { 'nombre', 'nombre' }		
+		::hSearch[ 'cliente' ] := { 'nom_cli', 'nom_cli', {|u| lower(u)} }		
 
 RETU SELF
+
+//----------------------------------------------------------------------------//
+
+{% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}

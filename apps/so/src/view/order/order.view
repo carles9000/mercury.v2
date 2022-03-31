@@ -59,6 +59,7 @@
 		INIT FORM o  
 
 			DIV o ID 'bar' CLASS 'btn-group'
+				BUTTON LABEL ' Modify' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Test()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
 				BUTTON LABEL ' Alert' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'alert(1)' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
 
 			ENDDIV o 
@@ -122,13 +123,16 @@
 					var oParam 	= new Object()
 						oParam[ 'action' ] 	= 'load'
 						oParam[ 'tag'] 		= $('#search_name').data( 'tag' )			
-						oParam[ 'search'] 	= $('#search').val()	 				
+						oParam[ 'search'] 	= $('#search').val()
+
+						oBrw.Loading(true)
 						
 						MsgServer( cUrl, oParam, Post_Load )					
 				}
 				
 				function Post_Load( dat ){
 				
+					oBrw.Loading(false)
 					console.log( dat )	
 
 					oBrw.SetData( dat.rows )
@@ -138,6 +142,24 @@
 				}								
 				
 				
+				//	----------------------------------
+				
+				function Test() {				
+					
+					var aSelect = oBrw.Select()															
+					
+					if ( aSelect.length == 1 )	{
+						
+						var oItem = aSelect[0]
+						var cId_Ped = oItem.id_ped
+						var cUrl = '{% mc_route( 'o.upd' ) %}' + '/' + cId_Ped
+						
+						console.log( cUrl )
+
+						window.location.href = cUrl						
+					}
+				}					
+		
 				//	----------------------------------
 				
 				function Search_Select_Tag( cTag ) {				

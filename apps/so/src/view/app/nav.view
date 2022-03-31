@@ -5,6 +5,13 @@
 		z-index:5;
 	}
 	
+	#nav_title{
+	    float: left;
+		left: 100px;
+		position: absolute;
+		top: 7px;
+	}
+	
 @media (min-width: 768px) {
     .dropdown-menu {
         width: 300px !important;  /* change the number to whatever that you need */
@@ -13,34 +20,37 @@
 	
 </style>
 
-<nav class="navbar navbar-dark bg-dark nav_top">
+<nav class="navbar navbar-dark bg-dark nav_top ">
 
-  <a class="navbar-brand" href="{{ mc_Route( 'default' ) }}">{{ pValue(1) }}</a>
   
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   
-  <div class="collapse navbar-collapse " id="navbarNavDropdown">
+  <a id="nav_title" class="navbar-brand" href="{{ mc_Route( 'default' ) }}">{{ pValue(1) }}</a>
+  
+  <div class="collapse navbar-collapse pt-3" id="navbarNavDropdown">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="{{ mc_Route( 'o.show' ) }}">Order</a>
+        <a class="nav-link" href="{{ mc_Route( 'o.show' ) }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Order</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           Tables
+			<i class="fa fa-table" aria-hidden="true"></i>&nbsp;
+			Tables
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ mc_Route( 't.cliente' ) }}">Test SlickGrid</a>
-         <a class="dropdown-item" href="{{ mc_Route( 't.cliente2' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Client</a>
+          <!--<a class="dropdown-item" href="{  { mc_Route( 't.cliente' ) }  }">Test SlickGrid</a>-->
+         <a class="dropdown-item" href="{{ mc_Route( 't.cli' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Client</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.prod' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Producto</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.tipo_pro' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Tipo Producto</a>
+         <a class="dropdown-item" href="{{ mc_Route( 't.emp' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Empleado</a>
 
         </div>
       </li>
 	  <div class="dropdown-divider"></div>
       <li class="nav-item">
-        <a class="nav-link" onclick="MsgYesNo( 'Exit ?', 'System', null, Logout )"  href="#" ><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+        <a class="nav-link" onclick="MsgYesNo( 'Exit ?', 'System', null, Logout )"  href="#" ><i class="fa fa-power-off" aria-hidden="true"></i>&nbsp;Logout</a>
       </li>	  
     </ul>
   </div> 

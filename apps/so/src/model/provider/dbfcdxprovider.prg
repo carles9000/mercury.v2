@@ -60,7 +60,19 @@ METHOD GetId( uValue ) CLASS DbfCdxProvider
 _d( 'Alias:' + ::cAlias )	
 _d( 'Id:' + ::cId )	
 
+	if !HB_HHasKey( ::hSearch, ::cId ) 		
+		mh_DoError( 'Index not defined -> ' + procname(0) )
+		retu nil
+	endif 
+	
+
 	aInfo 		:= ::hSearch[ ::cId ]
+	
+	if len( aInfo ) == 1
+		mh_DoError( 'Field search not defined -> ' + procname(0) )
+		retu nil
+	endif 	
+
 	
 	cTag 		:= aInfo[1]
 	nPos 		:= (::cAlias)->( FieldPos( aInfo[2] ) )
@@ -78,7 +90,7 @@ _d( 'Type:', cType )
 		uSearch := uValue
 	endif	
 	
-_d( 'SEARCH', uSearch )	
+_d( 'GETID SEARCH', uSearch )	
 
 		
 	(::cAlias)->( OrdSetFocus( cTag ) )

@@ -20,10 +20,15 @@ METHOD New() CLASS EmpleadoModel
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-		FIELD 'id_emp' 		UPDATE  OF ::oDataset
-		FIELD 'apellido'	UPDATE  OF ::oDataset
-		FIELD 'nombre'		UPDATE  OF ::oDataset
-		FIELD 'cargo'		UPDATE  OF ::oDataset
+		FIELD 'id_emp' 			UPDATE  OF ::oDataset
+		FIELD 'apellido'  		UPDATE  OF ::oDataset
+		FIELD 'nombre' 			UPDATE  OF ::oDataset
+		FIELD 'cargo'  			UPDATE  OF ::oDataset
+		FIELD 'data_nac'  		UPDATE  OF ::oDataset
+		FIELD 'data_cont' 		UPDATE  OF ::oDataset
+		FIELD 'tlf'  			UPDATE  OF ::oDataset
+		FIELD 'ext'  			UPDATE  OF ::oDataset
+		
 		
 		
 	//	Define if can Loading all records...  (for small tables)
@@ -36,7 +41,11 @@ METHOD New() CLASS EmpleadoModel
 	
 	//	Define Searchs by Tag 
 	
-		::hSearch[ 'id' ] 		:= { 'id_emp', 'id_emp' }
-		::hSearch[ 'apellido' ] := { 'apellido', 'apellido' }		
+		::hSearch[ 'id' ] 			:= { 'id_emp', 'id_emp' }
+		::hSearch[ 'apellido' ] 	:= { 'apellido', 'apellido' }		
 
 RETU SELF
+
+//----------------------------------------------------------------------------//
+
+{% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}

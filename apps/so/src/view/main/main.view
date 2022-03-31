@@ -2,6 +2,27 @@
 
 {{ mc_View( 'app/header.view' ) }}
 
+	<style>	
+		.title {
+			font-size: 38px;
+			color: #343a40;
+			font-family: sans-serif;		
+			text-decoration: none;			
+		}
+
+		.logo {
+			position: absolute;
+			top: 40%;
+			left: 50%;
+			transform: translate(-50%,-50%);			
+		}		
+
+		.logo img {
+			width: 100%;
+		}
+
+	</style>	
+
 
 <body>
 
@@ -9,6 +30,16 @@
 
 <div class="content main red ">
 
+
+	<div class="logo" align="center">		
+
+	
+		<img src="{{ AppUrlImg() + 'logo.png' }}" align=”middle”>
+		
+		<div class="title" >{{ mc_GetApp():cTitle }}</div>
+
+		
+	</div>
 	
 </div>
 

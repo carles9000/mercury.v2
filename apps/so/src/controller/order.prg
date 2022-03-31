@@ -6,6 +6,8 @@ CLASS Order
 	METHOD Action()
 	METHOD Load()
 	
+	METHOD Upd()
+	
 ENDCLASS
 
 //	---------------------------------------------------------------	//
@@ -56,6 +58,39 @@ METHOD Load( oController, hParam ) CLASS Order
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 
 RETU NIL
+
+
+//	---------------------------------------------------------------	//
+
+METHOD Upd( oController ) CLASS Order	
+
+	local oPedido		:= PedidoModel():New()		
+	local hParam		:= oController:GetAll()
+	local oValidator 
+	
+	DEFINE VALIDATOR oValidator WITH hParam
+		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
+	RUN VALIDATOR oValidator 
+	
+	if oValidator:lError
+		oController:View( 'sys/error.view', 200, oValidator:ErrorString() )				
+		retu 
+	endif		
+	
+	aRows := oPedido:GetId( hParam[ 'id' ]  )
+	
+	if len( aRows ) == 1 
+		hRow := aRows[1]
+	else 
+		oController:View( 'sys/error.view', 200, "Id doesn't exist: " + ltrim(str(hParam[ 'id' ])) )				
+		retu nil
+	endif
+
+	
+	oController:View( 'order/order_upd.view', 200, hRow )	
+	
+	
+RETU NIL 
 
 //	Load datamodel		---------------------------------------------
 
