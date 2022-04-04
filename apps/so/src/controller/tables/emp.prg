@@ -118,13 +118,11 @@ RETU NIL
 METHOD GetId( oController, hParam ) CLASS Emp		
 	
 	local oEmp 		:= EmpleadoModel():New()	
-	local aRows 		:= oEmp:GetId( val( hParam[ 'search' ] ) )
+	local hRow 		:= oEmp:GetId( val( hParam[ 'search' ] ) )
 		
-	if len( aRows) > 0
-		oController:oResponse:SendJson( { 'success' => .t. , 'row' => aRows[1] } )
-	else
-		oController:oResponse:SendJson( { 'success' => .f. , 'row' => {=>} } )
-	endif		
+	
+	oController:oResponse:SendJson( { 'success' => .t. , 'row' => hRow } )
+
 
 RETU NIL
 

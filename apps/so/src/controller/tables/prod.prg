@@ -112,13 +112,10 @@ RETU NIL
 METHOD GetId( oController, hParam ) CLASS Prod		
 	
 	local oProd 		:= ProdModel():New()		
-	local aRows 		:= oProd:GetId( val( hParam[ 'search' ] ) )
-		
-	if len( aRows) > 0
-		oController:oResponse:SendJson( { 'success' => .t. , 'row' => aRows[1] } )
-	else
-		oController:oResponse:SendJson( { 'success' => .f. , 'row' => {=>} } )
-	endif		
+	local hRow 		:= oProd:GetId( val( hParam[ 'search' ] ) )
+
+	oController:oResponse:SendJson( { 'success' => .t. , 'row' => hRow } )
+	
 
 RETU NIL
 

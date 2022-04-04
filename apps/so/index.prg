@@ -37,6 +37,7 @@ FUNCTION Main()
 			DEFINE ROUTE 'o.show'		URL 'o/show'					CONTROLLER 'show@order.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'o.action'	URL 'o/action'					CONTROLLER 'action@order.prg'		METHOD 'POST'	OF oApp
 			DEFINE ROUTE 'o.upd'		URL 'o/upd/(id)'				CONTROLLER 'upd@order.prg'			METHOD 'GET'	OF oApp
+			DEFINE ROUTE 'o.save'		URL 'o/save'					CONTROLLER 'save@order.prg'		METHOD 'POST'	OF oApp
 			
 		//	Tables 
 		

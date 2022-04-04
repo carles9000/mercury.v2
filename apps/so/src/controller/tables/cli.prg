@@ -112,13 +112,11 @@ RETU NIL
 METHOD GetId( oController, hParam ) CLASS Cli		
 	
 	local oCli 		:= ClienteModel():New()	
-	local aRows 		:= oCli:GetId( val( hParam[ 'search' ] ) )
+	local hRow 		:= oCli:GetId( val( hParam[ 'search' ] ) )
 		
-	if len( aRows) > 0
-		oController:oResponse:SendJson( { 'success' => .t. , 'row' => aRows[1] } )
-	else
-		oController:oResponse:SendJson( { 'success' => .f. , 'row' => {=>} } )
-	endif		
+
+	oController:oResponse:SendJson( { 'success' => .t. , 'row' => hRow } )
+		
 
 RETU NIL
 

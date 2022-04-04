@@ -17,6 +17,10 @@
 	
 	{{ LoadTWeb( AppUrlLib() + 'tweb' ) }}
 	
+	<!-- Fonts Awesome 4.7 -->
+	
+	<link rel="stylesheet" href="{{ AppUrlCss() + 'font-awesome-4.7.0/css/font-awesome.min.css' }}">	
+	
 	
 </head>
 

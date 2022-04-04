@@ -51,7 +51,7 @@ RETU SELF
 
 METHOD GetId( uValue ) CLASS DbfCdxProvider
 
-	local hRow	:= {}	
+	local hRow	:= {=>}	
 	local n 		:= 0
 	local uSearch	:= ''
 	local nPos 
@@ -99,13 +99,14 @@ _d( 'GETID SEARCH', uSearch )
 	
 	IF ( ::cAlias )->( FieldGet( nPos ) ) == uValue
 	
-		Aadd( hRow, eval( ::bLoadRow )  )					
+		//Aadd( hRow, eval( ::bLoadRow )  )					
+		hRow := eval( ::bLoadRow )  	
 
 	endif
 	
 _d( hRow )	
 	
-retu hRow
+retu hRow 
 
 //----------------------------------------------------------------------------//
 

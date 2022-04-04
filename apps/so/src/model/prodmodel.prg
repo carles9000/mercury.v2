@@ -38,6 +38,9 @@ METHOD New() CLASS ProdModel
 		::hSearch[ 'id' ] 		:= { 'id_prod', 'id_prod' }
 		::hSearch[ 'nombre' ] 	:= { 'nombre', 'nombre', {|u| lower(u) } }
 		::hSearch[ 'tamano' ] 	:= { 'tamano', 'tamano' }
+		
+		
+		(::cAlias)->( OrdSetFocus( ::hSearch[ 'id' ][1] ) )
 
 
 RETU SELF

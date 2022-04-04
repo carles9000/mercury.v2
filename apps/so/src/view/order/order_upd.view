@@ -83,6 +83,42 @@
 		padding-left: 5px;
 		word-break: break-word;
 	}
+	
+	/*	----------------------	*/
+	
+	.head {
+		height:60px;
+	}
+	
+	.head_ped  {
+		width: 130px;		
+		float: left;		
+		padding-top: 16px;
+		height: 60px;
+		font-family: sans-serif;
+		font-size: 18px;
+		font-weight: bold;		
+	}
+	
+	.head_bar {			
+		float: right;
+		margin-right: 10px;		
+	}
+	
+	.btn_img {
+		font-size: 18px;
+	}
+	
+	#id {
+	    width: 100px;
+		text-align: center;
+	}
+	
+	#fact_total {
+		width:100px;
+	}
+	
+	
 
 </style>
 
@@ -98,8 +134,10 @@
 		#include {% TWebInclude() %}
 		
 		local hRow := pvalue(1)
-		local aRows := {}
+		
+		local aRows := hRow['pos']
 		local o, oCol, oBrw
+		
 	//retu mh_valtochar( pvalue(1) )
 
 
@@ -110,7 +148,32 @@
 			o:cType     := 'md'     //  xs,sm,md,lg
 			o:cSizing   := 'sm'     //  sm,lg
 		
-			HTML o INLINE '<h3>ID {{ hRow['id_ped'] }}<hr>'
+			HTML o PARAMS hRow
+			
+				<div class="head">
+					<div class="head_ped">
+						ID <input id="id" value="<$ hRow['cab']['id_ped']  $>"></input>
+					</div>
+
+					<div class="head_bar">
+
+						<div class="input-group">	
+							<div class="input-group-prepend">						
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Save()"	>
+									<div  class="btn_img"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
+									Save</button>
+
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="alert(123)"	>
+									<div class="btn_img"><i class="fa fa-print" aria-hidden="true"></i></div>
+									Print</button>									
+							 </div>
+						</div>	
+					
+					</div>				
+				</div>				
+				
+				<hr>
+			ENDTEXT
 			
 		INIT FORM o  
 			
@@ -161,7 +224,7 @@
 			
 						SEPARATOR o LABEL 'Notes'
 					
-						GET oGet ID 'dni' VALUE '39690754L' TYPE 'date' LABEL 'Descripcion'  GRID 6 OF o
+						GET oGet ID 'data_ped' VALUE '39690754L' TYPE 'date' LABEL 'Descripcion'  GRID 6 OF o
 					
 						GET oGet ID 'dni' VALUE '39690754L' TYPE 'date' LABEL 'Descripcion'  GRID 6 OF o						
 					
@@ -178,13 +241,18 @@
 
 			ENDROW o
 			
-			ROW o 
+			ROW o  
 			
+				COL o GRID 12 
+					SEPARATOR o LABEL 'Totales'					
+				ENDCOL o 				
+				
 				COL o GRID 12
-				SEPARATOR o LABEL 'Totales'					
-			
-				GET ID 'fact_total' VALUE '' GRID 4 ALIGN 'right' READONLY OF o	
+					ROW o HALIGN 'right'
+						GET ID 'fact_total' VALUE '' ALIGN 'center' READONLY OF o	
+					ENDROW o
 				ENDCOL o 
+				
 			ENDROW o 
 			
 			ROW o VALIGN 'top'		// Try without VALIGN CLAUSE
@@ -195,8 +263,8 @@
 					
 					DIV o ID 'bar' CLASS 'btn-group'
 					
-						BUTTON LABEL ' Modify' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Brw_Modify()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
-						BUTTON LABEL ' Delete' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Brw_Delete()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+						BUTTON LABEL ' Modify' 	ICON '<i class="fa fa-recycle" ></i>' 		ACTION 'Brw_Modify()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+						BUTTON LABEL ' Delete' 	ICON '<i class="fa fa-trash-o" ></i>' 		ACTION 'Brw_Delete()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
 						
 					ENDDIV o 
 					
@@ -205,21 +273,16 @@
 						
 						GET ID 'prod' VALUE '' GRID 3 TYPE 'tel' LABEL 'Procuto' ;
 							BUTTON '<i class="fas fa-search"></i>', '<i class="fas fa-sign-in-alt"></i> Buscar' ;							
-							ACTION 'Prod_Search()', 'Prod_Accept()' OF o	
-							
-							
+							ACTION 'Prod_Search()', 'Prod_Accept()' OF o															
 							
 						GET ID 'prod_txt' VALUE '' LABEL 'Descripcion' READONLY GRID 4  OF o													
 						
 						GET ID 'prod_qty' VALUE '' GRID 1 TYPE 'tel'  LABEL 'Qty.' ALIGN 'center' ONCHANGE 'Row_Qty()' OF o	
 						GET ID 'prod_pvp' VALUE '' GRID 1 LABEL 'Precio' ALIGN 'center' READONLY OF o	
 						GET ID 'prod_total' VALUE '' GRID 1 LABEL 'Total' ALIGN 'center' READONLY OF o	
-						BUTTON ID 'prod_btn' LABEL 'Accept' GRID 2 ACTION 'Row_Accept()' WIDTH '100%' OF o  
+						BUTTON ID 'prod_btn' LABEL '  Accept' GRID 2 ACTION 'Row_Accept()' ICON '<i class="fa fa-check" aria-hidden="true"></i>' WIDTH '100%' OF o  
 					
-						HTML o INLINE '<input type="hidden" id="prod_recno"></input>'
-						
-						
-						
+						HTML o INLINE '<input type="hidden" id="prod_recno"></input>'																		
 						
 					ENDROW o
 					
@@ -236,9 +299,9 @@
 						//ADD oCol TO oBrw ID 'id_ped' 	HEADER 'id_ped'		EDIT SORT
 						ADD oCol TO oBrw ID 'id_prod' 	HEADER 'Id Prod'		EDIT 
 						ADD oCol TO oBrw ID 'prod_txt' 	HEADER 'Descripcion'	EDIT 
-						ADD oCol TO oBrw ID 'precio' 	HEADER 'Precio' 	EDIT
-						ADD oCol TO oBrw ID 'ctd'		HEADER 'Ctd' 		EDIT
-						ADD oCol TO oBrw ID 'total'		HEADER 'Total' 		EDIT
+						ADD oCol TO oBrw ID 'precio' 	HEADER 'Precio' 	EDIT ALIGN 'center' FORMATTER 'Decimal_2'
+						ADD oCol TO oBrw ID 'ctd'		HEADER 'Ctd' 		EDIT ALIGN 'center'
+						ADD oCol TO oBrw ID 'total'		HEADER 'Total' 		EDIT ALIGN 'center' FORMATTER 'Decimal_2'
 						
 						
 					INIT BROWSE oBrw DATA aRows						
@@ -247,7 +310,7 @@
 
 			ENDROW o 
 			
-			HTML o 
+			HTML o PARAMS hRow
 			
 			<script>
 			
@@ -456,7 +519,7 @@
 					if ( row ) {
 						$('#prod_txt').val( row.nombre )
 						
-						$('#prod_qty').val( '1' )
+						$('#prod_qty').val( '0' )
 						$('#prod_pvp').val( row.precio)
 						$('#prod_total').val( '0' )
 					
@@ -495,6 +558,19 @@
 						o[ 'total' ] 	= $('#prod_total').val() 
 console.log( 'RECNO', o[ '_recno' ] )	
 
+					if ( o[ 'id_prod' ] == '' ){ 
+						$('#prod').select() 
+						$('#prod').focus() 
+						return null 
+					}
+					console.log(  'CTD-------------', parseInt( o[ 'ctd' ] ) )
+					if ( parseInt( o[ 'ctd' ] ) <= 0 ){ 
+					console.log( 'DINS-------')
+						o[ 'ctd' ] 	= $('#prod').select() 
+						o[ 'ctd' ] 	= $('#prod').focus() 
+						return null 
+					}					
+					
 					if ( o[ '_recno' ] == '' )
 						oBrw.AddRow( o )
 					else
@@ -588,20 +664,74 @@ console.log( 'RECNO', o[ '_recno' ] )
 						
 					}) 								
 				}
+				
+				function Decimal_2( value, row) {
+				
+					return parseFloat( value ).toFixed(2)														
+				}	
 			
 			
 			//	-------------------------------------------------------------
+			
+				function Save() {
 				
-					$( document ).ready(function() {						
+					var cEmp = $('#emp').val()
+				
+					if ( cEmp == '' ) {
+						MsgError( 'Especificar empleado')
+						return null
+					}
+				
+					var cCli = $('#cli').val()
+				
+					if ( cCli == '' ) {
+						MsgError( 'Especificar cliente' )
+						return null
+					}	
+					var cComment 	= $('#comment').val()
+					var aPos 		= oBrw.GetData()
+					
+					var oParam = new Object()
+						oParam[ 'id' ]  = $('#id').val()
+						oParam[ 'id_emp' ] = cEmp 
+						oParam[ 'id_cli' ] = cCli						
+						oParam[ 'pos' ] = aPos 
 						
-						TWebIntro( 'emp', Emp_Accept ) 						
-						TWebIntro( 'cli', Cli_Accept ) 						
-						TWebIntro( 'prod', Prod_Accept )
-						TWebIntro( 'prod_qty', function(){ $('#prod_btn').focus() } )
- 						
+					var cUrl = "{{ mc_Route( 'o.save' ) }}"
 						
-						console.info( 'Order Update ready !')			
-					});				
+					MsgServer( cUrl, oParam, Post_Save )																																					
+				
+					return null				
+				}	
+
+				function Post_Save( dat ) {				
+					console.log( dat )				
+				}		
+			
+			//	-------------------------------------------------------------
+				
+				$( document ).ready(function() {						
+					
+					TWebIntro( 'emp', Emp_Accept ) 						
+					TWebIntro( 'cli', Cli_Accept ) 						
+					TWebIntro( 'prod', Prod_Accept )
+					TWebIntro( 'prod_qty', function(){ $('#prod_btn').focus() } )
+					
+					var oPedido 	= <$ SetDataJS(hRow[ 'cab']) $>
+					var oCliente 	= <$ SetDataJS(hRow[ 'ocliente']) $>
+					var oEmpleado 	= <$ SetDataJS(hRow[ 'oempleado']) $>
+					
+					console.log( 'READY', oPedido)
+					console.log( 'READY', oCliente)
+					console.log( 'READY', oEmpleado)
+					
+					ShowCli( oCliente )
+					ShowEmp( oEmpleado )
+					
+					
+					
+					console.info( 'Order Update ready !')			
+				});				
 				
 			
 			</script>						
