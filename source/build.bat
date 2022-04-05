@@ -22,6 +22,8 @@ copy mercury.ch  ..\lib\mercury.ch
 copy mercury.hrb c:\xampp\htdocs\pre\soulbour\lib\mercury\mercury.hrb
 copy mercury.ch c:\xampp\htdocs\pre\soulbour\lib\mercury\mercury.ch
 
+
+
 @echo .
 @echo =========================
 @echo Lib Mercury has builded !

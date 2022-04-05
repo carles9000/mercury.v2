@@ -22,10 +22,12 @@ METHOD New() CLASS PedidoPosModel
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
+		FIELD 'id' 			UPDATE  OF ::oDataset
 		FIELD 'id_ped' 		UPDATE  OF ::oDataset
 		FIELD 'id_prod'		UPDATE  OF ::oDataset
 		FIELD 'precio'		UPDATE  OF ::oDataset
 		FIELD 'ctd'			UPDATE  OF ::oDataset
+		FIELD 'total'		CALCULATED {|cAlias| (cAlias)->precio * (cAlias)->ctd  } OF ::oDataset
 
 		
 	//	Define if can Loading all records...  (for small tables)
@@ -83,8 +85,13 @@ _d( 'LOADPOS-a' )
 		
 			endif
 			
-		endif 		
-	
+		endif 
+		
+		h := ::oDataset:Row() 
+		h[ 'prod_txt'] := cProd 
+		
+		Aadd( aPos, h )
+	/*
 		Aadd( aPos, { 'id' => (::cAlias)->id,;
 						'id_ped' => (::cAlias)->id_ped,;
 						'id_prod' => (::cAlias)->id_prod,;
@@ -92,6 +99,7 @@ _d( 'LOADPOS-a' )
 						'precio' => (::cAlias)->precio,;
 						'ctd' => (::cAlias)->ctd;
 					})
+	*/
 	
 	
 		(::cAlias)->( DbSkip() )

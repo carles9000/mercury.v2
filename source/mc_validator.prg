@@ -114,7 +114,7 @@ METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
 
 	//LOCAL oReq 		:= App():oRequest     //::oRoute:oTRequest	
 	LOCAL aRoles, n, nRoles, cRole
-	LOCAL uValue 		
+	LOCAL uValue, lINE  		
 	LOCAL cargo
 	//LOCAL cMethod 	:= oReq:Method()
 	
@@ -136,7 +136,7 @@ METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
 	
 	//	Aqui hemos de ponser todos los roles. Escalar !
 
-	
+	lINE := Ascan( aRoles, 'ine' ) > 0 
 	
 	FOR n = 1 to nRoles
 	
@@ -156,71 +156,145 @@ METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
 				ENDIF
 				
 			CASE cRole == 'numeric'	 .or. cRole == 'number'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 						
 
-				IF ! ISDIGIT( alltrim( uValue) )
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no numérico', 'value' => uValue }
-					EXIT
+					IF ! ISDIGIT( alltrim( uValue) )
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no numérico', 'value' => uValue }
+						EXIT
+					ENDIF
+				
 				ENDIF
 
 			CASE cRole == 'string'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 							
 	
-				IF ! ISALPHA( uValue )
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no string', 'value' => uValue  }
-					EXIT
+					IF ! ISALPHA( uValue )
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no string', 'value' => uValue  }
+						EXIT
+					ENDIF
 				ENDIF
 
 			CASE substr(cRole,1,4) == 'len:'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 							
 
-				cargo := Val(substr(cRole, 5 ))
+					cargo := Val(substr(cRole, 5 ))
 
-				IF len( uValue ) <> cargo	
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Longitud ha de ser ' + ltrim(str(cargo)), 'value' => uValue  }
-					EXIT
+					IF len( uValue ) <> cargo	
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Longitud ha de ser ' + ltrim(str(cargo)), 'value' => uValue  }
+						EXIT
+					ENDIF
+					
 				ENDIF
 				
 			CASE substr(cRole,1,4) == 'max:'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 							
 
-				cargo 	:= Val(substr(cRole, 5 ))				
+					cargo 	:= Val(substr(cRole, 5 ))				
 
-				IF  IF( valtype( uValue ) == 'N', uValue, Val(uValue))  > cargo	
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Maxima valor de ' + ltrim(str(cargo)), 'value' => uValue  }
-					EXIT
+					IF  IF( valtype( uValue ) == 'N', uValue, Val(uValue))  > cargo	
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Maxima valor de ' + ltrim(str(cargo)), 'value' => uValue  }
+						EXIT
+					ENDIF	
+				
 				ENDIF	
 
 			CASE substr(cRole,1,4) == 'min:'
-
-				cargo 	:= Val(substr(cRole, 5 ))
+			
+				IF lINE .and. empty( uValue )
 				
-				IF  IF( valtype( uValue ) == 'N', uValue, Val(uValue))  < cargo	
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Minimo valor de ' + ltrim(str(cargo)), 'value' => uValue  }
-					EXIT
+				ELSE 							
+
+					cargo 	:= Val(substr(cRole, 5 ))
+					
+					IF  IF( valtype( uValue ) == 'N', uValue, Val(uValue))  < cargo	
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Minimo valor de ' + ltrim(str(cargo)), 'value' => uValue  }
+						EXIT
+					ENDIF		
+					
 				ENDIF				
 
 			CASE substr(cRole,1,7) == 'maxlen:'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 							
 
-				cargo := Val(substr(cRole, 8 ))
+					cargo := Val(substr(cRole, 8 ))
 
-				IF valtype( uValue ) == 'C' .AND. len(uValue) > cargo
-					RETU { 'success' => .F., 'field' => cKey,  'name' => cName,  'msg' => 'Maxima longitud de ' + ltrim(str(cargo)), 'value' => uValue  }
-					EXIT
+					IF valtype( uValue ) == 'C' .AND. len(uValue) > cargo
+						RETU { 'success' => .F., 'field' => cKey,  'name' => cName,  'msg' => 'Maxima longitud de ' + ltrim(str(cargo)), 'value' => uValue  }
+						EXIT
+					ENDIF	
+					
 				ENDIF	
 
 			CASE substr(cRole,1,7) == 'minlen:'
+			
+				IF lINE .and. empty( uValue )
+				
+				ELSE 							
+				
+					cargo := Val(substr(cRole, 8 ))
 
-				cargo := Val(substr(cRole, 8 ))
-
-				IF valtype( uValue ) == 'C' .AND. len(uValue) < cargo
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Minima longitud de ' + ltrim(str(cargo)), 'value' => uValue  }
-					EXIT
+					IF valtype( uValue ) == 'C' .AND. len(uValue) < cargo
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Minima longitud de ' + ltrim(str(cargo)), 'value' => uValue  }
+						EXIT
+					ENDIF	
+				
 				ENDIF	
 
 			CASE cRole == 'ismail'
-	
-				IF ! MC_IsMail( uValue )
-					RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no mail', 'value' => uValue  }
-					EXIT
-				ENDIF				
+			
+				IF lINE .and. empty( uValue )
 				
+				ELSE 			
+	
+					IF ! MC_IsMail( uValue )
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no mail', 'value' => uValue  }
+						EXIT
+					ENDIF	
+				
+				ENDIF	
+
+			CASE cRole == 'date'	
+
+				//	2022-12-01 
+				
+				IF lINE .and. empty( uValue )
+				
+				ELSE 
+				
+					IF len( uValue ) != 10 .or. ;
+						Substr( uValue,5,1 ) != '-' .or. ;
+						Substr( uValue,8,1 ) != '-' 
+						
+						RETU { 'success' => .F., 'field' => cKey, 'name' => cName,   'msg' => 'Valor no date', 'value' => uValue  }
+						EXIT								
+						
+					ENDIF 
+				
+				ENDIF 
+				
+			CASE cRole == 'ine'		//	If Not Empty == INE
+			
+			
+			OTHERWISE 
+			
+				RETU { 'success' => .F., 'field' => '', 'name' => '', 'msg' => 'Validator: dont exist role: ' + cRole , 'value' => ''  }
+				EXIT			
+							
 		ENDCASE		
 		
 	NEXT								

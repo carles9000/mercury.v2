@@ -80,6 +80,7 @@ METHOD Upd( oController ) CLASS Order
 	endif		
 	
 	hInfo := oPedido:Load( hParam[ 'id' ] , .T. )
+	
 	//_w( hInfo )
 	//retu
 		
@@ -103,25 +104,38 @@ METHOD Save( oController ) CLASS Order
 	local oPedido		:= PedidoModel():New()		
 	local oValidator 
 	local hError 		:= {=>}
-
 	
 	hParam[ 'id' ] := '7'
 	
 	DEFINE VALIDATOR oValidator WITH hParam
-		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
-		PARAMETER 'id_cli'	NAME 'Id Cli' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
-		PARAMETER 'id_emp'	NAME 'Id Empl' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
+		PARAMETER 'id' 		NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
+		PARAMETER 'id_cli'		NAME 'Id Cli' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
+		PARAMETER 'id_emp'		NAME 'Id Empl' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
+		PARAMETER 'data_ped'	NAME 'F. Pedido' ROLES 'ine|date|len:10' FORMATTER 'todate' OF oValidator			
+		PARAMETER 'data_req'	NAME 'F. Req' ROLES 'ine|date|len:10' FORMATTER 'todate' OF oValidator			
+		PARAMETER 'notes'		NAME 'Notes' ROLES 'maxlen:240' OF oValidator			
+		PARAMETER 'id_shipper'	NAME 'Shipper' ROLES 'maxlen:2' OF oValidator			
 	RUN VALIDATOR oValidator 	
 	
 	if oValidator:lError
-		oController:oResponse:SendJson( { 'process' => lSave, 'error' => oValidator:ErrorString() } )				
+		oController:oResponse:SendJson( { 'process' => .f., 'error' => oValidator:ErrorString() } )				
 		retu 
 	endif		
 
+	//oController:oResponse:SendJson( { 'param' => hParam , 'a' => valtype(hParam['data_ped'])} )	
+	
 
 	//	Valid logic data param pos 
 	
-		hCab := { 'id' => hParam[ 'id' ], 'id_cli' => hParam[ 'id_cli' ], 'id_emp' => hParam[ 'id_emp' ] }
+		hCab := { 	'id' => hParam[ 'id' ], ;
+					'id_cli' => hParam[ 'id_cli' ],;
+					'id_emp' => hParam[ 'id_emp' ],;
+					'data_ped' => hParam[ 'data_ped' ],;
+					'data_req' => hParam[ 'data_req' ],;
+					'notes' => hParam[ 'notes' ],;
+					'id_shipper' => hParam[ 'id_shipper' ];
+					}
+					
 		aPos := hParam[ 'pos' ]
 		
 		lSave := oPedido:Save( hCab, aPos, @hError )

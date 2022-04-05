@@ -33,6 +33,9 @@ METHOD New() CLASS PedidoModel
 			FIELD 'id_emp'		UPDATE  OF ::oDataset
 			FIELD 'total'		UPDATE  OF ::oDataset
 			FIELD 'data_ped'	UPDATE  OF ::oDataset
+			FIELD 'data_req'	UPDATE  OF ::oDataset
+			FIELD 'notes'		UPDATE  OF ::oDataset
+			FIELD 'id_shipper'	UPDATE  OF ::oDataset
 
 		
 	//	Define Special row Load
@@ -155,10 +158,13 @@ METHOD Save( hCab, aPos, hError ) CLASS PedidoModel
 	local n, nPos, oItem, nRecno, nTotal
 	
 	//	
-	
+		(cAliasPos)->( OrdSetFocus( 'id' )  )
+		
 		hError := {=>}
 	
-_d( 'SAVE' )	
+_d( 'SAVE' )
+_d( aPos )	
+
 _d( hCab )	
 	
 	//	Existe Cliente ?
@@ -219,36 +225,79 @@ _d( 'Proc2', lLock)
 _d( 'Proc3' )		
 			oItem := aPos[n]		
 		
-			lNew := At( '$', oItem[ '_recno' ] ) > 0 
-			
-			if lNew
-			
-				lLock_Pos := (cAliasPos)->( DbAppend() )				
-			
-				nIdPos := ::oCounter:Get( 'PDP' )
+_d( 'Proc3->' + oItem[ 'action'] )		
+
+			lLock_Pos := .f.
+_d('proc3-1')
+			DO CASE
+				case oItem[ 'action'] == 'A' 
+					
+_d('proc3-1a')
+						lLock_Pos := (cAliasPos)->( DbAppend() )				
+					_d( 'LOCK', lLock_Pos)
+						nIdPos := ::oCounter:Get( 'PDP' )
+_d( 'NIDPOS', nIdPos )						
+						
+						if nIdPos == -1 
+						
+							//	Error ----
+							
+							lLock_Pos := .f.
+							
+						else 
+							lLock_Pos := .t.
+						
+						endif 
+						
+				case oItem[ 'action'] == 'U' 
+_d('proc3-1b')
 				
-				if nIdPos == -1 
+				_d( oItem[ 'action'] )
+				_d( oItem['id'] )
 				
-					//	Error ----
+					nIdPos := if( valtype(oItem['id']) == 'N', oItem['id'], val(oItem['id']))
 				
-				endif 
+					(cAliasPos)->( DbSeek( nIdPos ) )
+					
+					if (cAliasPos)->id == nIdPos 
+						lLock_Pos := (cAliasPos)->( DbRlock() )
+					endif
+					
+				case oItem[ 'action'] == 'D' 
 				
+				_d( oItem[ 'action'] )
+				_d( oItem['id'] )
+				
+					
+					nIdPos := if( valtype(oItem['id']) == 'N', oItem['id'], val(oItem['id']))
+				
+					(cAliasPos)->( DbSeek( nIdPos ) )
+					
+					if (cAliasPos)->id == nIdPos 
+						if (cAliasPos)->( DbRlock() )
+							(cAliasPos)->( DbDelete() )
+						endif
+					endif										
+					
+			endcase
 			
-			else 																			
-			
-				lLock_Pos := (cAliasPos)->( DbRlock() )
-				
-				nIdPos := (cAliasPos)->id 
-				
-			endif 
-			
+_d('proc3-2')
 			if lLock_Pos 
-			
+_d( oItem )
+_d('proc3-41')			
 				(cAliasPos)->id      	:= nIdPos
+_d('proc3-42')			
 				(cAliasPos)->id_ped  	:= hCab['id']
-				(cAliasPos)->id_prod 	:= Val( oItem[ 'id_prod' ] )
-				(cAliasPos)->precio  	:= Val( oItem[ 'precio' ] )
-				(cAliasPos)->ctd    	:= Val( oItem[ 'ctd' ] )			
+_d('proc3-43')			
+				(cAliasPos)->id_prod 	:= Val( oItem['row']['id_prod'] )
+_d('proc3-44')			
+				(cAliasPos)->precio  	:= Val( oItem['row']['precio'] )
+_d('proc3-45')			
+				(cAliasPos)->ctd    	:= Val( oItem['row']['ctd'] )			
+			
+				
+				
+_d('proc3-46')			
 				
 			endif 		
 		
@@ -260,8 +309,11 @@ _d( 'Proc3' )
 		
 		nTotal := 0
 	
+		(cAliasPos)->( OrdSetFocus( 'id_ped' ) )
+		
 		(cAliasPos)->( DbSeek( hCab['id'] ) )
 		
+_d('proc3-5')			
 		while (cAliasPos)->id_ped == hCab['id']  .and. (cAliasPos)->( !eof() )
 		
 			nTotal += ( (cAliasPos)->precio * (cAliasPos)->ctd )
@@ -269,13 +321,25 @@ _d( 'Proc3' )
 			(cAliasPos)->( DbSkip() )
 		end 
 		
+_d('proc3-6')			
 		
 		//	Update Header Pedido 
 		
 			(::cAlias)->id_ped 	:= hCab['id']
 			(::cAlias)->id_cli 	:= hCab[ 'id_cli' ]
 			(::cAlias)->id_emp 	:= hCab[ 'id_emp' ]
-			(::cAlias)->total 		:= nTotal 				
+			(::cAlias)->total 		:= nTotal 
+
+			(::cAlias)->notes 		:= hCab['notes'] 
+			(::cAlias)->id_shipper 	:= hCab['id_shipper'] 
+			
+			if  valtype(hCab['data_ped']) == 'D'
+				(::cAlias)->data_ped := hCab['data_ped'] 
+			endif
+			
+			if  valtype(hCab['data_req']) == 'D'
+				(::cAlias)->data_req := hCab['data_req'] 
+			endif				
 		
 		
 	//	Commits

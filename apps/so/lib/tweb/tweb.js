@@ -2152,14 +2152,16 @@ function TWebControl() {
 
 		switch ( cControl ) {
 		
+			case 'tgetmemo':
 			case 'tget':
 			
 				if ( o ) {				
 					o.val( uValue );			
 				}
 				
-				break;			
-		
+				break;	
+
+			
 			case 'tcombobox':
 			
 				if ( typeof cargo == 'string' && cargo == 'data' ) {

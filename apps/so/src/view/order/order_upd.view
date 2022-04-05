@@ -87,13 +87,13 @@
 	/*	----------------------	*/
 	
 	.head {
-		height:60px;
+		height:30px;
 	}
 	
 	.head_ped  {
 		width: 130px;		
 		float: left;		
-		padding-top: 16px;
+		/*padding-top: 16px;*/
 		height: 60px;
 		font-family: sans-serif;
 		font-size: 18px;
@@ -116,6 +116,9 @@
 	
 	#fact_total {
 		width:100px;
+		text-align: center;
+		font-size: 20px;
+		font-weight: bold;		
 	}
 	
 	
@@ -136,7 +139,9 @@
 		local hRow := pvalue(1)
 		
 		local aRows := hRow['pos']
-		local o, oCol, oBrw
+		local o, oCol, oBrw, oShipper
+		LOCAL aKey 		:= { 'U', 'L', 'P', 'PP' }
+		LOCAL aValue 	:= { 'UPS', 'Loomis', 'Purolator', 'Parcel Post' }
 		
 	//retu mh_valtochar( pvalue(1) )
 
@@ -157,15 +162,21 @@
 
 					<div class="head_bar">
 
-						<div class="input-group">	
-							<div class="input-group-prepend">						
-								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Save()"	>
-									<div  class="btn_img"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
-									Save</button>
+						<div class="input-group ">	
+							<div class="btn-group"	>	
 
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Save()"	>
+									<i class="fa fa-floppy-o" aria-hidden="true"></i>
+									Save</button>
+									
 								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="alert(123)"	>
-									<div class="btn_img"><i class="fa fa-print" aria-hidden="true"></i></div>
-									Print</button>									
+									<i class="fa fa-print" aria-hidden="true"></i>
+									Print</button>	
+									
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="alert('send')"	>
+									<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;Send</button>										
+
+
 							 </div>
 						</div>	
 					
@@ -189,7 +200,7 @@
 						
 							SMALL o ID 'xxp' LABEL 'Comercial' GRID 12
 							
-							GET ID 'emp' VALUE '' GRID 12 TYPE 'tel' ;
+							GET ID 'emp' VALUE '' GRID 12 TYPE 'tel' ALIGN 'center' ;
 								BUTTON '<i class="fas fa-search"></i>', '<i class="fas fa-sign-in-alt"></i> Buscar' ;
 								ACTION 'Emp_Search()', 'Emp_Accept()' OF o					
 						
@@ -202,7 +213,7 @@
 						
 							SMALL o ID 'xxp' LABEL 'Cliente' GRID 12
 							
-							GET ID 'cli' VALUE '' GRID 12 TYPE 'tel' ;
+							GET ID 'cli' VALUE '' GRID 12 TYPE 'tel' ALIGN 'center' ;
 								BUTTON '<i class="fas fa-search"></i>', '<i class="fas fa-sign-in-alt"></i> Buscar' ;
 								ACTION 'Cli_Search()', 'Cli_Accept()' OF o					
 						
@@ -220,40 +231,33 @@
 				
 				COL o GRID 5
 				
-					ROW o 
+					ROWGROUP o 
 			
 						SEPARATOR o LABEL 'Notes'
 					
-						GET oGet ID 'data_ped' VALUE '39690754L' TYPE 'date' LABEL 'Descripcion'  GRID 6 OF o
+						GET oGet ID 'data_ped' VALUE '' TYPE 'date' LABEL 'F. Pedido'  GRID 6 OF o
 					
-						GET oGet ID 'dni' VALUE '39690754L' TYPE 'date' LABEL 'Descripcion'  GRID 6 OF o						
-					
-					ENDROW o 
-					
-					ROW o 
-					
-						GET oGet MEMO LABEL 'Descripcion' VALUE '' ROWS 2 GRID 12 OF o
+						GET oGet ID 'data_req' VALUE '' TYPE 'date' LABEL 'F. Req'  GRID 6 OF o						
 					
 					ENDROW o 
 					
+					ROWGROUP o 
 					
+						GET oGet MEMO ID 'notes' LABEL 'Notes' VALUE '' ROWS 2 GRID 12 OF o
+					
+					ENDROW o 
+					
+					ROWGROUP o
+					   
+						//SEPARATOR o LABEL 'Datos de Salida'
+
+						SELECT oShipper ID 'id_shipper' VALUE 'x' PROMPT aValue  VALUES aKey LABEL 'Shipper' GRID 6 OF o
+						
+					ENDROW	o						
 				ENDCOL o	
 
 			ENDROW o
-			
-			ROW o  
-			
-				COL o GRID 12 
-					SEPARATOR o LABEL 'Totales'					
-				ENDCOL o 				
-				
-				COL o GRID 12
-					ROW o HALIGN 'right'
-						GET ID 'fact_total' VALUE '' ALIGN 'center' READONLY OF o	
-					ENDROW o
-				ENDCOL o 
-				
-			ENDROW o 
+
 			
 			ROW o VALIGN 'top'		// Try without VALIGN CLAUSE
 			
@@ -277,17 +281,17 @@
 							
 						GET ID 'prod_txt' VALUE '' LABEL 'Descripcion' READONLY GRID 4  OF o													
 						
-						GET ID 'prod_qty' VALUE '' GRID 1 TYPE 'tel'  LABEL 'Qty.' ALIGN 'center' ONCHANGE 'Row_Qty()' OF o	
+						GET ID 'prod_qty' VALUE '' GRID 1 TYPE 'tel'  LABEL 'Qty.' ALIGN 'center'  ONCHANGE 'Row_Qty()' OF o	
 						GET ID 'prod_pvp' VALUE '' GRID 1 LABEL 'Precio' ALIGN 'center' READONLY OF o	
 						GET ID 'prod_total' VALUE '' GRID 1 LABEL 'Total' ALIGN 'center' READONLY OF o	
-						BUTTON ID 'prod_btn' LABEL '  Accept' GRID 2 ACTION 'Row_Accept()' ICON '<i class="fa fa-check" aria-hidden="true"></i>' WIDTH '100%' OF o  
+						BUTTON ID 'prod_btn' LABEL '  Accept' GRID 2 ACTION 'Row_Accept()' ICON '<i class="fa fa-check" aria-hidden="true"></i>' CLASS "btn-secondary" READONLY WIDTH '100%' OF o  
 					
-						HTML o INLINE '<input type="hidden" id="prod_recno"></input>'																		
+						HTML o INLINE '<input type="hidden" id="prod_id"></input>'																		
 						
 					ENDROW o
 					
-					DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-						EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+					DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 300 ;
+						EDIT UNIQUEID 'id' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 						ROWSTYLE 'MyRowStyle' ;
 						TOOLBAR "bar" ;						
 						OF o	
@@ -297,6 +301,7 @@
 
 						//ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
 						//ADD oCol TO oBrw ID 'id_ped' 	HEADER 'id_ped'		EDIT SORT
+						ADD oCol TO oBrw ID 'id' 		HEADER 'Id'				EDIT TYPE 'V'
 						ADD oCol TO oBrw ID 'id_prod' 	HEADER 'Id Prod'		EDIT 
 						ADD oCol TO oBrw ID 'prod_txt' 	HEADER 'Descripcion'	EDIT 
 						ADD oCol TO oBrw ID 'precio' 	HEADER 'Precio' 	EDIT ALIGN 'center' FORMATTER 'Decimal_2'
@@ -309,6 +314,24 @@
 				ENDCOL o
 
 			ENDROW o 
+			
+			
+			ROW o  
+
+				HTML o 
+				
+					<div class="row ml-auto">
+						<div class="input-group mb-3 pr-5">
+						  <div class="input-group-prepend">
+							<span class="input-group-text" id="inputGroup-sizing-default"><b>TOTAL</b></span>
+						  </div>
+						  <input type="text" id="fact_total" class="form-control" readonly >
+						</div>				
+					</div>				
+				
+				ENDTEXT 
+				
+			ENDROW o 			
 			
 			HTML o PARAMS hRow
 			
@@ -372,7 +395,9 @@
 						cHtml += DataToDiv( 'Cargo',  row.cargo )
 						cHtml += DataToDiv( 'Contact',   row.tlf + ', ' + row.ext )
 						cHtml += DataToDiv( 'Fecha Contable',  row.data_cont )						
-						cHtml += '</table>'											
+						cHtml += '</table>'	
+
+						$('#emp').val( row.id_emp )						
 					}
 					
 					$('#emp_data').html( cHtml )				
@@ -442,6 +467,8 @@
 						cHtml += DataToDiv( 'Mail', row.mail )
 						cHtml += DataToDiv( 'Url', row.url )
 						cHtml += '</table>'
+						
+						$('#cli').val( row.id_cli )
 					
 					
 					}
@@ -507,9 +534,19 @@
 					console.log( dat )
 					if ( dat.success ){
 						ShowProd( dat.row )
+						$('#prod_qty').removeAttr('disabled');
+						$('#prod_btn').removeAttr('disabled');
+						$('#prod_btn').addClass( 'btn-success' )
+						$('#prod_btn').removeClass( 'btn-secondary' )
+						
 						$('#prod_qty').select()
 						$('#prod_qty').focus()
 					} else {
+						$('#prod_qty').attr('disabled', '');
+						$('#prod_btn').attr('disabled', '');
+						$('#prod_btn').removeClass( 'btn-success' )
+						$('#prod_btn').addClass( 'btn-secondary' )
+						
 						ShowProd()
 					}
 				}
@@ -528,9 +565,7 @@
 						$('#prod_txt').val( '' )
 						$('#prod_qty').val( '0' )
 						$('#prod_pvp').val( '0' )
-						$('#prod_total').val( '0' )					
-					
-					
+						$('#prod_total').val( '0' )															
 					}												
 				}								
 				
@@ -550,13 +585,13 @@
 				function Row_Accept() {
 				
 					var o = new Object()
-						o[ '_recno' ] 	= $('#prod_recno').val() 
+						o[ 'id' ] 		= $('#prod_id').val() 
 						o[ 'id_prod' ] 	= $('#prod').val() 
 						o[ 'prod_txt' ] = $('#prod_txt').val() 
 						o[ 'precio' ] 	= $('#prod_pvp').val() 
 						o[ 'ctd' ] 		= $('#prod_qty').val() 
 						o[ 'total' ] 	= $('#prod_total').val() 
-console.log( 'RECNO', o[ '_recno' ] )	
+console.log( 'RECNO', o[ 'id' ] )	
 
 					if ( o[ 'id_prod' ] == '' ){ 
 						$('#prod').select() 
@@ -571,13 +606,19 @@ console.log( 'RECNO', o[ '_recno' ] )
 						return null 
 					}					
 					
-					if ( o[ '_recno' ] == '' )
+					if ( o[ 'id' ] == '' )
 						oBrw.AddRow( o )
 					else
-						oBrw.UpdateRowById( o[ '_recno' ], o )
+						oBrw.UpdateRowById( o[ 'id' ], o )
 						
 					Row_Reset()	
-					Fact_Total()	
+					Fact_Total()
+
+					$('#prod_qty').attr('disabled', '');
+					$('#prod_btn').attr('disabled', '');					
+					
+					$('#prod_btn').removeClass( 'btn-success' )
+					$('#prod_btn').addClass( 'btn-secondary' )
 					
 					$('#prod').select()
 					$('#prod').focus()
@@ -586,7 +627,7 @@ console.log( 'RECNO', o[ '_recno' ] )
 				
 				function Row_Reset() {
 				
-					$('#prod_recno').val('') 
+					$('#prod_id').val('') 
 					$('#prod').val('') 
 					$('#prod_txt').val('') 
 					$('#prod_pvp').val('0') 
@@ -606,7 +647,9 @@ console.log( 'RECNO', o[ '_recno' ] )
 						n += parseFloat( aData[i].total )
 					}
 					
-					$('#fact_total').val( n )				
+					
+					
+					$('#fact_total').val( n.toFixed(2)	 )				
 				
 				}
 				
@@ -631,9 +674,9 @@ console.log( 'RECNO', o[ '_recno' ] )
 					
 					if ( oItem.length == 1 ) {
 					
-					console.log( 'dentro. Recno', oItem[0]._recno)
+					console.log( 'dentro. Recno', oItem[0].id)
 					
-						$('#prod_recno').val( oItem[0]._recno ) 
+						$('#prod_id').val( oItem[0].id ) 
 						$('#prod').val( oItem[0].id_prod) 
 						$('#prod_txt').val( oItem[0].prod_txt ) 	
 						$('#prod_pvp').val( oItem[0].precio ) 
@@ -689,13 +732,20 @@ console.log( 'RECNO', o[ '_recno' ] )
 						return null
 					}	
 					var cComment 	= $('#comment').val()
-					var aPos 		= oBrw.GetData()
+					var aPos 		= oBrw.GetDataChanges()
 					
 					var oParam = new Object()
 						oParam[ 'id' ]  = $('#id').val()
 						oParam[ 'id_emp' ] = cEmp 
+						oParam[ 'data_ped' ] = $('#data_ped').val()
+						oParam[ 'data_req' ] = $('#data_req').val()
+						oParam[ 'notes' ] = $('#notes').val()
+						oParam[ 'id_shipper' ] = $('#id_shipper').val()
+						oParam[ 'notes' ] = $('#notes').val()
 						oParam[ 'id_cli' ] = cCli						
 						oParam[ 'pos' ] = aPos 
+						
+						console.log( 'SAVE', oParam)
 						
 					var cUrl = "{{ mc_Route( 'o.save' ) }}"
 						
@@ -709,14 +759,9 @@ console.log( 'RECNO', o[ '_recno' ] )
 				}		
 			
 			//	-------------------------------------------------------------
+			
+				function RefreshData() {
 				
-				$( document ).ready(function() {						
-					
-					TWebIntro( 'emp', Emp_Accept ) 						
-					TWebIntro( 'cli', Cli_Accept ) 						
-					TWebIntro( 'prod', Prod_Accept )
-					TWebIntro( 'prod_qty', function(){ $('#prod_btn').focus() } )
-					
 					var oPedido 	= <$ SetDataJS(hRow[ 'cab']) $>
 					var oCliente 	= <$ SetDataJS(hRow[ 'ocliente']) $>
 					var oEmpleado 	= <$ SetDataJS(hRow[ 'oempleado']) $>
@@ -727,6 +772,32 @@ console.log( 'RECNO', o[ '_recno' ] )
 					
 					ShowCli( oCliente )
 					ShowEmp( oEmpleado )
+					
+					$('#data_ped').val( oPedido[ 'data_ped' ] )
+					$('#data_req').val( oPedido[ 'data_req' ] )
+					$('#notes').val( oPedido[ 'notes' ] )
+					
+					var o = new TWebControl()
+					
+					o.Set( 'data_ped', oPedido[ 'data_ped' ] )
+					o.Set( 'data_req', oPedido[ 'data_req' ] )
+					o.Set( 'notes', oPedido[ 'notes' ] )
+					o.Set( 'id_shipper', oPedido[ 'id_shipper' ] )	
+
+					Fact_Total()					
+				}
+			
+			
+			//	-------------------------------------------------------------
+				
+				$( document ).ready(function() {						
+					
+					TWebIntro( 'emp', Emp_Accept ) 						
+					TWebIntro( 'cli', Cli_Accept ) 						
+					TWebIntro( 'prod', Prod_Accept )
+					TWebIntro( 'prod_qty', function(){ $('#prod_btn').focus() } )
+					
+					RefreshData()
 					
 					
 					

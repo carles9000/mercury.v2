@@ -225,7 +225,9 @@
 //#xcommand END BROWSE <oBrw> => <oBrw>:Activate()
 
 #xcommand DEFINE BROWSE DATASET <o> ALIAS <cAlias> => <o> := TBrwDataset():New( <cAlias> )
-#xcommand FIELD <cField> [ <lUpdate: UPDATE,UPDATED> ] [ VALID <bValid> ] [ <lNoEscape: NOESCAPE> ] OF <o> => <o>:Field( <cField>, [<.lUpdate.>], [<bValid>], [!<.lNoEscape.>]  )
+#xcommand FIELD <cField> [ <lUpdate: UPDATE,UPDATED> ] [ VALID <bValid> ] [ <lNoEscape: NOESCAPE> ] [ CALCULATED <bCalculated> ] OF <o> ;
+	=> ;
+		<o>:Field( <cField>, [<.lUpdate.>], [<bValid>], [!<.lNoEscape.>], [<bCalculated>] )
 
 
 

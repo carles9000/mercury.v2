@@ -61,6 +61,11 @@ FUNCTION Main()
 			DEFINE ROUTE 't.emp_action'	URL 't/emp_action'			CONTROLLER 'action@tables/emp.prg'		METHOD 'POST'	OF oApp			
 			DEFINE ROUTE 't.emp_search'	URL 't/emp_search'			CONTROLLER 'search@tables/emp.prg'		METHOD 'POST'	OF oApp			
 			
+			
+			DEFINE ROUTE 't.shipper'			URL 't/shipper'					CONTROLLER 'show@tables/shipper.prg'		METHOD 'GET'	OF oApp
+			DEFINE ROUTE 't.shipper_action'	URL 't/shipper_action'			CONTROLLER 'action@tables/shipper.prg'		METHOD 'POST'	OF oApp			
+			DEFINE ROUTE 't.shipper_search'	URL 't/shipper_search'			CONTROLLER 'search@tables/shipper.prg'		METHOD 'POST'	OF oApp			
+						
 						
 /*			
 		//	Auth				
