@@ -100,8 +100,8 @@
 				oBrw:cLocale := 'es-ES'							
 
 				//ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_type' 		HEADER 'Id' 			EDIT
-				ADD oCol TO oBrw ID 'name'  		HEADER 'Descripcion'  	EDIT
+				ADD oCol TO oBrw ID 'id_type' 		HEADER 'Id' 			EDIT SORT
+				ADD oCol TO oBrw ID 'name'  		HEADER 'Descripcion'  	EDIT SORT
 				
 				
 			INIT BROWSE oBrw DATA aRows	
@@ -158,12 +158,9 @@
 						
 						
 					if ( oParam[ 'data' ].length == 0 )
-						return null 
-					
+						return null 									
 				
 					
-					console.log( 'SAVE', oParam )
-					console.log( 'SAVE2',cUrl )
 					MsgServer( cUrl, oParam, Post_Save )				
 				}				
 				
@@ -179,9 +176,10 @@
 						cTxt += dat.errortxt + '<br>'					
 
 					} else {
-						console.log( 'UPDATED ROWS', dat.rows_updated )
+					
 						oBrw.ResetChanges( dat.rows_updated )						
 						oBrw.RefreshAll()
+				
 					}
 					
 					MsgInfo( cTxt )										
@@ -214,8 +212,7 @@
 
 				function TestPostEdit( rows, lUpdate ) {
 					
-					if ( lUpdate ) {
-						console.log( 'Rows Updated', rows )
+					if ( lUpdate ) {						
 						
 						MsgNotify( 'Row modified, but not saved !' )
 						

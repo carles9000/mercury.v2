@@ -23,7 +23,7 @@ RETU SELF
 METHOD Show( oController ) CLASS Shipper	
 
 	local oShipper	:= ShipperModel():New()	
-	local hData 			:= oShipper:GetAll()
+	local hData 	:= oShipper:GetAll()
 	
 	//	Si es una tabla que se puede cargar toda, la pasamos,
 	//	sino, no pasaremos nada...

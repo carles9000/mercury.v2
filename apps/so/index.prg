@@ -96,7 +96,6 @@ function MyConfig()
 	SET DATE TO ITALIAN 
 	SET DELETED ON 
 
-	_d( 'APP_URL->', MC_App_Url() )
 retu 	
 
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'

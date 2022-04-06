@@ -184,8 +184,7 @@ function MsgServer( cUrl, oValues, fCallback, cFormat ) {
 								fCallback.apply(null, [aData] );
 							} catch (e) {							
 								
-								//$('.loading_center').hide()
-								//console.log( 'IS_MERCURY', _Is_Mercury )
+							
 								bootbox.hideAll()
 								
 								
@@ -531,6 +530,7 @@ function TWebBrowse( cId, aData, lInit ) {
 	
 	this.UpdateChanges = function( cIdRow, cAction, row  ) {
 	
+
 		if ( typeof cIdRow === 'object' || typeof cIdRow === 'undefined' ) {			
 			return null
 		}	
@@ -556,13 +556,23 @@ function TWebBrowse( cId, aData, lInit ) {
 				
 			} else {
 			
+			
 				TWebBrowse.aChanges[cId][cIdRow][ 'row' ] = row	
 			}			
 			
-		} else {	
+		} else {			
+		
+			//	Si no existe _recno es que es una registro 'A' que se esta 
+			//	modificando 'U'. Lo dejaremos en A para darlo de alta
+
+			if ( !( '_recno' in row ) ){				
+				cAction = 'A'
+			}		
 		
 			TWebBrowse.aChanges[ cId ][ cIdRow ] = { 'action' : cAction, 'id' : cIdRow, 'row' : row } 		
 		}
+		
+
 
 	}
 	
@@ -594,6 +604,14 @@ function TWebBrowse( cId, aData, lInit ) {
 		return aChanges
 	}
 	
+	this.DelDataChangesId = function( cIdRow ) {
+	
+		var aChanges = oBrw.GetDataChanges()
+
+		delete TWebBrowse.aChanges[cId][cIdRow] 
+
+	}
+	
 	/*	
 		aRows_Changes = array of hash	
 			id = value of uniqueid
@@ -606,6 +624,7 @@ function TWebBrowse( cId, aData, lInit ) {
 	this.ResetChanges = function( aRows_Updated ) {
 
 		var cUniqueId = this.Get( 'uniqueid' );
+		var nLastIndexUpd = -1;
 
 
 		if ( typeof cUniqueId === 'object' || typeof cUniqueId === 'undefined' ) {			
@@ -622,7 +641,10 @@ function TWebBrowse( cId, aData, lInit ) {
 
 		
 			var cIdRow 
-			
+
+
+			var a = this.GetData()			
+
 			for (i = 0; i < aRows_Updated.length; i++) {
 			
 				oInfo = aRows_Updated[i]
@@ -631,21 +653,48 @@ function TWebBrowse( cId, aData, lInit ) {
 				cIdRow 	= oInfo.id
 				nValue 	= oInfo.value
 				cAction = oInfo.action
-
+		
 				
 				if ( cAction != 'D' ) {
 					
-					oItem = oBrowse.bootstrapTable('getRowByUniqueId', cIdRow )
-					
+					//oItem = oBrowse.bootstrapTable('getRowByUniqueId', cIdRow )
+					oItem = oInfo.item 
 
 					//	Actualizo id del item 
 					
-						if ( typeof nValue != 'undefined' )
-							oItem[ cUniqueId ] = nValue 
-							
-					
-					oBrowse.bootstrapTable('updateByUniqueId', { 'id' : cUniqueId, 'row': oItem } )
-			
+						if ( typeof nValue != 'undefined' ) {
+						
+							oItem[ cUniqueId ] = cIdRow							
+						}
+		
+					/*	En version prvia, ejecutabamos 'updateByUniqueId' y actualizabamos
+						la row, pero se observo que solo se actualizaba del array de registro (row)
+						los campos que estaban definidos en una columna. Si habian otros campos 
+						no los actualizaba.
+						
+						oBrowse.bootstrapTable('updateByUniqueId', { 'id' : cUniqueId, 'row': oItem } )	
+
+						Tambien se ha detectado que ocurre con 
+						
+						oBrowse.bootstrapTable('updateRow', { 'index' : i, 'row': oItem } )	
+						
+					*/
+		
+					/*	La solucion pasa en recorrer toda la tabla de rows y buscar la clave. Si la 
+						encontramos sustituimos el item. Al final recargamos el browse con la tabla 
+						actualizada y listos. Nos guarderemos el ultimo index del row modificado 
+						para posicionarnos al final
+					*/															
+									
+						for (j = 0; j < a.length; j++) {
+						
+							if ( a[j][cUniqueId] == cIdRow ) {
+								
+								nLastIndexUpd = j;							
+								a[j] = oItem 							
+								break;							
+							}					
+						}					
 				}
 				
 				
@@ -653,7 +702,19 @@ function TWebBrowse( cId, aData, lInit ) {
 					delete TWebBrowse.aChanges[ cId ][ cIdRow ]
 				}			
 			
-			}					
+			}			
+			
+			//	Finalmente si ha habido alguna modificacion, recargaremos toda la tabla
+			
+				if (nLastIndexUpd >= 0 ) {
+					this.SetData( a )			
+					oBrowse.bootstrapTable('scrollTo', {unit: 'rows', value: nLastIndexUpd})			
+				}
+				
+				
+
+
+			
 
 			if ( Object.size( TWebBrowse.aChanges[ cId ] ) == 0 ) {
 				TWebBrowse.aChanges[ cId ] = new Object()
@@ -851,8 +912,6 @@ function TWebBrowse( cId, aData, lInit ) {
 	this.UpdateCell = function( uId, cField, uValue ) {		
 	
 		var aDat = { 'index' : uId, 'field': cField, 'value' : uValue }
-		
-		console.log( 'UpdateCell', aDat )
 	
 		oBrowse.bootstrapTable('updateCell', aDat )
 	}
@@ -979,7 +1038,8 @@ function TWebBrowse( cId, aData, lInit ) {
 	
 		if ( typeof oItem != 'object' ) {
 			oItem = this.GetItemEmpty() 
-		}		
+		}	
+
 
 		oBrowse.bootstrapTable('insertRow', {
 				index: nIndex,
@@ -999,6 +1059,8 @@ function TWebBrowse( cId, aData, lInit ) {
 		if ( typeof oItem != 'object' ) {
 			oItem = this.GetItemEmpty() 
 		}		
+		
+
 		
 		var cUniqueId = this.Get( 'uniqueid' ); 	// 	TWebBrowse.aUniqueId[ cId ]
 		
@@ -1281,10 +1343,19 @@ function TWebBrowseBeforeEdit( row, index, oBrw, aCfgCols ) {
 	return true	
 }
 
-function TWebBrowseAfterEdit( row, index, oBrw, aCfgCols ) {
+function TWebBrowseAfterEdit( row, index, oBrw, aCfgCols, cUniqueId ) {
 	
 	var oItem 	= oBrw.GetRow( index )
 	var lUpdate	= false
+	
+	
+	
+	//	--------------------------------------
+console.log( 'TWebBrowseAfterEdit', oItem )		
+		oBrw.DelDataChangesId( cUniqueId )
+	
+	//	--------------------------------------
+
 
 	for (var key in row ) {	
 	
@@ -1294,13 +1365,12 @@ function TWebBrowseAfterEdit( row, index, oBrw, aCfgCols ) {
 		}			
 	}
 
-	if ( lUpdate ) {
-		var cId = oBrw.cId 
-		var cUniqueId = oBrw.Get( 'uniqueid' ); 	// 	TWebBrowse.aUniqueId[ cId ]
+	if ( lUpdate ) {		
+	
+		var cUniqueId = oBrw.Get( 'uniqueid' );
 		
-		var cUniqueId = oItem[cUniqueId]
-			
-		//oBrw.UpdateRow( index, oItem );					
+		var cUniqueId = oItem[cUniqueId]			
+		
 		oBrw.UpdateRowById( cUniqueId, oItem );					
 	}
 
@@ -1658,7 +1728,7 @@ function TWebUpload( cId, cUrl, callback, oData ) {
 			
 			var file 	= evt.target.files[0]			
 			
-			console.log( 'oData', $.type( Self.oData ) )
+	
 			
 			var formData = new FormData();	
 
@@ -1797,7 +1867,7 @@ function TWebUploadImage( cId_Img, cUrl, fCallback, oData, lIsUri ) {
 			if ( typeof fCallback === "function") {									
 				fCallback.apply(null, [dat] );								
 			} else { 
-				console.log( 'success', dat )								  						
+				//console.log( 'success', dat )								  						
 			}							
 		},
 		error: function(data, textStatus, jqXHR) {
@@ -1853,7 +1923,17 @@ $(document).ready( function() {
 function TWebBrowseForm( bBeforeEdit, bAfterEdit, index, oBrw, aCfgCols) {
 
 	this.cHtml = '';
-	this.aCtrl = [];		
+	this.aCtrl = [];
+
+
+	//	Recupera KEY 
+	
+		var cUniqueId 	= oBrw.Get( 'uniqueid' );
+		var oItem 		= oBrw.GetItem()
+			
+		cUniqueId = oItem[cUniqueId]	
+
+	//	-------------------------------
 	
 	
 	var oSelf = this;
@@ -1886,10 +1966,10 @@ function TWebBrowseForm( bBeforeEdit, bAfterEdit, index, oBrw, aCfgCols) {
 							
 								var rows = oSelf.GetValues()								
 							
-								if ( bBeforeEdit.apply(null, [rows, index, oBrw, aCfgCols]) == false )
+								if ( bBeforeEdit.apply(null, [rows, index, oBrw, aCfgCols, cUniqueId]) == false )
 									return false
 								
-								if ( bAfterEdit.apply(null, [rows, index, oBrw, aCfgCols]) == false )
+								if ( bAfterEdit.apply(null, [rows, index, oBrw, aCfgCols, cUniqueId]) == false )
 									return false
 						
 									
@@ -2028,7 +2108,7 @@ function TWebBrowseForm( bBeforeEdit, bAfterEdit, index, oBrw, aCfgCols) {
 			case 'M':
 			case 'GETMEMO':
 			
-			console.log( 'MEMO', o)
+			
 			
 				if (o.edit_escape ) {
 									
@@ -2044,7 +2124,7 @@ function TWebBrowseForm( bBeforeEdit, bAfterEdit, index, oBrw, aCfgCols) {
 					var uValue = o.value 
 				}
 
-				console.log( uValue )
+				
 				
 
 				this.cHtml += '<div class="col-' + cWidth + ' ' + cOffset + ' pt-1" style="margin-bottom:0.5rem;">'
@@ -2210,14 +2290,12 @@ function TWebControl() {
 
 	this.Group 	= function ( cGroup, cAction ) {		
 	
-	
-		//console.log( cGroup, cAction )
+
 		
 		var o 		= this.GetGroup( cGroup )
 		var oObj	= null
 		var cId 
-		
-		//console.log( 'o', o )
+
 		
 		switch ( cAction ) {
 		
@@ -2227,12 +2305,12 @@ function TWebControl() {
 				for ( i=0; i < o.length; i++ ) {
 				
 					cId =  o[i].id
-					//console.log( 'ID', cId )
+				
 					
 					uValue = $(o[i]).data( 'default')
 					uValue = ( typeof uValue == 'undefined' ) ? '' : uValue;					
 					
-					//console.log( 'ID ' + cId, uValue )
+				
 					this.Set( cId, uValue )																			
 				}						
 				break;						

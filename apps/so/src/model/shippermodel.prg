@@ -21,7 +21,7 @@ METHOD New() CLASS ShipperModel
 	
 		DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-			FIELD 'id_type' 	UPDATE  OF ::oDataset
+			FIELD 'id_type' 	UPDATE  VALID {|o,uValue,hRow| (hRow['id_type'] := upper(uValue), .t. ) } OF ::oDataset
 			FIELD 'name' 		UPDATE  OF ::oDataset
 			
 		
@@ -32,8 +32,9 @@ METHOD New() CLASS ShipperModel
 	
 	//	Define Searchs by Tag 
 	
+								//	  cTag    ,  cField , Format
 		::hSearch[ 'id' ] 		:= { 'id_type', 'id_type', {|u| upper(u) }  }
-		::hSearch[ 'nombre' ] 	:= { 'nombre', 'name', {|u| lower(u) } }		
+		::hSearch[ 'nombre' ] 	:= { 'name', 'name', {|u| lower(u) } }		
 
 RETU SELF
 

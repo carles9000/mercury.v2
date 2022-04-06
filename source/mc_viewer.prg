@@ -91,7 +91,7 @@ FUNCTION mc_View( cFile, ... )
 	
 	cFileView 			:= cPath + cFile
 	
-	_d( cFileView )
+
 	
 	IF File ( cFileView )	
 		
@@ -119,7 +119,7 @@ FUNCTION mc_Css( cFile )
 	
 	cFileCss 			:= cPath + cFile
 	
-	_d( cFileCss )
+
 	
 	IF File ( cFileCss )
 	
@@ -148,7 +148,7 @@ FUNCTION mc_JS( cFile )
 	
 	cFileJS 			:= cPath + cFile
 	
-	_d( cFileJS )
+
 	
 	IF File ( cFileJS )
 	

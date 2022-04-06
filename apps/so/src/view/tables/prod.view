@@ -89,7 +89,7 @@
 			ENDTEXT			
 
 			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				EDIT UNIQUEID 'id_prod' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 				ROWSTYLE 'MyRowStyle' ;
 				TOOLBAR "bar" ;
 				SEARCH TOOLS EXPORT PRINT  ;
@@ -100,8 +100,8 @@
 				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
 
-				ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_prod' 	HEADER 'id_prod' 		EDIT
+				//ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				ADD oCol TO oBrw ID 'id_prod' 	HEADER 'Id.' 			EDIT TYPE 'V' ALIGN 'center' FORMATTER 'MyId' CLASS 'MyCssId' 
 				ADD oCol TO oBrw ID 'nombre'  	HEADER 'nombre'  		EDIT
 				ADD oCol TO oBrw ID 'color' 	HEADER 'color' 	 		EDIT
 				ADD oCol TO oBrw ID 'tamano'  	HEADER 'tamano'  		EDIT

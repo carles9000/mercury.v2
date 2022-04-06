@@ -176,7 +176,7 @@
 				
 					
 					console.log( 'SAVE', oParam )
-					console.log( 'SAVE2',cUrl )
+			
 					MsgServer( cUrl, oParam, Post_Save )				
 				}				
 				

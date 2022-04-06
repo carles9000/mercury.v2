@@ -21,7 +21,7 @@ METHOD New() CLASS ProdModel
 	
 		DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-			FIELD 'id_prod' 	UPDATE  OF ::oDataset
+			FIELD 'id_prod' 	UPDATE  VALID {|o,uValue,hRow| Prod_NewId( o, uValue, hRow ) } OF ::oDataset
 			FIELD 'nombre' 		UPDATE  OF ::oDataset
 			FIELD 'color' 		UPDATE  OF ::oDataset
 			FIELD 'tamano' 		UPDATE  OF ::oDataset
@@ -45,6 +45,19 @@ METHOD New() CLASS ProdModel
 
 RETU SELF
 
+function Prod_NewId( o, uValue, hRow )
+
+	if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
+		
+		oCounter := CounterModel():New()
+		
+		hRow[ 'id_prod' ] := oCounter:Get( 'TPR' )
+		
+	endif 
+	
+retu .t. 
+
 
 //----------------------------------------------------------------------------//
 {% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}
+{% mh_LoadFile( "/src/model/countermodel.prg" ) %}

@@ -110,10 +110,12 @@ retu hRow
 
 //----------------------------------------------------------------------------//
 
-METHOD GetAll() CLASS DbfCdxProvider
+METHOD GetAll(  ) CLASS DbfCdxProvider
 
 	local aRows	:= {}
 	local n 		:= 0
+	
+	
 		
 	(::cAlias)->( OrdSetFocus( ::cId ) )
 	(::cAlias)->( DbGoTop() )
