@@ -1,42 +1,6 @@
 {{ mc_View( 'app/header_tables.view' ) }}
 
-<style>
-
-	.container_table { 
-	
-		/*border: 5px solid yellow;*/
-		bottom: 10px;
-		top: 10px;
-		position: absolute;
-		right: 10px;
-		left: 10px;
-		overflow: hidden;
-	}
-	
-	.myid {
-		background-color: lightgray;
-		font-weight: bold;
-		text-align: center;
-		border-left: 2px solid gray !important;
-		border-right: 2px solid gray !important;
-		border-top: 0px solid !important;
-		border-bottom: 0px solid !important;
-	}
-
-	.mybtnbar {
-		border-radius:0px;
-	}
-
-	.myrow {
-		background-color: #ff000040;
-		color: black;
-		border: 2px solid #e91e1e;
-		font-weight: bold;
-	}	
-
-
-
-</style>
+{{ mc_Css( 'tables.css' ) }}	
 
 <body>
 
@@ -94,13 +58,9 @@
 				SEARCH TOOLS EXPORT PRINT  ;
 				OF o	
 
-				//oBrw:lDark = .t.
-				//oBrw:lStripped := .t.
-				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
-
-				//ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_type' 		HEADER 'Id' 			EDIT SORT
+				
+				ADD oCol TO oBrw ID 'id_type' 		HEADER 'Id' 			EDIT SORT ALIGN 'center' WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId' 
 				ADD oCol TO oBrw ID 'name'  		HEADER 'Descripcion'  	EDIT SORT
 				
 				
@@ -117,6 +77,12 @@
 				function Reset() 	{ oBrw.Reset() }
 				
 				function Delete() 	{ 
+				
+					var aSelect = oBrw.Select()
+					
+					if ( aSelect.length == 0 )
+						return null	
+						
 					MsgYesNo( 'Are you sure ?', 'Delete', null, 
 						function(){ 
 							oBrw.DeleteRow() 
@@ -189,7 +155,7 @@
 
 				function MyRowStyle(row, index) {
 
-					if ( oBrw.IsRowIdUpdated( row._recno ) == true ) {				
+					if ( oBrw.IsRowIdUpdated( row.id_type ) == true ) {				
 						return { classes: 'myrow' }	
 					} else {
 						return {}			

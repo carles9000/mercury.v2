@@ -575,11 +575,14 @@ function TWebBrowse( cId, aData, lInit ) {
 
 
 	}
+
+	this.IsRowIdUpdated = function( uKey ) {
 	
-	this.IsRowIdUpdated = function( nId ) {
-	
-		var a = TWebBrowse.aChanges[ cId ]								
-		var lFound = ( nId in a )						
+		var cUniqueId = this.Get( 'uniqueid' );		
+		
+		var a = TWebBrowse.aChanges[ cId ]
+		
+		var lFound = ( uKey in a )						
 		
 		return lFound
 	}

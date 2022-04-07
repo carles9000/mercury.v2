@@ -15,13 +15,13 @@ METHOD New() CLASS CounterModel
 
 	::Open( AppPathData() + 'counter.dbf', AppPathData() + 'counter.cdx')
 	
-_d( SELF:ClassName() )
+
 	//	Define data Dataset. These will be the only fields that I will allow to work
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-		FIELD 'type' 		UPDATE  OF ::oDataset
-		FIELD 'moduel'		UPDATE  OF ::oDataset
+		FIELD 'type' 		UPDATE  VALID {|o,uValue,hRow| (hRow['type'] := upper(uValue), .t. ) }  OF ::oDataset
+		FIELD 'module'		UPDATE  OF ::oDataset
 		FIELD 'counter'		UPDATE  OF ::oDataset
 
 		
@@ -35,7 +35,8 @@ _d( SELF:ClassName() )
 	
 	//	Define Searchs by Tag 
 	
-		::hSearch[ 'type' ] 		:= { 'type', 'type' }		
+		::hSearch[ 'type' ] 		:= { 'type', 'type' , {|u| upper(u) }}		
+		::hSearch[ 'module' ] 		:= { 'module', 'module', {|u| lower(u) } }		
 		
 	//	Activate tag
 	

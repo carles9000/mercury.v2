@@ -1,4 +1,4 @@
-CLASS Emp
+CLASS Counter
 
 	METHOD New() 	CONSTRUCTOR
 	
@@ -15,7 +15,7 @@ ENDCLASS
 
 //	---------------------------------------------------------------	//
 
-METHOD New( oController ) CLASS Emp
+METHOD New( oController ) CLASS Counter
 
 	//AUTENTICATE CONTROLLER oController
 	
@@ -23,23 +23,22 @@ RETU SELF
 
 //	---------------------------------------------------------------	//
 
-METHOD Show( oController ) CLASS Emp	
-	local oEmp		:= EmpleadoModel():New()	
-	local hData 	:= oEmp:GetAll()
-	
+METHOD Show( oController ) CLASS Counter	
+	local oCounter		:= CounterModel():New()	
+	local hData 		:= oCounter:GetAll()
 	
 
 	//	Si es una tabla que se puede cargar toda, la pasamos,
 	//	sino, no pasaremos nada...
 
-	oController:View( 'tables/emp.view', 200, hData )	
+	oController:View( 'tables/counter.view', 200, hData )	
 
 RETU NIL
 
 
 //	---------------------------------------------------------------	//
 
-METHOD Action( oController ) CLASS Emp	
+METHOD Action( oController ) CLASS Counter	
 
 	local hParam 		:= GetMsgServer()	
 	
@@ -53,21 +52,21 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Save( oController, hParam ) CLASS Emp		
+METHOD Save( oController, hParam ) CLASS Counter		
 	
 	local aData 		:= hParam[ 'data' ]
-	local oEmp			:= EmpleadoModel():New()	
+	local oCounter		:= CounterModel():New()	
 	local nUpdated 	:= 0
 	local aUpdated 	:= 0
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oEmp:oDataset:Save( aData )
+		aUpdated := oCounter:oDataset:Save( aData )
 		nUpdated := len( aUpdated )		
 
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oEmp:oDataset:GetError(), 'errortxt' => oEmp:oDataset:GetErrorString() }
+		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCounter:oDataset:GetError(), 'errortxt' => oCounter:oDataset:GetErrorString() }
 				
 	oController:oResponse:SendJson( hResponse )
 
@@ -75,13 +74,13 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Load( oController, hParam ) CLASS Emp	
+METHOD Load( oController, hParam ) CLASS Counter	
 	
 	
-	local oEmp 		:= EmpleadoModel():New()	
-	local aRows 		:= oEmp:Search( hParam[ 'tag'],  hParam[ 'search' ] )
+	local oCounter 	:= CounterModel():New()	
+	local aRows 		:= oCounter:Search( hParam[ 'tag'],  hParam[ 'search' ] )
 
-	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
+	
 	
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 
@@ -90,24 +89,18 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Search( oController ) CLASS Emp	
+METHOD Search( oController ) CLASS Counter	
 	
 	
-	local oEmp 		:= EmpleadoModel():New()	
+	local oCounter 		
 	local hParam		:= GetMsgServer()
 	local aRows		:= {}
-	
-	/*
-	if empty( hParam[ 'search' ] )
-		oController:oResponse:SendJson( { 'success' => .f., 'rows' => aRows } )
-		retu nil
-	endif
-	*/
+
 
 	//	Buscamos en modelo --------------------------------
 	
-		oEmp 		:= EmpleadoModel():New()		
-		aRows 		:= oEmp:Search( 'apellido', hParam[ 'search' ] )
+		oCounter 	:= CounterModel():New()		
+		aRows 		:= oCounter:Search( 'module', hParam[ 'search' ] )
 		
 	//	Respuesta -----------------------------------------		
 	
@@ -117,14 +110,14 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD GetId( oController, hParam ) CLASS Emp		
+METHOD GetId( oController, hParam ) CLASS Counter		
 	
-	local oEmp 		:= EmpleadoModel():New()	
-	local hRow 		:= oEmp:GetId( val( hParam[ 'search' ] ) )
+	local oCounter 	:= CounterModel():New()	
+	local hRow 		:= oCounter:GetId( val( hParam[ 'search' ] ) )
 		
-	
-	oController:oResponse:SendJson( { 'success' => .t. , 'row' => hRow } )
 
+	oController:oResponse:SendJson( { 'success' => .t. , 'row' => hRow } )
+		
 
 RETU NIL
 
@@ -133,4 +126,4 @@ RETU NIL
 
 //	Load datamodel		---------------------------------------------
 
-	{% mh_LoadFile( "/src/model/empleadomodel.prg" ) %}
+	{% mh_LoadFile( "/src/model/countermodel.prg" ) %}

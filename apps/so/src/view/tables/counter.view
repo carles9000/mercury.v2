@@ -14,12 +14,12 @@
 
 		local aRows := pValue(1)
 		local o, oCol, oBrw
-
+		
 		DEFINE FORM o
 		
 			o:cSizing := 'sm'
 
-			HTML o INLINE '<h3>Tipo Product</h3><hr>'
+			HTML o INLINE '<h3>Counter</h3><hr>'
 			
 		INIT FORM o  
 
@@ -44,7 +44,7 @@
 					</button>
 					<div class="dropdown-menu">
 					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Id' )">ID</a>
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Nombre' )">Nombre</a>					  
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Module' )">Module</a>					  
 					</div>
 				  </div>
 				</div>					
@@ -52,21 +52,18 @@
 			ENDTEXT			
 
 			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-				EDIT UNIQUEID 'id_type' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				EDIT UNIQUEID 'type' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 				ROWSTYLE 'MyRowStyle' ;
 				TOOLBAR "bar" ;
 				SEARCH TOOLS EXPORT PRINT  ;
 				OF o	
 
-				//oBrw:lDark = .t.
-				//oBrw:lStripped := .t.
-				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
-
-				//ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_type' 		HEADER 'id_prod' 		EDIT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'  
-				ADD oCol TO oBrw ID 'nombre'  		HEADER 'nombre'  		EDIT
-				ADD oCol TO oBrw ID 'descripcio' 	HEADER 'Descripcion'	TYPE 'M' EDIT								
+				
+				ADD oCol TO oBrw ID 'type' 		HEADER 'Id' 		EDIT SORT ALIGN 'center' WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'  
+				ADD oCol TO oBrw ID 'module'	HEADER 'Module'  	EDIT SORT
+				ADD oCol TO oBrw ID 'counter'	HEADER 'Counter'  	EDIT TYPE 'N' 
+				
 				
 			INIT BROWSE oBrw DATA aRows	
 			
@@ -97,7 +94,7 @@
 				
 				function Load() {									
 					
-					var cUrl 	= '{{ mc_route('t.tipo_pro_action') }}'
+					var cUrl 	= '{{ mc_route('t.counter_action') }}'
 							
 					var oParam 	= new Object()
 						oParam[ 'action' ] 	= 'load'
@@ -109,6 +106,8 @@
 				
 				function Post_Load( dat ){
 				
+					console.log( dat )	
+
 					oBrw.SetData( dat.rows )
 					
 					$( '#search').select()
@@ -119,21 +118,23 @@
 
 				function Save() 	{ 
 				
-					var cUrl 	= '{{ mc_route('t.tipo_pro_action') }}'
+					var cUrl 	= '{{ mc_route('t.counter_action') }}'
 					var oParam = new Object()
 						oParam[ 'action' ] = 'save'
 						oParam[ 'data'   ] = oBrw.GetDataChanges()
 						
 						
 					if ( oParam[ 'data' ].length == 0 )
-						return null 
-					
+						return null 									
 				
+					
 					MsgServer( cUrl, oParam, Post_Save )				
 				}				
 				
 				function Post_Save( dat ) {
-								
+				
+				
+					
 					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
 					
 					if ( dat.error.length > 0 ) {
@@ -145,6 +146,7 @@
 					
 						oBrw.ResetChanges( dat.rows_updated )						
 						oBrw.RefreshAll()
+				
 					}
 					
 					MsgInfo( cTxt )										
@@ -153,8 +155,8 @@
 				//	Styles
 
 				function MyRowStyle(row, index) {
-
-					if ( oBrw.IsRowIdUpdated( row._recno ) == true ) {				
+			
+					if ( oBrw.IsRowIdUpdated( row.type ) == true ) {				
 						return { classes: 'myrow' }	
 					} else {
 						return {}			
@@ -177,7 +179,7 @@
 
 				function TestPostEdit( rows, lUpdate ) {
 					
-					if ( lUpdate ) {					
+					if ( lUpdate ) {						
 						
 						MsgNotify( 'Row modified, but not saved !' )
 						
@@ -196,7 +198,7 @@
 				
 					$( document ).ready(function() {	
 					
-						Search_Select_Tag( 'Nombre' )
+						Search_Select_Tag( 'Module' )
 						
 						TWebIntro( 'search', Load ) 						
 						
@@ -208,6 +210,8 @@
 			ENDTEXT
 			
 		END FORM o	RETURN
+
+
 	?>			
 	
 	</div>	

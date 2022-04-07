@@ -20,7 +20,7 @@ METHOD New() CLASS EmpleadoModel
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-		FIELD 'id_emp' 			UPDATE  OF ::oDataset
+		FIELD 'id_emp' 			UPDATE  VALID {|o,uValue,hRow| Emp_NewId( o, uValue, hRow ) } OF ::oDataset
 		FIELD 'apellido'  		UPDATE  OF ::oDataset
 		FIELD 'nombre' 			UPDATE  OF ::oDataset
 		FIELD 'cargo'  			UPDATE  OF ::oDataset
@@ -42,10 +42,25 @@ METHOD New() CLASS EmpleadoModel
 	//	Define Searchs by Tag 
 	
 		::hSearch[ 'id' ] 			:= { 'id_emp', 'id_emp' }
-		::hSearch[ 'apellido' ] 	:= { 'apellido', 'apellido' }		
+		::hSearch[ 'apellido' ] 	:= { 'apellido', 'apellido', {|u| lower(u)} }		
 
 RETU SELF
 
 //----------------------------------------------------------------------------//
 
+function Emp_NewId( o, uValue, hRow )
+
+	if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
+		
+		oCounter := CounterModel():New()
+		
+		hRow[ 'id_emp' ] := oCounter:Get( 'EMP' )
+		
+	endif 
+	
+retu .t. 
+
+//----------------------------------------------------------------------------//
+
 {% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}
+{% mh_LoadFile( "/src/model/countermodel.prg" ) %}

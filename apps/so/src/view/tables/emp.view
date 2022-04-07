@@ -86,6 +86,12 @@
 				function Reset() 	{ oBrw.Reset() }
 				
 				function Delete() 	{ 
+				
+					var aSelect = oBrw.Select()
+					
+					if ( aSelect.length == 0 )
+						return null															
+					
 					MsgYesNo( 'Are you sure ?', 'Delete', null, 
 						function(){ 
 							oBrw.DeleteRow() 

@@ -46,6 +46,7 @@
          <a class="dropdown-item" href="{{ mc_Route( 't.tipo_pro' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Tipo Producto</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.emp' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Empleado</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.shipper' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Shipper</a>
+         <a class="dropdown-item" href="{{ mc_Route( 't.counter' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Counters</a>
 
         </div>
       </li>

@@ -45,6 +45,8 @@ METHOD New() CLASS ProdModel
 
 RETU SELF
 
+//----------------------------------------------------------------------------//
+
 function Prod_NewId( o, uValue, hRow )
 
 	if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
@@ -56,7 +58,6 @@ function Prod_NewId( o, uValue, hRow )
 	endif 
 	
 retu .t. 
-
 
 //----------------------------------------------------------------------------//
 {% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}
