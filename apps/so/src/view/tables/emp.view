@@ -1,42 +1,6 @@
 {{ mc_View( 'app/header_tables.view' ) }}
 
-<style>
-
-	.container_table { 
-	
-		/*border: 5px solid yellow;*/
-		bottom: 10px;
-		top: 10px;
-		position: absolute;
-		right: 10px;
-		left: 10px;
-		overflow: hidden;
-	}
-	
-	.myid {
-		background-color: lightgray;
-		font-weight: bold;
-		text-align: center;
-		border-left: 2px solid gray !important;
-		border-right: 2px solid gray !important;
-		border-top: 0px solid !important;
-		border-bottom: 0px solid !important;
-	}
-
-	.mybtnbar {
-		border-radius:0px;
-	}
-
-	.myrow {
-		background-color: #ff000040;
-		color: black;
-		border: 2px solid #e91e1e;
-		font-weight: bold;
-	}	
-
-
-
-</style>
+{{ mc_Css( 'tables.css' ) }}	
 
 <body>
 
@@ -88,7 +52,7 @@
 			ENDTEXT			
 
 			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				EDIT UNIQUEID 'id_emp' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 				ROWSTYLE 'MyRowStyle' ;
 				TOOLBAR "bar" ;
 				SEARCH TOOLS EXPORT PRINT  ;
@@ -99,8 +63,8 @@
 				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
 
-				ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_emp' 		HEADER 'Id' 
+				
+				ADD oCol TO oBrw ID 'id_emp' 		HEADER 'Id' 			EDIT TYPE 'V' ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   	
 				ADD oCol TO oBrw ID 'apellido'  	HEADER 'Apellido'  		EDIT
 				ADD oCol TO oBrw ID 'nombre' 		HEADER 'Name' 	 		EDIT
 				ADD oCol TO oBrw ID 'cargo'  		HEADER 'Cargo'  		EDIT

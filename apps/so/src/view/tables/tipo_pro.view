@@ -1,42 +1,6 @@
 {{ mc_View( 'app/header_tables.view' ) }}
 
-<style>
-
-	.container_table { 
-	
-		/*border: 5px solid yellow;*/
-		bottom: 10px;
-		top: 10px;
-		position: absolute;
-		right: 10px;
-		left: 10px;
-		overflow: hidden;
-	}
-	
-	.myid {
-		background-color: lightgray;
-		font-weight: bold;
-		text-align: center;
-		border-left: 2px solid gray !important;
-		border-right: 2px solid gray !important;
-		border-top: 0px solid !important;
-		border-bottom: 0px solid !important;
-	}
-
-	.mybtnbar {
-		border-radius:0px;
-	}
-
-	.myrow {
-		background-color: #ff000040;
-		color: black;
-		border: 2px solid #e91e1e;
-		font-weight: bold;
-	}	
-
-
-
-</style>
+{{ mc_Css( 'tables.css' ) }}	
 
 <body>
 
@@ -88,7 +52,7 @@
 			ENDTEXT			
 
 			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				EDIT UNIQUEID 'id_type' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 				ROWSTYLE 'MyRowStyle' ;
 				TOOLBAR "bar" ;
 				SEARCH TOOLS EXPORT PRINT  ;
@@ -99,8 +63,8 @@
 				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
 
-				ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
-				ADD oCol TO oBrw ID 'id_type' 		HEADER 'id_prod' 		EDIT
+				//ADD oCol TO oBrw ID '_recno'		HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				ADD oCol TO oBrw ID 'id_type' 		HEADER 'id_prod' 		EDIT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'  
 				ADD oCol TO oBrw ID 'nombre'  		HEADER 'nombre'  		EDIT
 				ADD oCol TO oBrw ID 'descripcio' 	HEADER 'Descripcion'	TYPE 'M' EDIT								
 				
@@ -139,8 +103,6 @@
 				
 				function Post_Load( dat ){
 				
-					console.log( dat )	
-
 					oBrw.SetData( dat.rows )
 					
 					$( '#search').select()
@@ -161,16 +123,11 @@
 						return null 
 					
 				
-					
-					console.log( 'SAVE', oParam )
-					console.log( 'SAVE2',cUrl )
 					MsgServer( cUrl, oParam, Post_Save )				
 				}				
 				
 				function Post_Save( dat ) {
-				
-					console.log( 'POSTSAVE', dat )
-					
+								
 					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
 					
 					if ( dat.error.length > 0 ) {
@@ -179,7 +136,7 @@
 						cTxt += dat.errortxt + '<br>'					
 
 					} else {
-						console.log( 'UPDATED ROWS', dat.rows_updated )
+					
 						oBrw.ResetChanges( dat.rows_updated )						
 						oBrw.RefreshAll()
 					}
@@ -214,8 +171,7 @@
 
 				function TestPostEdit( rows, lUpdate ) {
 					
-					if ( lUpdate ) {
-						console.log( 'Rows Updated', rows )
+					if ( lUpdate ) {					
 						
 						MsgNotify( 'Row modified, but not saved !' )
 						

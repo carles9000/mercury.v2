@@ -1,42 +1,7 @@
 {{ mc_View( 'app/header_tables.view' ) }}
 
-<style>
+{{ mc_Css( 'tables.css' ) }}		
 
-	.container_table { 
-	
-		/*border: 5px solid yellow;*/
-		bottom: 10px;
-		top: 10px;
-		position: absolute;
-		right: 10px;
-		left: 10px;
-		overflow: hidden;
-	}
-	
-	.myid {
-		background-color: lightgray;
-		font-weight: bold;
-		text-align: center;
-		border-left: 2px solid gray !important;
-		border-right: 2px solid gray !important;
-		border-top: 0px solid !important;
-		border-bottom: 0px solid !important;
-	}
-
-	.mybtnbar {
-		border-radius:0px;
-	}
-
-	.myrow {
-		background-color: #ff000040;
-		color: black;
-		border: 2px solid #e91e1e;
-		font-weight: bold;
-	}	
-
-
-
-</style>
 
 <body>
 
@@ -151,8 +116,6 @@
 				}
 				
 				function Post_Load( dat ){
-				
-					console.log( dat )	
 
 					oBrw.SetData( dat.rows )
 					
@@ -172,17 +135,11 @@
 						
 					if ( oParam[ 'data' ].length == 0 )
 						return null 
-					
-				
-					
-					console.log( 'SAVE', oParam )
 			
 					MsgServer( cUrl, oParam, Post_Save )				
 				}				
 				
 				function Post_Save( dat ) {
-				
-					console.log( 'POSTSAVE', dat )
 					
 					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
 					
@@ -191,8 +148,7 @@
 						cTxt += '<b><u>Error</u></b> ' + '<br>'
 						cTxt += dat.errortxt + '<br>'					
 
-					} else {
-						console.log( 'UPDATED ROWS', dat.rows_updated )
+					} else {					
 						oBrw.ResetChanges( dat.rows_updated )						
 						oBrw.RefreshAll()
 					}
