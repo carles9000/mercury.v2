@@ -19,7 +19,7 @@ METHOD New() CLASS ClienteModel
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-		FIELD 'id_cli' 		UPDATE  OF ::oDataset
+		FIELD 'id_cli' 		UPDATE  VALID {|o,uValue,hRow, cAction| Cli_NewId( o, uValue, hRow, cAction ) }  OF ::oDataset
 		FIELD 'nom_cli'		UPDATE  OF ::oDataset
 		FIELD 'cont_nom'	UPDATE  OF ::oDataset
 		FIELD 'cont_ape'	UPDATE  OF ::oDataset
@@ -53,6 +53,43 @@ METHOD New() CLASS ClienteModel
 
 RETU SELF
 
+
+//----------------------------------------------------------------------------//
+
+function Cli_NewId( o, uValue, hRow, cAction  )
+
+	local oPedido
+	local lValid 	:= .t.
+
+	if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
+		
+		oCounter := CounterModel():New()
+		
+		hRow[ 'id_cli' ] := oCounter:Get( 'CLI' )
+		
+	else 
+		
+		do case
+			case cAction == 'D'			
+			
+				oPedido := PedidoModel():New()
+				
+				nTotal := oPedido:CountId( 'cliente', uValue )	//	Return total id_cli used in pedido
+				
+				if nTotal > 0
+					o:SetError( "Client " + mh_valtochar(uValue) + " ,can't be deleted. Referenced " + ltrim(str( nTotal)) + " times")
+					lValid := .f. 
+				endif
+
+		endcase		
+		
+	endif 
+	
+retu lValid 
+
+
 //----------------------------------------------------------------------------//
 
 {% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}
+{% mh_LoadFile( "/src/model/pedidomodel.prg" ) %}
+{% mh_LoadFile( "/src/model/countermodel.prg" ) %}

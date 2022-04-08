@@ -52,18 +52,15 @@ METHOD Save( oController, hParam ) CLASS Tipo_Pro
 	
 	local aData 		:= hParam[ 'data' ]
 	local oTipo_Pro	:= Tipo_ProModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
+	local aResume
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oTipo_Pro:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
-
+		aResume := oTipo_Pro:oDataset:Save( aData )
+	
+		hResponse := { 'success' => .T., 'resume' => aResume }	
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oTipo_Pro:oDataset:GetError(), 'errortxt' => oTipo_Pro:oDataset:GetErrorString() }
-				
 	oController:oResponse:SendJson( hResponse )
 
 RETU NIL

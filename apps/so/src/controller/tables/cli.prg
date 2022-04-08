@@ -55,17 +55,14 @@ METHOD Save( oController, hParam ) CLASS Cli
 	
 	local aData 		:= hParam[ 'data' ]
 	local oCli			:= ClienteModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
+	local aResume
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oCli:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
-
+		aResume := oCli:oDataset:Save( aData )		
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCli:oDataset:GetError(), 'errortxt' => oCli:oDataset:GetErrorString() }
+		hResponse := { 'success' => .T., 'resume' => aResume }
 				
 	oController:oResponse:SendJson( hResponse )
 
@@ -79,8 +76,6 @@ METHOD Load( oController, hParam ) CLASS Cli
 	local oCli 		:= ClienteModel():New()	
 	local aRows 		:= oCli:Search( hParam[ 'tag'],  hParam[ 'search' ] )
 
-	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
-	
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 
 RETU NIL

@@ -298,6 +298,64 @@ function MsgNotify( cMsg, cType, cIcon, lSound ) {
 
 //----------------------------------------------------------------------------//
 
+//	resume = oDataset.Save()
+
+function MsgBrwResume( aResume ){
+
+	var nOk = 0
+	var nKo = 0
+	var cError = ''
+
+	for (i = 0; i < aResume.length; i++) {
+	
+		if ( aResume[i][ 'success' ] ) {
+		
+			nOk++														
+		
+		} else {
+		
+			nKo++ 
+			
+			cError += '<li>'							
+			cError += aResume[i][ 'msg' ] 
+			cError += '</li>'							
+		}										
+	}
+
+	if ( nOk == 0 && nKo == 0 )
+		return null 
+		
+	if ( nOk > 0 && nKo == 0 ) {
+	
+		MsgInfo( 'All changes was succesfully ! ' + nOk )
+		
+	} else {
+	
+		var cHtml = '<div class="text-center"><b><u>Process summary</u></b></div><br>' 
+		    cHtml += '<div style="max-height: 250px;overflow: auto;">'
+		
+		if ( nOk > 0 ) {
+			cHtml += '<i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;'
+			cHtml += 'Changes was succesfully: <b>' + nOk + '</b><br><br>'
+		}
+	
+		if ( nKo > 0 ) {
+			cHtml += '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;'
+			cHtml += 'Changes with error: <b>' + nKo + '</b><br>'
+			cHtml += '<ul>'
+			cHtml += cError
+			cHtml += '</ul>'
+		}
+		    cHtml += '</div>'
+	
+		MsgError( cHtml, 'Resume', '<i class="fa fa-bell-o" aria-hidden="true"></i>' )					
+	}
+	
+}
+
+
+//----------------------------------------------------------------------------//
+
 function MsgSound( cFile ) {
 
 	var audioElement = document.createElement('audio');
@@ -650,8 +708,7 @@ function TWebBrowse( cId, aData, lInit ) {
 
 			for (i = 0; i < aRows_Updated.length; i++) {
 			
-				oInfo = aRows_Updated[i]
-				
+				oInfo = aRows_Updated[i]				
 			
 				cIdRow 	= oInfo.id
 				nValue 	= oInfo.value
@@ -716,9 +773,6 @@ function TWebBrowse( cId, aData, lInit ) {
 				
 				
 
-
-			
-
 			if ( Object.size( TWebBrowse.aChanges[ cId ] ) == 0 ) {
 				TWebBrowse.aChanges[ cId ] = new Object()
 			}			
@@ -727,6 +781,104 @@ function TWebBrowse( cId, aData, lInit ) {
 			TWebBrowse.aChanges[ cId ] = new Object()
 		}
 	}
+	
+	this.Resume = function( aResume ) {
+
+		var cUniqueId = this.Get( 'uniqueid' );
+		var nLastIndexUpd = -1;
+
+
+		if ( typeof cUniqueId === 'object' || typeof cUniqueId === 'undefined' ) {			
+			return null
+		}
+		
+		if ( typeof aResume == 'object' ) {
+		
+			var aChanges = this.GetDataChanges()
+			var aInfo
+			var nValue 
+			var cAction
+			var oItem 
+
+		
+			var cIdRow 
+
+
+			var a = this.GetData()			
+
+			for (i = 0; i < aResume.length; i++) {
+			
+				oInfo = aResume[i]				
+			
+				cIdRow 	= oInfo.id
+				//nValue 	= oInfo.value
+				cAction = oInfo.action
+		
+				
+				//	Proc all diferent 'D', because 'D' was deleted 
+				
+				if ( cAction != 'D' ) {					
+					
+					oItem = oInfo.item 
+
+					//	Actualizo id del item 
+					
+						if ( typeof nValue != 'undefined' ) {
+						
+							oItem[ cUniqueId ] = cIdRow							
+						}
+		
+					/*	En version prvia, ejecutabamos 'updateByUniqueId' y actualizabamos
+						la row, pero se observo que solo se actualizaba del array de registro (row)
+						los campos que estaban definidos en una columna. Si habian otros campos 
+						no los actualizaba.
+						
+						oBrowse.bootstrapTable('updateByUniqueId', { 'id' : cUniqueId, 'row': oItem } )	
+
+						Tambien se ha detectado que ocurre con 
+						
+						oBrowse.bootstrapTable('updateRow', { 'index' : i, 'row': oItem } )	
+						
+						La solucion pasa en recorrer toda la tabla de rows y buscar la clave. Si la 
+						encontramos sustituimos el item. Al final recargamos el browse con la tabla 
+						actualizada y listos. Nos guarderemos el ultimo index del row modificado 
+						para posicionarnos al final
+					*/															
+									
+						for (j = 0; j < a.length; j++) {
+						
+							if ( a[j][cUniqueId] == cIdRow ) {
+								
+								nLastIndexUpd = j;							
+								a[j] = oItem 							
+								break;							
+							}					
+						}					
+				}
+				
+				
+				if ( cIdRow in TWebBrowse.aChanges[ cId ] ) {
+					delete TWebBrowse.aChanges[ cId ][ cIdRow ]
+				}			
+			
+			}			
+			
+			//	Finalmente si ha habido alguna modificacion, recargaremos toda la tabla
+			
+				if (nLastIndexUpd >= 0 ) {
+					this.SetData( a )			
+					oBrowse.bootstrapTable('scrollTo', {unit: 'rows', value: nLastIndexUpd})			
+				}				
+				
+
+			if ( Object.size( TWebBrowse.aChanges[ cId ] ) == 0 ) {
+				TWebBrowse.aChanges[ cId ] = new Object()
+			}			
+		
+		} else {
+			TWebBrowse.aChanges[ cId ] = new Object()
+		}
+	}	
 	
 	
 	this.SetChecked = function( aRows, cUniqueId ) {	
@@ -1115,6 +1267,15 @@ function TWebBrowse( cId, aData, lInit ) {
 		return oItem	
 	}	
 	
+	this.GetNative = function() {
+		return oBrowse
+	}	
+	
+	this.Goto = function( index ) {					
+		oBrowse.bootstrapTable('scrollTo', { unit: 'rows', value: index } )		
+	}
+	
+	
 	this.SetQuery = function( bQuery ) {
 	
 		if ( $.type( bQuery ) == 'function' ) 
@@ -1374,7 +1535,16 @@ console.log( 'TWebBrowseAfterEdit', oItem )
 		
 		var cUniqueId = oItem[cUniqueId]			
 		
-		oBrw.UpdateRowById( cUniqueId, oItem );					
+		oBrw.UpdateRowById( cUniqueId, oItem );	
+
+		//	Refrescamos todo el browse para que apliquen estilos css si estan definidos y 
+		//	condicionados. Por ejemplo, para le uso de IsRowIdUpdated()
+
+			oBrw.RefreshAll()
+			
+		//	Posicionaremos en el index 
+		
+			oBrw.Goto( index )	
 	}
 
 	if ( oBrw.Get( 'postedit') != "" ) {

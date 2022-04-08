@@ -56,18 +56,15 @@ METHOD Save( oController, hParam ) CLASS Prod
 	
 	local aData 		:= hParam[ 'data' ]
 	local oProd		:= ProdModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
+	local aResume
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oProd:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
-
+		aResume := oProd:oDataset:Save( aData )
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oProd:oDataset:GetError(), 'errortxt' => oProd:oDataset:GetErrorString() }
-				
+		hResponse := { 'success' => .T., 'resume' => aResume }				
+	
 	oController:oResponse:SendJson( hResponse )
 
 RETU NIL
@@ -80,8 +77,6 @@ METHOD Load( oController, hParam ) CLASS Prod
 	local oProd 		:= ProdModel():New()	
 	local aRows 		:= oProd:Search( hParam[ 'tag'],  hParam[ 'search' ] )
 
-	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
-	
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 
 RETU NIL

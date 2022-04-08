@@ -19,7 +19,8 @@
 		
 			o:cSizing := 'sm'
 
-			HTML o INLINE '<h3>Empleado</h3><hr>'
+			HTML o INLINE '<h4><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Empleado</h4><hr>'
+			
 			
 		INIT FORM o  
 
@@ -58,9 +59,6 @@
 				SEARCH TOOLS EXPORT PRINT  ;
 				OF o	
 
-				//oBrw:lDark = .t.
-				//oBrw:lStripped := .t.
-				//oBrw:lVirtualScroll := .t.
 				oBrw:cLocale := 'es-ES'							
 
 				
@@ -77,148 +75,18 @@
 			
 			HTML o 
 		
-			<script>							
+				<script>							
+				
+					const ID_BROWSE = 'ringo'
+					const URL_ROUTE = '{{ mc_route('t.emp_action') }}'
+					const UNIQUEID	= 'id_emp'
+					const SELECTTAG	= 'Apellido'
+
+				</script>
 			
-				var oBrw = new TWebBrowse( 'ringo' )		
+				{{ mc_JS( 'tables.js' ) }} 
 				
-				function Edit() 	{ oBrw.Edit() }	
-				function Add()  	{ oBrw.AddRow() }	
-				function Reset() 	{ oBrw.Reset() }
-				
-				function Delete() 	{ 
-				
-					var aSelect = oBrw.Select()
-					
-					if ( aSelect.length == 0 )
-						return null															
-					
-					MsgYesNo( 'Are you sure ?', 'Delete', null, 
-						function(){ 
-							oBrw.DeleteRow() 
-						} )
-				}				
-
-				//	Load data...
-				
-				function Load() {									
-					
-					var cUrl 	= '{{ mc_route('t.emp_action') }}'
-							
-					var oParam 	= new Object()
-						oParam[ 'action' ] 	= 'load'
-						oParam[ 'tag'] 		= $('#search_name').data( 'tag' )			
-						oParam[ 'search'] 	= $('#search').val()	 				
-						
-						MsgServer( cUrl, oParam, Post_Load )					
-				}
-				
-				function Post_Load( dat ){
-				
-					console.log( dat )	
-
-					oBrw.SetData( dat.rows )
-					
-					$( '#search').select()
-					$( '#search_total').html( dat.rows.length )
-				}								
-				
-				//	Save Data...
-
-				function Save() 	{ 
-				
-					var cUrl 	= '{{ mc_route('t.emp_action') }}'
-					var oParam = new Object()
-						oParam[ 'action' ] = 'save'
-						oParam[ 'data'   ] = oBrw.GetDataChanges()
-						
-						
-					if ( oParam[ 'data' ].length == 0 )
-						return null 
-					
-				
-					
-					console.log( 'SAVE', oParam )
-					console.log( 'SAVE2',cUrl )
-					MsgServer( cUrl, oParam, Post_Save )				
-				}				
-				
-				function Post_Save( dat ) {
-				
-					console.log( 'POSTSAVE', dat )
-					
-					var cTxt = '<b>Rows updated:</b> ' + dat.updated + '<br>'						
-					
-					if ( dat.error.length > 0 ) {
-				
-						cTxt += '<b><u>Error</u></b> ' + '<br>'
-						cTxt += dat.errortxt + '<br>'					
-
-					} else {
-						console.log( 'UPDATED ROWS', dat.rows_updated )
-						oBrw.ResetChanges( dat.rows_updated )						
-						oBrw.RefreshAll()
-					}
-					
-					MsgInfo( cTxt )										
-				}
-				
-				//	Styles
-
-				function MyRowStyle(row, index) {
-
-					if ( oBrw.IsRowIdUpdated( row._recno ) == true ) {				
-						return { classes: 'myrow' }	
-					} else {
-						return {}			
-					}										
-				}				
-
-				function MyCssId( value, row, index ) {			
-							
-					return { classes: 'myid' }
-				}
-
-				function MyId( value ) {													
-					
-					if ( typeof value == 'string' && value.substring(0, 1) == '$' ) {
-						return '<i class="far fa-edit"></i>'					
-					} else
-						return value 
-				}				
-
-
-				function TestPostEdit( rows, lUpdate ) {
-					
-					if ( lUpdate ) {
-						console.log( 'Rows Updated', rows )
-						
-						MsgNotify( 'Row modified, but not saved !' )
-						
-						oBrw.RefreshAll()	//	Important to apply css style
-					}						
-				}		
-				
-				function Search_Select_Tag( cTag ) {				
-					$( '#search_name').data( 'tag', cTag )		
-					$( '#search_total').html( '0' )
-					$( '#search_name').html( cTag )
-					$( '#search').focus()
-				}
-
-				//	----------------------------------
-				
-					$( document ).ready(function() {	
-					
-						Search_Select_Tag( 'Apellido' )
-						
-						TWebIntro( 'search', Load ) 						
-						
-						console.info( 'Tables ready !')			
-					});				
-				
-			</script>
-						
-			ENDTEXT
+			ENDTEXT 			
 			
 		END FORM o	RETURN
 	?>			

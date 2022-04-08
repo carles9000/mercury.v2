@@ -21,8 +21,7 @@ CLASS DbfCdxProvider
 	METHOD SearchExact( cKey_Search, uValue )
 	
 	METHOD Count()					INLINE (::cAlias)->( RecCount() )
-	
-	
+	METHOD CountId()						
 
 ENDCLASS 
 
@@ -237,6 +236,42 @@ _d( 'SEARCH', uSearch )
 retu aRows
 
 
+//----------------------------------------------------------------------------//
+
+METHOD CountId( cKey, uValue ) CLASS DbfCdxProvider
+
+	local nTotal := 0
+	local cField, nFieldPos, bPrepare
+_d( 'COUNTID ' + cKey  )
+	if HB_HHasKey( ::hSearch, cKey )
+	
+		cTag 		:= ::hSearch[ cKey ][1] 
+		cField 		:= ::hSearch[ cKey ][2] 
+		nFieldPos 	:= (::cAlias)->( FieldPos( cField) )
+		
+		bPrepare 	:= if( len( ::hSearch[ cKey ] ) > 2 , ::hSearch[ cKey ][3], nil )	
+
+		if valtype( bPrepare ) == 'B' 
+			uValue := Eval( bPrepare, uValue )
+		endif							
+		
+		(::cAlias)->( OrdSetFocus( cTag ) )
+		
+		(::cAlias)->( DbSeek( uValue) )
+		
+		while (::cAlias)->( FieldGet( nFieldPos ) ) == uValue .and. (::cAlias)->( !eof())
+		
+			nTotal++
+		
+			(::cAlias)->( dbskip() )
+		end 								
+		
+	endif
+
+
+
+RETU nTotal 
+
 //	-----------------------------------------------
 /*
 
@@ -266,3 +301,4 @@ function NewAlias( cPrefix )
    enddo
    
 return cAlias
+

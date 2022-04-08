@@ -56,18 +56,15 @@ METHOD Save( oController, hParam ) CLASS Counter
 	
 	local aData 		:= hParam[ 'data' ]
 	local oCounter		:= CounterModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
+	local aResume
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oCounter:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
+		aResume := oCounter:oDataset:Save( aData )		
 
-		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCounter:oDataset:GetError(), 'errortxt' => oCounter:oDataset:GetErrorString() }
-				
+		hResponse := { 'success' => .T., 'resume' => aResume }			
+	
 	oController:oResponse:SendJson( hResponse )
 
 RETU NIL
@@ -79,8 +76,6 @@ METHOD Load( oController, hParam ) CLASS Counter
 	
 	local oCounter 	:= CounterModel():New()	
 	local aRows 		:= oCounter:Search( hParam[ 'tag'],  hParam[ 'search' ] )
-
-	
 	
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 

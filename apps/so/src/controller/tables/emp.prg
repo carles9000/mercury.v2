@@ -57,18 +57,15 @@ METHOD Save( oController, hParam ) CLASS Emp
 	
 	local aData 		:= hParam[ 'data' ]
 	local oEmp			:= EmpleadoModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
+	local aResume
 	local hResponse 
 	
 	//	Process data...	
 	
-		aUpdated := oEmp:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
-
+		aResume := oEmp:oDataset:Save( aData )
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oEmp:oDataset:GetError(), 'errortxt' => oEmp:oDataset:GetErrorString() }
-				
+		hResponse := { 'success' => .T., 'resume' => aResume }			
+		
 	oController:oResponse:SendJson( hResponse )
 
 RETU NIL

@@ -52,18 +52,14 @@ METHOD Save( oController, hParam ) CLASS Shipper
 	
 	local aData 			:= hParam[ 'data' ]
 	local oShipper	:= ShipperModel():New()	
-	local nUpdated 	:= 0
-	local aUpdated 	:= 0
-	local hResponse 
+	local hResponse, aResume
 	
 	//	Process data...	
 	
-		aUpdated := oShipper:oDataset:Save( aData )
-		nUpdated := len( aUpdated )		
-
+		aResume := oShipper:oDataset:Save( aData )
 		
-		hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oShipper:oDataset:GetError(), 'errortxt' => oShipper:oDataset:GetErrorString() }
-				
+		hResponse := { 'success' => .T., 'resume' => aResume }	
+
 	oController:oResponse:SendJson( hResponse )
 
 RETU NIL
@@ -76,8 +72,6 @@ METHOD Load( oController, hParam ) CLASS Shipper
 	local oShipper 	:= ShipperModel():New()	
 	local aRows 		:= oShipper:Search( hParam[ 'tag'],  hParam[ 'search' ] )
 
-	//	hResponse := { 'success' => .T., 'updated' => nUpdated, 'rows_updated' => aUpdated, 'error' => oCliente:oDataset:GetError(), 'errortxt' => oCliente:oDataset:GetErrorString() }
-	
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 
 RETU NIL
