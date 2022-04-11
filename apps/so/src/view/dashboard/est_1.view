@@ -1,0 +1,241 @@
+{{ mc_View( 'app/header_dashboard.view' ) }}
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Dashboard' ) }}
+
+<div class="content main green">
+
+	<div class="container">			
+	
+		<div class="row p-3" >
+			<div class="w-100 alert alert-secondary" role="alert">
+			  <h3><b><i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;Real-time data monitoring</b></h3>
+			</div>			
+		</div>	
+
+		<div class="row">										
+		
+			<div class="col-4">
+			
+				<div class="card">
+				  <div class="card-header">
+					<b>Featured 1</b>
+				  </div>
+				  <div class="card-body">
+					<canvas id="chart1"></canvas>
+				  </div>
+				</div>								
+			
+			</div>
+			
+			<div class="col-4">
+			
+				<div class="card">
+				  <div class="card-header">
+					Featured 2
+				  </div>
+				  <div class="card-body">
+					<canvas id="chart2"></canvas>
+				  </div>
+				</div>								
+			
+			</div>
+
+			<div class="col-4">
+			
+				<div class="card">
+				  <div class="card-header">
+					Featured
+				  </div>
+				  <div class="card-body">
+					<canvas id="chart3"></canvas>
+				  </div>
+				</div>								
+			
+			</div>							
+
+		</div>	
+
+			
+  			<div class="row pt-5">										
+			
+				<div class="col-6">
+				
+					<div class="card">
+					  <div class="card-header">
+						<b>Top 5 sales</b>
+					  </div>
+					  <div class="card-body ">
+						<canvas id="chart4" width="800" height="450"></canvas>
+					  </div>
+					</div>								
+				
+				</div>		
+
+				<div class="col-6">
+				
+					<div class="card">
+					  <div class="card-header">
+						<b>History sales</b>
+					  </div>
+					  <div class="card-body mycard">
+					  
+                           <div class="table-responsive-sm">
+                                <table class="table text-nowrap table-striped">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th class="border-top-0">Id</th>
+                                            <th class="border-top-0">Name</th>
+                                            <th class="text-center border-top-0">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+									
+									<?prg
+									
+										local aSales := pValue(4)
+										local n 
+										local nTotal := len( aSales )
+										local cHtml   := ''
+										
+										for n :=1 to nTotal 
+										
+											do case
+												case aSales[n][3] > 100000 ; cClass = "text-center text-success"
+												case aSales[n][3] > 50000 ; cClass = "text-center text-primary"
+												otherwise 
+													cClass := 'text-center text-danger'
+											endcase																				
+										
+											cHtml += '<tr>'
+											cHtml += '<td>' + mh_valtochar( aSales[n][1] ) + '</td>'
+											cHtml += '<td>' + aSales[n][2] + '</td>'
+											cHtml += '<td class="' + cClass + '">' + Transform( aSales[n][3], "99,999,999.99€" ) + '</td>'
+											
+											cHtml += '</tr>'										
+										next 																			
+									
+										retu cHtml
+									?> 
+                                       
+                                    </tbody>
+                                </table>
+							</div>
+						
+					  </div>
+					</div>								
+				
+				</div>					
+				
+			</div>					
+				
+	
+	</div>	
+
+	<script>
+	  const labels = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	  ];
+
+	  var a = {{ hb_jsonencode( pvalue(1)['2020'] ) }}
+	  
+	  const data1 = {
+		labels: labels,
+		datasets: [{	
+		  label: 'Year 2020',		
+		  backgroundColor: 'rgb(255, 99, 132)',
+		  borderColor: 'rgb(255, 99, 132)',
+		  data: {{ hb_jsonencode( pvalue(1)['2020'] ) }},
+		  tension: 0.4		  
+		}]
+	  };
+	  
+		  const data2 = {
+			labels: labels,
+			datasets: [{
+			  label: 'Year 2021',
+			  backgroundColor: 'rgb(60, 190, 242)',
+			  borderColor: 'rgb(60, 190, 242)',
+			  data: {{ hb_jsonencode( pvalue(1)['2021'] ) }},
+			  tension: 0.4
+			}]
+		  };
+
+		  const data3 = {
+			labels: labels,
+			datasets: [{
+			  label: 'Year 2022',
+			  backgroundColor: 'rgb(94,182,117)',
+			  borderColor: 'rgb(94,182,117)',
+			  data: {{ hb_jsonencode( pvalue(1)['2022'] ) }},
+			  tension: 0.4
+			}]
+		  };
+
+		  const data4 = {
+			  labels: {{ hb_jsonencode( pvalue(2) ) }},
+			  datasets: [
+				{
+				  label: "Top 5 Clients",
+				  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+				  data: {{ hb_jsonencode( pvalue(3) ) }}
+				}
+			  ]
+			}  		  
+
+		  config1 = {
+			type: 'line',
+			data: data1,
+			options: {
+				title: { 
+					display: true,
+					text: 'TEST...' 
+				}
+			}
+		  };
+		  
+		  
+		  const config2 = {	type: 'line', data: data2, options: {} };		  
+		  const config3 = {	type: 'line', data: data3, options: {} };		  
+
+			const config4 = {
+			  type: 'bar',
+			  data: data4,
+				options: {
+				  legend: { display: false },
+				  title: {
+					display: true,
+					text: 'Predicted world population (millions) in 2050'
+				  }
+				}
+			}		  
+			
+		$(document).ready(function(){
+			console.log( 'ready-1')
+			const myChart1 = new Chart(document.getElementById('chart1'), config1 );
+			const myChart2 = new Chart(document.getElementById('chart2'), config2 );
+			const myChart3 = new Chart(document.getElementById('chart3'), config3 );
+			
+			const myChart4 = new Chart(document.getElementById('chart4'), config4 );
+		  			
+
+	  
+			console.log( 'ready-2')
+		});		  
+	
+	</script>
+
+</body>
+</html>

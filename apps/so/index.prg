@@ -32,6 +32,9 @@ FUNCTION Main()
 			DEFINE ROUTE 'splash' 			URL '/' 					VIEW 'splash.view' 				METHOD 'GET' OF oApp					
 			DEFINE ROUTE 'default' 		URL 'default' 				CONTROLLER 'default@app.prg' METHOD 'GET' OF oApp			
 			
+		//	Dashboard
+			DEFINE ROUTE 'dashboard' 		URL 'dashboard' 			CONTROLLER 'show@dashboard.prg' METHOD 'GET' OF oApp			
+			
 		//	Orders 
 		
 			DEFINE ROUTE 'o.show'		URL 'o/show'					CONTROLLER 'show@order.prg'		METHOD 'GET'	OF oApp

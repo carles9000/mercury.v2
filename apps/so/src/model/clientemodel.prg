@@ -4,7 +4,8 @@
 CLASS ClienteModel  FROM DbfCdxProvider
 
 	METHOD New()             		CONSTRUCTOR
-
+	
+	METHOD GetName( nId )
 	
 ENDCLASS
 
@@ -87,6 +88,18 @@ function Cli_NewId( o, uValue, hRow, cAction  )
 	
 retu lValid 
 
+//----------------------------------------------------------------------------//
+
+METHOD GetName( nId ) CLASS ClienteModel
+
+	local cName 	:= ''
+	
+	local hRow 	:= ::GetId( nId )
+	
+	if !empty( hRow )
+		cName := hRow[ 'nom_cli' ]
+	endif 
+retu cName 
 
 //----------------------------------------------------------------------------//
 
