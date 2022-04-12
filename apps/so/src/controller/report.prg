@@ -25,7 +25,7 @@ METHOD Invoice( oController ) CLASS Report
 	local cFile , cUrlFile	
 	local oPrn, oValidator, hInfo
 	local hCom 	:= {=>}
-	
+_d( 'INVOICE' )	
 	DEFINE VALIDATOR oValidator WITH hParam
 		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
 	RUN VALIDATOR oValidator 
@@ -35,19 +35,25 @@ METHOD Invoice( oController ) CLASS Report
 		retu 
 	endif	
 	
+_d( 'INVOICE-1' )	
 	cFile 		:= AppPathReport() + 'fact' + ltrim(str( hParam['id'])) + '.pdf'
 	cUrlFile 	:= AppUrlReport() + 'fact' + ltrim(str( hParam['id'])) + '.pdf'		
 
+_d( cFile  )	
+_d( cUrlFile )	
 	hInfo := oPedido:Load( hParam[ 'id' ] , .T. )	
 	
+_d( 'INVOICE-2' )	
 
 	
 	if file( cFile )
 		fErase( cFile )
 	endif
 
+_d( 'INVOICE-3' )	
 	oPrn := InitPrn()
 
+_d( 'INVOICE-4' )	
 	oPrn:StartPage() 
 	
 	//	Logo 
@@ -56,6 +62,7 @@ METHOD Invoice( oController ) CLASS Report
 		oPrn:cmSay( 0.5 ,3.5, "Charly's motorcycle", oPrn:hFont[ 'title_logo' ] ,, 0 )
 		oPrn:cmSay( 1.7 ,3.6, "Let's go to hell", oPrn:hFont[ 'title_sublogo' ] ,, 0 )
 
+_d( 'INVOICE-5' )	
 	//	Bussiness
 	
 		hCom[ 'name' ] := "Charly's motorcycle"
@@ -81,6 +88,7 @@ METHOD Invoice( oController ) CLASS Report
 		
 	//	Grid
 	
+_d( 'INVOICE-6' )	
 	   oPrn:cmRect( 13,  2, 26, 19, 1 )
 	   oPrn:cmLine( 14,  2, 14, 19, 1 )
 	   oPrn:cmLine( 25,  2, 25, 19, 1 )
@@ -103,6 +111,7 @@ METHOD Invoice( oController ) CLASS Report
 		aPos := hInfo[ 'pos' ]
 		
 		nRow := 14.5
+_d( 'INVOICE-7' )	
 		
 		for n := 1 to len( aPos )
 		
@@ -123,11 +132,13 @@ METHOD Invoice( oController ) CLASS Report
    
 
    
+_d( 'INVOICE-8' )	
 	oPrn:EndPage()
   
 	oPrn:Save( cFile )
 	oPrn:End()
 
+_d( 'INVOICE-9' )	
 	oController:oResponse:SendJson( { 'success' => .t., 'param' => hParam, 'url' => cUrlFile, 'pedido' => hInfo } )
 
 RETU NIL

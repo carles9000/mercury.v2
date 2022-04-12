@@ -111,7 +111,7 @@ retu
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'
 function AppUrlLib(); 	retu MC_App_Url() + 'lib/'
 function AppUrlCss(); 	retu MC_App_Url() + 'css/'
-function AppUrlReport(); 	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Url() + '/data.report/', AP_GetEnv( "PATH_REPORT" ) )
+function AppUrlReport(); 	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Url() + 'data.report/', AP_GetEnv( "PATH_REPORT" ) )
 function AppPathData() ;	retu if(  empty( AP_GetEnv( "PATH_DATA" ) ), MC_App_Path() + '/data/', AP_GetEnv( "PATH_DATA" ) )
 function AppPathImg();	retu MC_App_Path() + '/images/'
 function AppPathReport();	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Path() + '/data.report/', AP_GetEnv( "PATH_REPORT" ) )
