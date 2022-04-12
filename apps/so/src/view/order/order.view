@@ -54,13 +54,13 @@
 
 		DEFINE FORM o
 		
-			HTML o INLINE '<h3>Orderrrrr</h3><hr>'
+			HTML o INLINE '<h3>Order</h3><hr>'
 			
 		INIT FORM o  
 
 			DIV o ID 'bar' CLASS 'btn-group'
-				BUTTON LABEL ' Modify' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'Test()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
-				BUTTON LABEL ' Alert' 	ICON '<i class="far fa-plus-square"></i>' 		ACTION 'alert(1)' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' Modify' 		ICON '<i class="fa fa-recycle" aria-hidden="true"></i>' 	ACTION 'OrderUpd()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
+				BUTTON LABEL ' New Order' 	ICON '<i class="fa fa-plus" aria-hidden="true"></i>' 		ACTION 'OrderNew()' 			CLASS 'btn-secondary mybtnbar' GRID 0 OF o
 
 			ENDDIV o 
 
@@ -77,8 +77,9 @@
 					  
 					</button>
 					<div class="dropdown-menu">
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Id' )">Id</a>
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'Cliente' )">Id Cliente</a>					  
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'id' )">Id Pedido</a>
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'cliente' )">Id Cliente</a>					  
+					  <!--<a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'cliente' )">Nombre Cliente</a>-->
 					</div>
 				  </div>
 				</div>					
@@ -86,24 +87,24 @@
 			ENDTEXT			
 
 			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 ;
-				EDIT UNIQUEID '_recno' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
+				EDIT UNIQUEID 'id_ped' TITLE '<i class="fas fa-recycle"></i> Modificacion...' POSTEDIT 'TestPostEdit' ;
 				ROWSTYLE 'MyRowStyle' ;
 				TOOLBAR "bar" ;
 				SEARCH TOOLS EXPORT PRINT  ;
 				OF o	
 
-				//oBrw:lDark = .t.
-				//oBrw:lStripped := .t.
-				//oBrw:lVirtualScroll := .t.
+
+				oBrw:lStripped := .t.
 				oBrw:cLocale := 'es-ES'							
 
-				//ADD oCol TO oBrw ID '_recno'	HEADER 'Recno' 	ALIGN 'center' SORT WIDTH 80 FORMATTER 'MyId' CLASS 'MyCssId'   		
+				
 				ADD oCol TO oBrw ID 'id_ped' 	HEADER 'ID' 		
 				ADD oCol TO oBrw ID 'id_cli'  	HEADER 'Id Cliente'  		
 				ADD oCol TO oBrw ID 'nom_cli'  	HEADER 'Nom Cliente'  		
 				ADD oCol TO oBrw ID 'nom_emp'  	HEADER 'Nom Empleado'  		
-				ADD oCol TO oBrw ID 'total'  	HEADER 'Total'  						
-				ADD oCol TO oBrw ID 'data_ped' 	HEADER 'Fecha Pedido' 						
+				ADD oCol TO oBrw ID 'total'  	HEADER 'Total'  ALIGN 'center'						
+				ADD oCol TO oBrw ID 'data_ped' 	HEADER 'Fecha Pedido' TYPE 'D'						
+				ADD oCol TO oBrw ID 'pago_ok' 	HEADER 'Pago' 	WIDTH 70 ALIGN 'center' FORMATTER 'pagoFormatter'						
 				
 								
 			INIT BROWSE oBrw 
@@ -119,11 +120,19 @@
 				function Load() {									
 					
 					var cUrl 	= '{{ mc_route('o.action') }}'
-							
+					var cSearch = $('#search').val()
+					var cTag 	= $('#search_name').data( 'tag' )	
+					
+					if ( cTag == 'cliente' && cSearch == '' ) {
+						oBrw.SetData()
+						Cli_Search()															
+						return null					
+					}																				
+				
 					var oParam 	= new Object()
 						oParam[ 'action' ] 	= 'load'
-						oParam[ 'tag'] 		= $('#search_name').data( 'tag' )			
-						oParam[ 'search'] 	= $('#search').val()
+						oParam[ 'tag'] 		= cTag 			
+						oParam[ 'search'] 	= cSearch
 
 						oBrw.Loading(true)
 						
@@ -144,21 +153,48 @@
 				
 				//	----------------------------------
 				
-				function Test() {				
+				function Cli_Search() {
+				
+					var cUrl 	= "{{ mc_Route( 't.cli_search' ) }}"		
+					var aH 		= { 'id_cli':'Código' ,  'nom_cli':'Cliente' }
+		
+					TWebBrwSearch( cUrl, aH, Post_Cli_Search, '','Búsqueda de Clientes' )
+				}		
+
+				function Post_Cli_Search( row ) {
+					console.log( row )
+					
+					if ( row ) {		
+						$('#search').val( row.id_cli )
+						Search_Select_Tag( 'cliente' )
+						Load()
+					} else {
+						
+					}
+					
+				}				
+				//	----------------------------------
+				
+				function OrderUpd() {				
 					
 					var aSelect = oBrw.Select()															
 					
 					if ( aSelect.length == 1 )	{
 						
-						var oItem = aSelect[0]
+						var oItem 	= aSelect[0]
 						var cId_Ped = oItem.id_ped
-						var cUrl = '{% mc_route( 'o.upd' ) %}' + '/' + cId_Ped
-						
-						console.log( cUrl )
+						var cUrl 	= '{% mc_route( 'o.upd' ) %}' + '/' + cId_Ped
 
 						window.location.href = cUrl						
 					}
-				}					
+				}	
+
+				function OrderNew() {				
+
+					var cUrl = '{% mc_route( 'o.upd' ) %}' + '/0'
+			
+					window.location.href = cUrl						
+				}				
 		
 				//	----------------------------------
 				
@@ -168,6 +204,15 @@
 					$( '#search_name').html( cTag )
 					$( '#search').focus()
 				}				
+				//	----------------------------------
+				
+				function pagoFormatter(value, row) {
+						
+					if ( row.pago_ok )						
+						return '<img src="{{ AppUrlImg() + 'ball_green.png' }}">'
+					else
+						return '<img src="{{ AppUrlImg() + 'ball_red.png' }}">'
+				}					
 				//	----------------------------------
 				
 					$( document ).ready(function() {	

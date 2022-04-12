@@ -138,14 +138,10 @@
 		
 		local hRow := pvalue(1)
 		
-		local aRows := hRow['pos']
+		local aRows 	:= hRow['pos']
 		local o, oCol, oBrw, oShipper
 		LOCAL aKey 		:= { 'U', 'L', 'P', 'PP' }
 		LOCAL aValue 	:= { 'UPS', 'Loomis', 'Purolator', 'Parcel Post' }
-		
-	//retu mh_valtochar( pvalue(1) )
-
-
 
 		DEFINE FORM o
 		
@@ -157,7 +153,7 @@
 			
 				<div class="head">
 					<div class="head_ped">
-						ID <input id="id" value="<$ hRow['cab']['id_ped']  $>"></input>
+						ID <input id="id" value="<$ if( !empty(hRow['cab']), hRow['cab']['id_ped'], 0)  $>" readonly></input>
 					</div>
 
 					<div class="head_bar">
@@ -342,9 +338,9 @@
 				function Emp_Search() {
 				
 					var cUrl 	= "{{ mc_Route( 't.emp_search' ) }}"		
-					var aH 		= { 'id_emp':'CÃ³digo' ,  'apellido':'Apellido', 'nombre': 'Nombre', 'ext': 'Ext.' }
+					var aH 		= { 'id_emp':'Código' ,  'apellido':'Apellido', 'nombre': 'Nombre', 'ext': 'Ext.' }
 		
-					TWebBrwSearch( cUrl, aH, Post_Emp_Search, '','BÃºsqueda de ArtÃ­culos' )
+					TWebBrwSearch( cUrl, aH, Post_Emp_Search, '','Búsqueda de Artículos' )
 				}		
 
 				function Post_Emp_Search( row ) {
@@ -387,8 +383,8 @@
 				function ShowEmp( row ) {
 				
 					var cHtml = '' 
-					
-					if ( row ) {
+		
+					if ( $.type( row ) == 'object' ) {
 
 						cHtml  = '<table border="1">'
 						cHtml += DataToDiv( 'Nombre',  row.nombre + ', ' + row.apellido )
@@ -436,9 +432,9 @@
 				function Cli_Search() {
 				
 					var cUrl 	= "{{ mc_Route( 't.cli_search' ) }}"		
-					var aH 		= { 'id_cli':'CÃ³digo' ,  'nom_cli':'Cliente' }
+					var aH 		= { 'id_cli':'Código' ,  'nom_cli':'Cliente' }
 		
-					TWebBrwSearch( cUrl, aH, Post_Cli_Search, '','BÃºsqueda de Clientes' )
+					TWebBrwSearch( cUrl, aH, Post_Cli_Search, '','Búsqueda de Clientes' )
 				}		
 
 				function Post_Cli_Search( row ) {
@@ -455,7 +451,7 @@
 				
 					var cHtml = '' 
 					
-					if ( row ) {				
+					if ( $.type( row ) == 'object' ) {				
 
 						cHtml  = '<table border="1">'
 						cHtml += DataToDiv( 'Nombre',  row.nom_cli )
@@ -491,9 +487,9 @@
 				function Prod_Search() {
 				
 					var cUrl 	= "{{ mc_Route( 't.prod_search' ) }}"		
-					var aH 		= { 'id_prod':'CÃ³digo' ,  'nombre': 'Nombre' }
+					var aH 		= { 'id_prod':'Código' ,  'nombre': 'Nombre' }
 		
-					TWebBrwSearch( cUrl, aH, Post_Prod_Search, '','BÃºsqueda de Productos' )
+					TWebBrwSearch( cUrl, aH, Post_Prod_Search, '','Búsqueda de Productos' )
 				}		
 
 				function Post_Prod_Search( row ) {
@@ -591,7 +587,7 @@
 						o[ 'precio' ] 	= $('#prod_pvp').val() 
 						o[ 'ctd' ] 		= $('#prod_qty').val() 
 						o[ 'total' ] 	= $('#prod_total').val() 
-console.log( 'RECNO', o[ 'id' ] )	
+
 
 					if ( o[ 'id_prod' ] == '' ){ 
 						$('#prod').select() 
@@ -772,10 +768,6 @@ console.log( 'RECNO', o[ 'id' ] )
 					
 					ShowCli( oCliente )
 					ShowEmp( oEmpleado )
-					
-					$('#data_ped').val( oPedido[ 'data_ped' ] )
-					$('#data_req').val( oPedido[ 'data_req' ] )
-					$('#notes').val( oPedido[ 'notes' ] )
 					
 					var o = new TWebControl()
 					

@@ -47,12 +47,12 @@ METHOD Load( oController, hParam ) CLASS Order
 	
 	
 	local oPedido		:= PedidoModel():New()	
-	local aRows 		
+	local oCliente		:= oPedido:oCliente
+	local aRows, aClients	
 	
 	hParam[ 'tag' ] := lower( hParam[ 'tag' ] )
 
-	do case
-		//case hParam[ 'tag' ] == 'id' 		;  aRows	:= oPedido:GetId( Val( hParam[ 'search' ] ) )
+	do case		
 		case hParam[ 'tag' ] == 'id' 		;  aRows	:= oPedido:SearchExact( 'id', Val( hParam[ 'search' ] ) )
 		case hParam[ 'tag' ] == 'cliente' 	;  aRows	:= oPedido:SearchExact( 'cliente', Val( hParam[ 'search' ] ) )
 	endcase		
@@ -69,6 +69,7 @@ METHOD Upd( oController ) CLASS Order
 	local oPedido		:= PedidoModel():New()		
 	local hParam		:= oController:GetAll()
 	local oValidator 
+	local hInfo 		:= {=>}
 	
 	DEFINE VALIDATOR oValidator WITH hParam
 		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
@@ -77,9 +78,19 @@ METHOD Upd( oController ) CLASS Order
 	if oValidator:lError
 		oController:View( 'sys/error.view', 200, oValidator:ErrorString() )				
 		retu 
-	endif		
+	endif	
+
+	if hParam[ 'id' ] == 0
 	
-	hInfo := oPedido:Load( hParam[ 'id' ] , .T. )
+		hInfo[ 'cab' ] := {}
+		hInfo[ 'pos' ] := {}
+		hInfo[ 'ocliente' ] := nil
+		hInfo[ 'oempleado' ] := nil 
+		
+	else
+		hInfo := oPedido:Load( hParam[ 'id' ] , .T. )
+		
+	endif
 	
 	//_w( hInfo )
 	//retu

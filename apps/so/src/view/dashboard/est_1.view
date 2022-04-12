@@ -20,7 +20,7 @@
 			
 				<div class="card">
 				  <div class="card-header">
-					<b>Featured 1</b>
+					<b>Year 2020</b>
 				  </div>
 				  <div class="card-body">
 					<canvas id="chart1"></canvas>
@@ -33,7 +33,7 @@
 			
 				<div class="card">
 				  <div class="card-header">
-					Featured 2
+					<b>Year 2021</b>
 				  </div>
 				  <div class="card-body">
 					<canvas id="chart2"></canvas>
@@ -46,7 +46,7 @@
 			
 				<div class="card">
 				  <div class="card-header">
-					Featured
+					<b>Year 2022</b>
 				  </div>
 				  <div class="card-body">
 					<canvas id="chart3"></canvas>
@@ -149,12 +149,12 @@
 		'December'
 	  ];
 
-	  var a = {{ hb_jsonencode( pvalue(1)['2020'] ) }}
+	 
 	  
 	  const data1 = {
 		labels: labels,
 		datasets: [{	
-		  label: 'Year 2020',		
+		  label: 'Sales',		
 		  backgroundColor: 'rgb(255, 99, 132)',
 		  borderColor: 'rgb(255, 99, 132)',
 		  data: {{ hb_jsonencode( pvalue(1)['2020'] ) }},
@@ -162,10 +162,11 @@
 		}]
 	  };
 	  
+	  
 		  const data2 = {
 			labels: labels,
 			datasets: [{
-			  label: 'Year 2021',
+			  label: 'Sales',
 			  backgroundColor: 'rgb(60, 190, 242)',
 			  borderColor: 'rgb(60, 190, 242)',
 			  data: {{ hb_jsonencode( pvalue(1)['2021'] ) }},
@@ -176,7 +177,7 @@
 		  const data3 = {
 			labels: labels,
 			datasets: [{
-			  label: 'Year 2022',
+			  label: 'Sales',
 			  backgroundColor: 'rgb(94,182,117)',
 			  borderColor: 'rgb(94,182,117)',
 			  data: {{ hb_jsonencode( pvalue(1)['2022'] ) }},
@@ -196,15 +197,14 @@
 			}  		  
 
 		  config1 = {
-			type: 'line',
+			type: 'line',		
 			data: data1,
-			options: {
-				title: { 
-					display: true,
-					text: 'TEST...' 
-				}
-			}
+			options: {			legend: {
+				  display: false
+				}}
 		  };
+		  
+
 		  
 		  
 		  const config2 = {	type: 'line', data: data2, options: {} };		  
@@ -224,6 +224,7 @@
 			
 		$(document).ready(function(){
 			console.log( 'ready-1')
+			
 			const myChart1 = new Chart(document.getElementById('chart1'), config1 );
 			const myChart2 = new Chart(document.getElementById('chart2'), config2 );
 			const myChart3 = new Chart(document.getElementById('chart3'), config3 );

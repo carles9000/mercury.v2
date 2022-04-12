@@ -36,6 +36,7 @@ METHOD New() CLASS PedidoModel
 			FIELD 'data_req'	UPDATE  OF ::oDataset
 			FIELD 'notes'		UPDATE  OF ::oDataset
 			FIELD 'id_shipper'	UPDATE  OF ::oDataset
+			FIELD 'pago_ok'		UPDATE  OF ::oDataset
 
 		
 	//	Define Special row Load
