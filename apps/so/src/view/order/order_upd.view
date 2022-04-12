@@ -165,7 +165,7 @@
 									<i class="fa fa-floppy-o" aria-hidden="true"></i>
 									Save</button>
 									
-								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="alert(123)"	>
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Print()"	>
 									<i class="fa fa-print" aria-hidden="true"></i>
 									Print</button>	
 									
@@ -754,6 +754,41 @@
 					console.log( dat )				
 				}		
 			
+			//	-------------------------------------------------------------
+			
+				function Print() {
+			
+					var cId = $('#id').val()
+				
+			
+					if ( cId == '' ) {
+						MsgError( 'Especificar factura')
+						return null
+					}
+				
+						
+					var oParam = new Object()
+						oParam[ 'id' ]  = cId
+						
+						
+					var cUrl = "{{ mc_Route( 'r.invoice' ) }}"
+						console.log( cUrl )
+						
+					MsgServer( cUrl, oParam, Post_Print )																																					
+				
+					return null				
+				}	
+
+				function Post_Print( dat ) {				
+					console.log( 'POST', dat )	
+
+					if ( dat.success ){
+					
+						//window.location.href = dat.url
+						window.open( dat.url, '_blank' )
+					}
+				}		
+						
 			//	-------------------------------------------------------------
 			
 				function RefreshData() {

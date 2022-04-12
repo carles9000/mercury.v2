@@ -73,7 +73,10 @@ FUNCTION Main()
 			DEFINE ROUTE 't.counter_action'	URL 't/counter_action'			CONTROLLER 'action@tables/counter.prg'		METHOD 'POST'	OF oApp			
 			DEFINE ROUTE 't.counter_search'	URL 't/counter_search'			CONTROLLER 'search@tables/counter.prg'		METHOD 'POST'	OF oApp			
 				
-						
+		//	Report
+				
+			DEFINE ROUTE 'r.invoice'		URL 'r/invoice'				CONTROLLER 'invoice@report.prg'		METHOD 'POST'	OF oApp			
+										
 /*			
 		//	Auth				
 			
@@ -108,5 +111,8 @@ retu
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'
 function AppUrlLib(); 	retu MC_App_Url() + 'lib/'
 function AppUrlCss(); 	retu MC_App_Url() + 'css/'
+function AppUrlReport(); 	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Url() + '/data.report/', AP_GetEnv( "PATH_REPORT" ) )
 function AppPathData() ;	retu if(  empty( AP_GetEnv( "PATH_DATA" ) ), MC_App_Path() + '/data/', AP_GetEnv( "PATH_DATA" ) )
+function AppPathImg();	retu MC_App_Path() + '/images/'
+function AppPathReport();	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Path() + '/data.report/', AP_GetEnv( "PATH_REPORT" ) )
 function App_Version() ; 	retu APP_VERSION 
