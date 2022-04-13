@@ -17,6 +17,7 @@ CLASS DbfCdxProvider
 	
 	METHOD GetId()
 	METHOD GetAll()
+	METHOD GetAllCombo( cKey, cField )
 	METHOD Search()
 	METHOD SearchExact( cKey_Search, uValue )
 	
@@ -56,9 +57,6 @@ METHOD GetId( uValue ) CLASS DbfCdxProvider
 	local nPos 
 	local cType
 
-_d( 'Alias:' + ::cAlias )	
-_d( 'Id:' + ::cId )	
-
 	if !HB_HHasKey( ::hSearch, ::cId ) 		
 		mh_DoError( 'Index not defined -> ' + procname(0) )
 		retu nil
@@ -77,9 +75,7 @@ _d( 'Id:' + ::cId )
 	nPos 		:= (::cAlias)->( FieldPos( aInfo[2] ) )
 	cType 		:= valtype( (::cAlias)->( FieldGet(nPos)) )
 	
-_d( 'Tag:' + cTag )	
-_d( 'Pos:', nPos )	
-_d( 'Type:', cType )	
+
 	
 	bPrepare 	:= if( len( aInfo ) > 2 , aInfo[3], nil )	
 
@@ -88,8 +84,6 @@ _d( 'Type:', cType )
 	else
 		uSearch := uValue
 	endif	
-	
-_d( 'GETID SEARCH', uSearch )	
 
 		
 	(::cAlias)->( OrdSetFocus( cTag ) )
@@ -102,14 +96,13 @@ _d( 'GETID SEARCH', uSearch )
 		hRow := eval( ::bLoadRow )  	
 
 	endif
-	
-_d( hRow )	
+
 	
 retu hRow 
 
 //----------------------------------------------------------------------------//
 
-METHOD GetAll(  ) CLASS DbfCdxProvider
+METHOD GetAll() CLASS DbfCdxProvider
 
 	local aRows	:= {}
 	local n 		:= 0
@@ -131,13 +124,46 @@ METHOD GetAll(  ) CLASS DbfCdxProvider
 RETU aRows
 
 //----------------------------------------------------------------------------//
+//	-> to hash. 
+METHOD GetAllCombo( cKey, cField ) CLASS DbfCdxProvider
+
+
+	local n 		:= 0		
+	local hData 	:= {=>}
+	local nPosKey, nPosField
+	
+	_d('getallcombo')
+	_d( cKey, cField )
+	
+	nPosKey 	:= (::cAlias)->( FieldPos( cKey) )
+	nPosField 	:= (::cAlias)->( FieldPos( cField ) )
+	
+	_d(nPosKey)
+	_d(nPosField)
+	
+	(::cAlias)->( OrdSetFocus( ::cId ) )
+	(::cAlias)->( DbGoTop() )
+
+		while n <= ::nMax .and. (::cAlias)->( !eof() )														
+			
+			hData[ (::cAlias)->( FieldGet( nPosKey) ) ] := Alltrim( (::cAlias)->( FieldGet( nPosField) ))
+
+			(::cAlias)->( DbSkip() )			
+			
+			n++
+		end
+
+RETU hData
+
+
+//----------------------------------------------------------------------------//
 
 
 METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 
 	local aRows	:= {}	
 	local n 		:= 0
-_d( 'SEARCH....' )
+
 	if empty( cSearch )
 		retu if( ::lCanLoadAll, ::GetAll(), aRows )
 	endif
@@ -159,10 +185,7 @@ _d( 'SEARCH....' )
 	if valtype( bPrepare ) == 'B' 
 		cSearch := Eval( bPrepare, cSearch )
 	endif	
-	
-_d( 'Alias:' + ::cAlias )	
-_d( 'Tag:' + cTag )	
-_d( 'Search:' + cSearch )	
+
 		
 	(::cAlias)->( OrdSetFocus( cTag ) )
 	(::cAlias)->( dbGoTop() )
@@ -187,8 +210,7 @@ METHOD SearchExact( cKey_Search, uValue ) CLASS DbfCdxProvider
 
 	local aRows	:= {}	
 	local n 		:= 0
-	
-_d( 'SEARCHEXACT....' )
+
 
 	if empty( uValue )
 		retu aRows 
@@ -206,9 +228,6 @@ _d( 'SEARCHEXACT....' )
 	nPos 		:= (::cAlias)->( FieldPos( aInfo[2] ) )
 	cType 		:= valtype( (::cAlias)->( FieldGet(nPos)) )
 	
-_d( 'Tag:' + cTag )	
-_d( 'Pos:', nPos )	
-_d( 'Type:', cType )	
 	
 	bPrepare 	:= if( len( aInfo ) > 2 , aInfo[3], nil )	
 
@@ -218,9 +237,7 @@ _d( 'Type:', cType )
 		uSearch := uValue
 	endif	
 	
-_d( 'SEARCH', uSearch )	
-
-		
+	
 	(::cAlias)->( OrdSetFocus( cTag ) )
 	(::cAlias)->( dbGoTop() )
 	(::cAlias)->( dbSeek( uSearch, .f. ) )
@@ -242,9 +259,9 @@ METHOD CountId( cKey, uValue ) CLASS DbfCdxProvider
 
 	local nTotal := 0
 	local cField, nFieldPos, bPrepare
-_d( 'COUNTID ' + cKey  )
+
 	if HB_HHasKey( ::hSearch, cKey )
-	
+
 		cTag 		:= ::hSearch[ cKey ][1] 
 		cField 		:= ::hSearch[ cKey ][2] 
 		nFieldPos 	:= (::cAlias)->( FieldPos( cField) )
@@ -253,7 +270,9 @@ _d( 'COUNTID ' + cKey  )
 
 		if valtype( bPrepare ) == 'B' 
 			uValue := Eval( bPrepare, uValue )
-		endif							
+		endif	
+
+	
 		
 		(::cAlias)->( OrdSetFocus( cTag ) )
 		

@@ -44,7 +44,7 @@ RETU Self
 METHOD Run() CLASS MC_Validator
 
 	LOCAL hMsg
-	LOCAL n, aH, cKey, aValue, o, hResponse, cRoles, cName, cFormat
+	LOCAL n, aH, cKey, aValue, o, hResponse, cRoles, cName, cFormat, uDefault
 
 	
 	FOR n := 1 to len( ::hValidate )
@@ -54,10 +54,11 @@ METHOD Run() CLASS MC_Validator
 		cKey 	:= aH[1]
 		aValue 	:= aH[2]
 		
-		cRoles 	:= aValue[1]
-		cName  	:= aValue[2]
+		cRoles 		:= aValue[1]
+		cName  		:= aValue[2]
+		uDefault 	:= aValue[4]
 
-		hMsg 	:= ::EvalValue( cKey, cRoles, cName )
+		hMsg 	:= ::EvalValue( cKey, cRoles, cName, uDefault )
 
 		IF hMsg[ 'success' ] == .F.
 			
@@ -110,7 +111,7 @@ RETU cError
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
+METHOD EvalValue( cKey, cValue, cName, uDefault ) CLASS MC_Validator
 
 	//LOCAL oReq 		:= App():oRequest     //::oRoute:oTRequest	
 	LOCAL aRoles, n, nRoles, cRole
@@ -128,6 +129,12 @@ METHOD EvalValue( cKey, cValue, cName ) CLASS MC_Validator
 		uValue := ::hData[ cKey ]				
 	else
 		RETU { 'success' => .F., 'field' => cKey, 'name' => cName,  'msg' => 'Parameter not defined', 'value' => '' }
+	endif
+	
+	if valtype( uValue ) == 'U'
+		uValue 				:= uDefault	
+		::hData[ cKey ] 	:= uDefault	
+		
 	endif
 
 	
@@ -414,12 +421,13 @@ RETU NIL
 
 //	-------------------------------------------------------------------------	//	
 
-METHOD Set( cParameter, cRoles, cName, cFormat ) CLASS MC_Validator
+METHOD Set( cParameter, cRoles, cName, cFormat, cDefault ) CLASS MC_Validator
 
 	DEFAULT cRoles 	:= 'required'
 	DEFAULT cName 		:= ''
 	DEFAULT cFormat 	:= ''
+	DEFAULT cDefault 	:= ''
 
-	::hValidate[ lower( cParameter ) ] := { cRoles, cName, cFormat }
+	::hValidate[ lower( cParameter ) ] := { cRoles, cName, cFormat, cDefault }
 
 RETU NIL

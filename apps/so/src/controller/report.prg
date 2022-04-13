@@ -25,7 +25,7 @@ METHOD Invoice( oController ) CLASS Report
 	local cFile , cUrlFile	
 	local oPrn, oValidator, hInfo
 	local hCom 	:= {=>}
-_d( 'INVOICE' )	
+
 	DEFINE VALIDATOR oValidator WITH hParam
 		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
 	RUN VALIDATOR oValidator 
@@ -35,25 +35,20 @@ _d( 'INVOICE' )
 		retu 
 	endif	
 	
-_d( 'INVOICE-1' )	
+
 	cFile 		:= AppPathReport() + 'fact' + ltrim(str( hParam['id'])) + '.pdf'
 	cUrlFile 	:= AppUrlReport() + 'fact' + ltrim(str( hParam['id'])) + '.pdf'		
 
-_d( cFile  )	
-_d( cUrlFile )	
+
 	hInfo := oPedido:Load( hParam[ 'id' ] , .T. )	
-	
-_d( 'INVOICE-2' )	
 
 	
 	if file( cFile )
 		fErase( cFile )
 	endif
 
-_d( 'INVOICE-3' )	
 	oPrn := InitPrn()
-
-_d( 'INVOICE-4' )	
+	
 	oPrn:StartPage() 
 	
 	//	Logo 
@@ -61,8 +56,7 @@ _d( 'INVOICE-4' )
 		oPrn:CmSayBitmap( 0.5, 0.5, cLogo, 2.6, 2 )
 		oPrn:cmSay( 0.5 ,3.5, "Charly's motorcycle", oPrn:hFont[ 'title_logo' ] ,, 0 )
 		oPrn:cmSay( 1.7 ,3.6, "Let's go to hell", oPrn:hFont[ 'title_sublogo' ] ,, 0 )
-
-_d( 'INVOICE-5' )	
+	
 	//	Bussiness
 	
 		hCom[ 'name' ] := "Charly's motorcycle"
@@ -77,9 +71,7 @@ _d( 'INVOICE-5' )
 	//	Pedido 
 	
 		LinCol( oPrn, 8.0, 2, 5, 'Nº FACTURA'	, ltrim(str(hParam['id'] )) )
-		LinCol( oPrn, 8.5, 2, 5, 'Fecha'		, hInfo['cab']['data_ped'] )
-		
-	
+		LinCol( oPrn, 8.5, 2, 5, 'Fecha'		, hInfo['cab']['data_ped'] )			
 		
    
    //	Client
@@ -87,31 +79,28 @@ _d( 'INVOICE-5' )
 		Client( oPrn, hInfo[ 'ocliente' ] )
 		
 	//	Grid
-	
-_d( 'INVOICE-6' )	
-	   oPrn:cmRect( 13,  2, 26, 19, 1 )
-	   oPrn:cmLine( 14,  2, 14, 19, 1 )
-	   oPrn:cmLine( 25,  2, 25, 19, 1 )
-	   oPrn:cmLine( 13, 4.5, 26, 4.5, 1 )
-	   oPrn:cmLine( 13, 11.5, 26, 11.5, 1 )
-	   oPrn:cmLine( 13, 14, 26, 14, 1 )
-	   oPrn:cmLine( 13, 16.5, 26, 16.5, 1 )	
-		
-	   oPrn:cmSay( 13.3, 2.6, "Code", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-	   oPrn:cmSay( 13.3, 7, "Description", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-	   oPrn:cmSay( 13.3, 12.2, "Units", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-	   oPrn:cmSay( 13.3, 14.7, "Price", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-	   oPrn:cmSay( 13.3, 17, "Amount", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-	   
-	   oPrn:cmSay( 25.3, 14.7, "TOTAL", oPrn:hFont[ 'helvetica10-bold' ], 0 )
-   
-   
 
-	   
+		oPrn:cmRect( 13,  2, 26, 19, 1 )
+		oPrn:cmLine( 14,  2, 14, 19, 1 )
+		oPrn:cmLine( 25,  2, 25, 19, 1 )
+		oPrn:cmLine( 13, 4.5, 26, 4.5, 1 )
+		oPrn:cmLine( 13, 11.5, 26, 11.5, 1 )
+		oPrn:cmLine( 13, 14, 26, 14, 1 )
+		oPrn:cmLine( 13, 16.5, 26, 16.5, 1 )	
+
+		oPrn:cmSay( 13.3, 2.6, "Code", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+		oPrn:cmSay( 13.3, 7, "Description", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+		oPrn:cmSay( 13.3, 12.2, "Units", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+		oPrn:cmSay( 13.3, 14.7, "Price", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+		oPrn:cmSay( 13.3, 17, "Amount", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+
+		oPrn:cmSay( 25.3, 14.7, "TOTAL", oPrn:hFont[ 'helvetica10-bold' ], 0 )
+   
+   
 		aPos := hInfo[ 'pos' ]
 		
 		nRow := 14.5
-_d( 'INVOICE-7' )	
+
 		
 		for n := 1 to len( aPos )
 		
@@ -129,16 +118,12 @@ _d( 'INVOICE-7' )
 		
 		
 		oPrn:cmSay( 29, 14, '© 2021-2022 Powered by modHarbour V2', oPrn:hFont[ 'times-bolditalic' ], 0 )
-   
-
-   
-_d( 'INVOICE-8' )	
+	
 	oPrn:EndPage()
   
 	oPrn:Save( cFile )
 	oPrn:End()
 
-_d( 'INVOICE-9' )	
 	oController:oResponse:SendJson( { 'success' => .t., 'param' => hParam, 'url' => cUrlFile, 'pedido' => hInfo } )
 
 RETU NIL

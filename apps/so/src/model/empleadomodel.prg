@@ -20,7 +20,7 @@ METHOD New() CLASS EmpleadoModel
 	
 	DEFINE BROWSE DATASET ::oDataset ALIAS ::cAlias 
 
-		FIELD 'id_emp' 			UPDATE  VALID {|o,uValue,hRow| Emp_NewId( o, uValue, hRow ) } OF ::oDataset
+		FIELD 'id_emp' 			UPDATE  VALID {|o,uValue,hRow,cAction| ValidEmp( o, uValue, hRow, cAction  ) } OF ::oDataset
 		FIELD 'apellido'  		UPDATE  OF ::oDataset
 		FIELD 'nombre' 			UPDATE  OF ::oDataset
 		FIELD 'cargo'  			UPDATE  OF ::oDataset
@@ -48,19 +48,44 @@ RETU SELF
 
 //----------------------------------------------------------------------------//
 
-function Emp_NewId( o, uValue, hRow )
+function ValidEmp( o, uValue, hRow, cAction  )
 
-	if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
+	local oPedido
+	local lValid 	:= .t.
+	local nTotal 
+
+	do case
+		case cAction == 'A'	 .or. cAction == 'U'			
 		
-		oCounter := CounterModel():New()
+			if Valtype(uValue) == 'C' .and. At( '$', uValue ) > 0
+				
+				oCounter := CounterModel():New()
+				
+				hRow[ 'id_emp' ] := oCounter:Get( 'EMP' )
+				
+			endif 
+			
+			lValid := .t. 
+			
+		case cAction == 'D'			
 		
-		hRow[ 'id_emp' ] := oCounter:Get( 'EMP' )
-		
-	endif 
+			oPedido 	:= PedidoModel():New()			
+			
+			nTotal := oPedido:CountId( 'emp', uValue )	//	Return total id_prod used in pedidopos
+			
+			if nTotal > 0
+				o:SetError( "Empleado " + mh_valtochar(uValue) + " ,can't be deleted. Referenced " + ltrim(str( nTotal)) + " times")
+				lValid := .f. 
+			endif			
+
+	endcase		
+
 	
-retu .t. 
+retu lValid 
 
 //----------------------------------------------------------------------------//
 
+
 {% mh_LoadFile( "/src/model/provider/dbfcdxprovider.prg" ) %}
+{% mh_LoadFile( "/src/model/pedidomodel.prg" ) %}
 {% mh_LoadFile( "/src/model/countermodel.prg" ) %}

@@ -55,6 +55,8 @@ METHOD New() CLASS PedidoModel
 	
 		::hSearch[ 'id' ] 		:= { 'id_ped', 'id_ped' }
 		::hSearch[ 'cliente' ] := { 'id_cli', 'id_cli' }
+		::hSearch[ 'shipper' ] := { 'id_shipper', 'id_shipper' }
+		::hSearch[ 'emp' ] 	:= { 'id_emp', 'id_emp' }
 		
 	//	Activate ID 
 	
@@ -123,16 +125,13 @@ METHOD Load( nId, lAllData ) CLASS PedidoModel
 	
 	(::cAlias)->( OrdSetFocus( ::hSearch[ 'id' ][1] ) )
 
-	_d( 'FOCUS', ::hSearch[ 'id' ][1] )
-	_d( 'LOAD', nId )
 	
 	(::cAlias)->( DbSeek( nId ) )
 	
 	_d( (::cAlias)->id_ped )
 	
 	if (::cAlias)->id_ped == nId 
-	
-	_d( 'DINS' )
+
 	
 		hPedido[ 'cab' ] := ::LoadRow()
 		hPedido[ 'pos' ] := ::oPedidoPos:LoadPos( nId )		
@@ -162,11 +161,7 @@ METHOD Save( hCab, aPos, hError ) CLASS PedidoModel
 		(cAliasPos)->( OrdSetFocus( 'id' )  )
 		
 		hError := {=>}
-	
-_d( 'SAVE' )
-_d( aPos )	
 
-_d( hCab )	
 	
 	//	Existe Cliente ?
 	
@@ -180,12 +175,14 @@ _d( hCab )
 		if empty( hCab['id'] ) 
 	
 			(::cAlias)->( DbAppend() )
-			
+
 			hCab[ 'id' ] := ::oCounter:Get( 'PDC' )
-			
+		
 			if hCab[ 'id' ] == -1
 				
 				//	Error 
+				
+					retu .f.
 				
 			endif 			
 			
@@ -194,7 +191,7 @@ _d( hCab )
 			lLock := .t.
 		
 		else 
-_d( 'Proc1b')		
+	
 
 			(::cAlias)->( DbSeek( hCab[ 'id' ] ) )
 			
@@ -215,29 +212,28 @@ _d( 'Proc1b')
 	
 	endif 
 		
-		
-_d( 'Proc2', lLock)	
+
 
 	//	Save Pos 
 	
 		nPos := len( aPos )
 		
 		for n := 1 to nPos 
-_d( 'Proc3' )		
+	
 			oItem := aPos[n]		
 		
-_d( 'Proc3->' + oItem[ 'action'] )		
+	
 
 			lLock_Pos := .f.
-_d('proc3-1')
+
 			DO CASE
 				case oItem[ 'action'] == 'A' 
 					
-_d('proc3-1a')
+
 						lLock_Pos := (cAliasPos)->( DbAppend() )				
 					_d( 'LOCK', lLock_Pos)
 						nIdPos := ::oCounter:Get( 'PDP' )
-_d( 'NIDPOS', nIdPos )						
+				
 						
 						if nIdPos == -1 
 						
@@ -251,7 +247,7 @@ _d( 'NIDPOS', nIdPos )
 						endif 
 						
 				case oItem[ 'action'] == 'U' 
-_d('proc3-1b')
+
 				
 				_d( oItem[ 'action'] )
 				_d( oItem['id'] )
@@ -282,23 +278,22 @@ _d('proc3-1b')
 					
 			endcase
 			
-_d('proc3-2')
+
 			if lLock_Pos 
-_d( oItem )
-_d('proc3-41')			
+		
 				(cAliasPos)->id      	:= nIdPos
-_d('proc3-42')			
+		
 				(cAliasPos)->id_ped  	:= hCab['id']
-_d('proc3-43')			
+		
 				(cAliasPos)->id_prod 	:= Val( oItem['row']['id_prod'] )
-_d('proc3-44')			
+		
 				(cAliasPos)->precio  	:= Val( oItem['row']['precio'] )
-_d('proc3-45')			
+		
 				(cAliasPos)->ctd    	:= Val( oItem['row']['ctd'] )			
 			
 				
 				
-_d('proc3-46')			
+		
 				
 			endif 		
 		
@@ -314,7 +309,7 @@ _d('proc3-46')
 		
 		(cAliasPos)->( DbSeek( hCab['id'] ) )
 		
-_d('proc3-5')			
+		
 		while (cAliasPos)->id_ped == hCab['id']  .and. (cAliasPos)->( !eof() )
 		
 			nTotal += ( (cAliasPos)->precio * (cAliasPos)->ctd )
@@ -322,7 +317,7 @@ _d('proc3-5')
 			(cAliasPos)->( DbSkip() )
 		end 
 		
-_d('proc3-6')			
+		
 		
 		//	Update Header Pedido 
 		
@@ -331,7 +326,7 @@ _d('proc3-6')
 			(::cAlias)->id_emp 	:= hCab[ 'id_emp' ]
 			(::cAlias)->total 		:= nTotal 
 
-			(::cAlias)->notes 		:= hCab['notes'] 
+			(::cAlias)->notes 			:= hCab['notes'] 
 			(::cAlias)->id_shipper 	:= hCab['id_shipper'] 
 			
 			if  valtype(hCab['data_ped']) == 'D'
@@ -349,7 +344,7 @@ _d('proc3-6')
 		(cAliasPos)->( DbCommit() )														
 
 
-RETU lSave 
+RETU .T.
 
 
 

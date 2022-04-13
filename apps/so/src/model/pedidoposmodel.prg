@@ -42,6 +42,7 @@ METHOD New() CLASS PedidoPosModel
 	
 		::hSearch[ 'id' ] 		:= { 'id', 'id' }
 		::hSearch[ 'id_ped' ]	:= { 'id_ped', 'id_ped' }
+		::hSearch[ 'id_prod' ]	:= { 'id_prod', 'id_prod' }
 	
 	//	
 		(::cAlias)->( OrdSetFocus( ::hSearch[ 'id' ][1] ) )

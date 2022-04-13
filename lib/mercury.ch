@@ -67,9 +67,9 @@
 => ;
 	<oValidator> := MC_Validator():New( <hData>, [<cRoute>], [<.json.>]  )
 	
-#xcommand PARAMETER <cParameter> [NAME <cName>] [ ROLES <cRoles> ] [FORMATTER <cFormat>] OF <oValidator> ;
+#xcommand PARAMETER <cParameter> [NAME <cName>] [ ROLES <cRoles> ] [FORMATTER <cFormat>] [DEFAULT <cDefault>] OF <oValidator> ;
 => ;
-	<oValidator>:Set( <cParameter>, <cRoles>, [<cName>], [<cFormat>] )
+	<oValidator>:Set( <cParameter>, <cRoles>, [<cName>], [<cFormat>], [<cDefault>] )
 	
 #xcommand RUN VALIDATOR <oValidator> => <oValidator>:Run()
 

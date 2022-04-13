@@ -136,12 +136,11 @@
 	<?prg
 		#include {% TWebInclude() %}
 		
-		local hRow := pvalue(1)
+		local hRow 		:= pvalue(1)
+		local hShipper 	:= pvalue(2)
 		
 		local aRows 	:= hRow['pos']
 		local o, oCol, oBrw, oShipper
-		LOCAL aKey 		:= { 'U', 'L', 'P', 'PP' }
-		LOCAL aValue 	:= { 'UPS', 'Loomis', 'Purolator', 'Parcel Post' }
 
 		DEFINE FORM o
 		
@@ -243,11 +242,9 @@
 					
 					ENDROW o 
 					
-					ROWGROUP o
-					   
-						//SEPARATOR o LABEL 'Datos de Salida'
-
-						SELECT oShipper ID 'id_shipper' VALUE 'x' PROMPT aValue  VALUES aKey LABEL 'Shipper' GRID 6 OF o
+					ROWGROUP o					   						
+						
+						SELECT oShipper ID 'id_shipper' VALUE 'x' KEYVALUE hShipper LABEL 'Shipper' GRID 6 OF o
 						
 					ENDROW	o						
 				ENDCOL o	
@@ -751,7 +748,19 @@
 				}	
 
 				function Post_Save( dat ) {				
-					console.log( dat )				
+					console.log( dat )
+
+					if (dat.process) {
+					
+						MsgInfo( 'Updated was successfully. ID ' + dat.id, 'System', null, 
+							function(){
+								var cUrl = "{{ mc_Route( 'o.show' ) }}"
+								window.location.replace( cUrl )								
+						})										
+					
+					} else {
+						MsgError( dat.error)
+					}
 				}		
 			
 			//	-------------------------------------------------------------

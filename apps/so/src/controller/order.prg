@@ -67,9 +67,11 @@ RETU NIL
 METHOD Upd( oController ) CLASS Order	
 
 	local oPedido		:= PedidoModel():New()		
+	local oShipper		:= ShipperModel():New()		
 	local hParam		:= oController:GetAll()
 	local oValidator 
 	local hInfo 		:= {=>}
+	local hShipper		:= {=>}
 	
 	DEFINE VALIDATOR oValidator WITH hParam
 		PARAMETER 'id' 	NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
@@ -92,6 +94,9 @@ METHOD Upd( oController ) CLASS Order
 		
 	endif
 	
+	hShipper := oShipper:GetAllCombo( 'id_type', 'name' )
+
+	
 	//_w( hInfo )
 	//retu
 		
@@ -101,7 +106,7 @@ METHOD Upd( oController ) CLASS Order
 	endif
 
 	
-	oController:View( 'order/order_upd.view', 200, hInfo  )	
+	oController:View( 'order/order_upd.view', 200, hInfo, hShipper )	
 	
 	
 RETU NIL 
@@ -115,8 +120,7 @@ METHOD Save( oController ) CLASS Order
 	local oPedido		:= PedidoModel():New()		
 	local oValidator 
 	local hError 		:= {=>}
-	
-	hParam[ 'id' ] := '7'
+
 	
 	DEFINE VALIDATOR oValidator WITH hParam
 		PARAMETER 'id' 		NAME 'Id' ROLES 'required|number|maxlen:8' FORMATTER 'tonumber' OF oValidator			
@@ -128,10 +132,12 @@ METHOD Save( oController ) CLASS Order
 		PARAMETER 'id_shipper'	NAME 'Shipper' ROLES 'maxlen:2' OF oValidator			
 	RUN VALIDATOR oValidator 	
 	
+	
 	if oValidator:lError
 		oController:oResponse:SendJson( { 'process' => .f., 'error' => oValidator:ErrorString() } )				
 		retu 
 	endif		
+	
 
 	//oController:oResponse:SendJson( { 'param' => hParam , 'a' => valtype(hParam['data_ped'])} )	
 	
@@ -152,9 +158,9 @@ METHOD Save( oController ) CLASS Order
 		lSave := oPedido:Save( hCab, aPos, @hError )
 	
 	
-	//	Retur Response 
+	//	Return Response 
 	
-		oController:oResponse:SendJson( { 'process' => lSave, 'hparam' => hParam, 'error' => hError } )	
+		oController:oResponse:SendJson( { 'process' => lSave, 'id' => hCab['id'], 'hparam' => hParam, 'error' => hError, 'cab' => hCab } )	
 	
 RETU NIL 
 
@@ -164,3 +170,4 @@ RETU NIL
 	{% mh_LoadFile( "/src/model/pedidomodel.prg" ) %}
 	{% mh_LoadFile( "/src/model/clientemodel.prg" ) %}
 	{% mh_LoadFile( "/src/model/empleadomodel.prg" ) %}
+	{% mh_LoadFile( "/src/model/shippermodel.prg" ) %}
