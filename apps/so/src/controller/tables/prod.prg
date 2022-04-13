@@ -17,7 +17,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Prod
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

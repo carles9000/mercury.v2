@@ -168,8 +168,7 @@ METHOD Search( cKey_Search, cSearch ) CLASS DbfCdxProvider
 		retu if( ::lCanLoadAll, ::GetAll(), aRows )
 	endif
 	
-	cKey_Search := lower( cKey_Search )
-	
+	cKey_Search := lower( cKey_Search )	
 
 	if ! HB_HHasKey( ::hSearch, cKey_Search )		
 		retu aRows

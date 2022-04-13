@@ -30,9 +30,11 @@ FUNCTION Main()
 		//	Basic pages...		
 			
 			DEFINE ROUTE 'splash' 			URL '/' 					VIEW 'splash.view' 				METHOD 'GET' OF oApp					
-			DEFINE ROUTE 'default' 		URL 'default' 				CONTROLLER 'default@app.prg' METHOD 'GET' OF oApp			
+			DEFINE ROUTE 'default' 		URL 'default' 				CONTROLLER 'default@app.prg' 	METHOD 'GET' OF oApp			
+			DEFINE ROUTE 'about' 			URL 'about' 				CONTROLLER 'about@app.prg' 	METHOD 'POST' OF oApp			
 			
 		//	Dashboard
+		
 			DEFINE ROUTE 'dashboard' 		URL 'dashboard' 			CONTROLLER 'show@dashboard.prg' METHOD 'GET' OF oApp			
 			
 		//	Orders 
@@ -41,13 +43,10 @@ FUNCTION Main()
 			DEFINE ROUTE 'o.action'	URL 'o/action'					CONTROLLER 'action@order.prg'		METHOD 'POST'	OF oApp
 			DEFINE ROUTE 'o.upd'		URL 'o/upd/(id)'				CONTROLLER 'upd@order.prg'			METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'o.save'		URL 'o/save'					CONTROLLER 'save@order.prg'		METHOD 'POST'	OF oApp
+			DEFINE ROUTE 'o.del'		URL 'o/del'						CONTROLLER 'del@order.prg'			METHOD 'POST'	OF oApp
 			
 		//	Tables 
-		
-			//DEFINE ROUTE 't.cliente'		URL 't/cliente'				CONTROLLER 'cliente@tables.prg'	METHOD 'GET'	OF oApp
-			//DEFINE ROUTE 't.cliente2'		URL 't/cliente2'				CONTROLLER 'cliente2@tables.prg'	METHOD 'GET'	OF oApp
-			//DEFINE ROUTE 't.cliente2_save'	URL 't/cliente2_save'				CONTROLLER 'cliente2_save@tables.prg'	METHOD 'POST'	OF oApp
-			
+
 			DEFINE ROUTE 't.cli'			URL 't/cli'					CONTROLLER 'show@tables/cli.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 't.cli_action'	URL 't/cli_action'			CONTROLLER 'action@tables/cli.prg'		METHOD 'POST'	OF oApp			
 			DEFINE ROUTE 't.cli_search'	URL 't/cli_search'			CONTROLLER 'search@tables/cli.prg'		METHOD 'POST'	OF oApp			
@@ -77,13 +76,13 @@ FUNCTION Main()
 				
 			DEFINE ROUTE 'r.invoice'		URL 'r/invoice'				CONTROLLER 'invoice@report.prg'		METHOD 'POST'	OF oApp			
 										
-/*			
 		//	Auth				
 			
 			DEFINE ROUTE 'app.login'		URL 'app/login'			CONTROLLER 'login@access.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'app.logout'		URL 'app/logout'		CONTROLLER 'logout@access.prg'		METHOD 'GET'	OF oApp
 			DEFINE ROUTE 'app.auth'		URL 'app/auth'			CONTROLLER 'auth@access.prg'		METHOD 'POST'	OF oApp
 		
+/*			
 		
 		//	Basic module
 			DEFINE ROUTE 'menu'			URL 'menu'				CONTROLLER 'menu@myapp.prg'		METHOD 'GET'	OF oApp

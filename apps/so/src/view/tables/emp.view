@@ -6,7 +6,7 @@
 
 {{ mc_View( 'app/nav.view', 'Tables' ) }}
 
-<div class="content main green">
+<div class="content main ">
 
 	<div class="container_table">			
 	

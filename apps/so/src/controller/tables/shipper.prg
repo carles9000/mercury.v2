@@ -14,7 +14,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Shipper
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

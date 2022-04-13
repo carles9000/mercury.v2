@@ -14,7 +14,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Tipo_Pro
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

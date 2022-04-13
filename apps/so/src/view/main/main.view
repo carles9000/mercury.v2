@@ -1,6 +1,6 @@
 <html>
 
-{{ mc_View( 'app/header.view' ) }}
+{{ mc_View( 'app/header_tweb.view' ) }}
 
 	<style>	
 		.title {
@@ -28,7 +28,7 @@
 
 {{ mc_View( 'app/nav.view', 'Main' ) }}
 
-<div class="content main red ">
+<div class="content main ">
 
 
 	<div class="logo" align="center">		

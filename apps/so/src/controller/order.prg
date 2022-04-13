@@ -8,6 +8,7 @@ CLASS Order
 	
 	METHOD Upd()
 	METHOD Save()
+	METHOD Del()
 	
 ENDCLASS
 
@@ -15,7 +16,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Order
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 
@@ -163,6 +164,17 @@ METHOD Save( oController ) CLASS Order
 		oController:oResponse:SendJson( { 'process' => lSave, 'id' => hCab['id'], 'hparam' => hParam, 'error' => hError, 'cab' => hCab } )	
 	
 RETU NIL 
+
+//	---------------------------------------------------------------	//
+
+//	We will not develop this method because it is a demo and could
+//	eliminate all invoices, but is the same that rest
+
+METHOD Del( oController, hParam ) CLASS Order	
+
+	oController:oResponse:SendJson( { 'success' => .t. } )
+
+RETU NIL
 
 
 //	Load datamodel		---------------------------------------------

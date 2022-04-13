@@ -17,7 +17,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Emp
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

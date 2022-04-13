@@ -17,7 +17,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Counter
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

@@ -52,10 +52,11 @@
          <a class="dropdown-item" href="{{ mc_Route( 't.counter' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Counters</a>
 
         </div>
-      </li>
-	  
+      </li>	
 
-	  
+      <li class="nav-item ">        
+        <a class="nav-link" href="#" onclick="About()"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About</a>
+      </li>  	  
 	  
 	  <div class="dropdown-divider"></div>
       <li class="nav-item">
@@ -71,17 +72,43 @@
 
 	function Logout() {
 	
-		window.location.href = '{{ mc_Route( "splash" ) }}'						
+		window.location.href = '{{ mc_Route( "app.logout" ) }}'						
 	}
 	
-	// Add slideDown animation to dropdown
-	$('.dropdown').on('show.bs.dropdown', function(e){
-	  $(this).find('.dropdown-menu').first().stop(true, true).slideDown(300);
-	});
+	function About() {
 
-	// Add slideUp animation to dropdown
-	$('.dropdown').on('hide.bs.dropdown', function(e){
-	  $(this).find('.dropdown-menu').first().stop(true, true).slideUp(300);
-	});	
+		var cUrl = "{{ mc_Route( 'about' ) }}"
+						
+		MsgServer( cUrl, null, Post_About )			
+	}
+	
+	function Post_About( dat ){
+		console.log( dat )
+		var dialog = bootbox.dialog({
+			message: dat.html,
+			closeButton: false,
+			backdrop: false,
+			onEscape: true, 			
+		});
+	}
+	
+	
+	$(document).ready(function(){ 
+	
+		// Add slideDown animation to dropdown
+		$('.dropdown').on('show.bs.dropdown', function(e){
+		  $(this).find('.dropdown-menu').first().stop(true, true).slideDown(300);
+		});
+
+		// Add slideUp animation to dropdown
+		$('.dropdown').on('hide.bs.dropdown', function(e){
+		  $(this).find('.dropdown-menu').first().stop(true, true).slideUp(300);
+		});	
+		
+		console.log( 'dropdown ready')
+	
+	})
+	
+	
 
 </script>

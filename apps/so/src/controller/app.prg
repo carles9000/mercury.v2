@@ -3,20 +3,15 @@ CLASS App
 	METHOD New() 	CONSTRUCTOR
 	
 	METHOD Default()	
-	
-	METHOD Menu()	
-	
-	METHOD Test1()				
-	METHOD Test2()				
-	METHOD Test3()				
-   	
+	METHOD About()	
+ 	
 ENDCLASS
 
 //	---------------------------------------------------------------	//
 
 METHOD New( oController ) CLASS App
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 
@@ -30,32 +25,24 @@ RETU NIL
 
 //	---------------------------------------------------------------	//
 
-METHOD Menu( oController ) CLASS App
+METHOD About( oController ) CLASS App	
 
-	oController:View( 'app/menu.view' )
+	local cHtml := ''
+	local cUrl 	:= AppUrlImg()
+	
+
+	BLOCKS TO cHtml PARAMS cUrl  
+		
+		<div>
+			<img src="{{ cUrl + 'logo_report.png' }}">
+		</div>
+	
+	ENDTEXT
+	
+
+	oController:oResponse:SendJson( { 'html' => cHtml } )	
+	
 
 RETU NIL
 
 //	---------------------------------------------------------------	//
-
-METHOD Test1( oController ) CLASS App
-
-	oController:View( 'app/test1.view' )
-	
-RETU NIL
-
-//	---------------------------------------------------------------	//
-
-METHOD Test2( oController ) CLASS App
-
-	oController:View( 'app/test2.view' )
-	
-RETU NIL
-
-//	---------------------------------------------------------------	//
-
-METHOD Test3( oController ) CLASS App
-
-	oController:View( 'app/test3.view', 200, oController:oMiddleware:GetData() )
-	
-RETU NIL

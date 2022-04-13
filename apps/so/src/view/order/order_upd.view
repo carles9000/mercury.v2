@@ -1,135 +1,12 @@
 {{ mc_View( 'app/header_tables.view' ) }}
 
-<style>
-
-	.container_table { 
-	
-		/*border: 5px solid yellow;*/
-		bottom: 10px;
-		top: 10px;
-		position: absolute;
-		right: 10px;
-		left: 10px;
-		overflow: hidden;
-		    overflow-y: auto;
-	}
-	
-	.myid {
-		background-color: lightgray;
-		font-weight: bold;
-		text-align: center;
-		border-left: 2px solid gray !important;
-		border-right: 2px solid gray !important;
-		border-top: 0px solid !important;
-		border-bottom: 0px solid !important;
-	}
-
-	.mybtnbar {
-		border-radius:0px;
-	}
-
-	.myrow {
-		background-color: #ff000040;
-		color: black;
-		border: 2px solid #e91e1e;
-		font-weight: bold;
-	}	
-
-	.box_data {
-	
-		/*border: 1px solid blue;*/
-		margin: 10px;
-		overflow: hidden;
-		
-	
-	}
-	
-	.row_data {
-		margin-left: 20px;
-    height: 20px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    line-height: 20px;
-	}
-	
-	.data_font {
-		font-family: sans-serif;
-		font-size: 14px;
-	}
-	
-	.data_font_title {
-		font-weight: bold;	
-	}
-	
-	.data_font_value {
-		font-family: cursive;
-	}
-
-/*---------------*/
-
-	.t {
-		font-family: sans-serif;
-		font-size: 14px;
-	}
-
-	.t-title {
-		text-align:right;
-		padding-right: 5px;
-		font-weight: bold;
-		background-color: lightgray;
-	}
-	
-	.t-data {
-		padding-left: 5px;
-		word-break: break-word;
-	}
-	
-	/*	----------------------	*/
-	
-	.head {
-		height:30px;
-	}
-	
-	.head_ped  {
-		width: 130px;		
-		float: left;		
-		/*padding-top: 16px;*/
-		height: 60px;
-		font-family: sans-serif;
-		font-size: 18px;
-		font-weight: bold;		
-	}
-	
-	.head_bar {			
-		float: right;
-		margin-right: 10px;		
-	}
-	
-	.btn_img {
-		font-size: 18px;
-	}
-	
-	#id {
-	    width: 100px;
-		text-align: center;
-	}
-	
-	#fact_total {
-		width:100px;
-		text-align: center;
-		font-size: 20px;
-		font-weight: bold;		
-	}
-	
-	
-
-</style>
+{{ mc_Css( 'order.css' ) }}
 
 <body>
 
 {{ mc_View( 'app/nav.view', 'Order Update' ) }}
 
-<div class="content main green">
+<div class="content main ">
 
 	<div class="container_table">			
 	
@@ -161,12 +38,13 @@
 							<div class="btn-group"	>	
 
 								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Save()"	>
-									<i class="fa fa-floppy-o" aria-hidden="true"></i>
-									Save</button>
+									<i class="fa fa-floppy-o" aria-hidden="true"></i>&nbsp;Save</button>
+									
+								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Delete()"	>
+									<i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;Delete</button>									
 									
 								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="Print()"	>
-									<i class="fa fa-print" aria-hidden="true"></i>
-									Print</button>	
+									<i class="fa fa-print" aria-hidden="true"></i>&nbsp;Print</button>	
 									
 								<button id="btn_basket" type="button" class="btn btn-secondary " onclick="alert('send')"	>
 									<i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;Send</button>										
@@ -763,6 +641,27 @@
 					}
 				}		
 			
+			//	-------------------------------------------------------------
+			
+				function Delete() {				
+					
+					var oParam = new Object()
+						oParam[ 'id' ]  = $('#id').val()
+						
+					var cUrl = "{{ mc_Route( 'o.del' ) }}"
+						
+					MsgServer( cUrl, oParam, Post_Del )																																					
+				
+					return null				
+				}	
+
+				function Post_Del( dat ) {	
+				
+					console.log( dat )
+
+					MsgInfo( "Option delete is disabled !" )
+					
+				}				
 			//	-------------------------------------------------------------
 			
 				function Print() {

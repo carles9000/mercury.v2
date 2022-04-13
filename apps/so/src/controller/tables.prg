@@ -16,7 +16,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Tables
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 

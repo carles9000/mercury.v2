@@ -17,7 +17,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Cli
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 
@@ -74,7 +74,14 @@ METHOD Load( oController, hParam ) CLASS Cli
 	
 	
 	local oCli 		:= ClienteModel():New()	
-	local aRows 		:= oCli:Search( hParam[ 'tag'],  hParam[ 'search' ] )
+	local aRows 		
+	
+	hParam[ 'tag' ] 	:= lower( hParam[ 'tag' ] )
+
+	do case		
+		case hParam[ 'tag' ] == 'id' 		;  aRows	:= oCli:SearchExact( hParam[ 'tag' ], Val( hParam[ 'search' ] ) )
+		case hParam[ 'tag' ] == 'cliente' 	;  aRows	:= oCli:SearchExact( hParam[ 'tag' ], hParam[ 'search' ] )
+	endcase					
 
 	oController:oResponse:SendJson( { 'rows' => aRows } )
 

@@ -1,0 +1,57 @@
+{{ mc_View( 'app/header_tweb.view' ) }}	
+
+<body>
+
+	<nav class="navbar navbar-dark bg-dark">
+	  <a class="navbar-brand" href="#">Login</a>
+	</nav>							
+
+		<div class="justify-content-center p-5" align="center">			
+			
+			<div class="mb-3">
+				<label for="user">User Name</label><br>
+				<input style="max-width:200px;" class="form-control text-center" name="user" id="user" placeholder="User id demo" >
+			</div>
+	
+			
+			<br>
+				
+			<div class="mb-3">
+				<label for="psw">Password</label><br>
+				<input style="max-width:200px;" class="form-control text-center" type="password" name="psw" id="psw" placeholder="Password is 1234" > 
+			</div>
+			
+			<br><br>
+			
+			<button class="btn btn-primary" style="width:200px;" onclick="Login()" value="Login"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp; Login</button>
+			
+		</div>
+
+	
+	<script>
+	
+		function Login() {
+		
+			var cUrl = '{{ mc_Route( 'app.auth' ) }}'
+			var oParam 	= new Object()						
+				oParam[ 'user']	= $('#user').val()
+				oParam[ 'psw'] 	= $('#psw').val()
+			
+				MsgServer( cUrl, oParam, Post_Login )		
+		}
+		
+		function Post_Login( dat ){
+			
+			if (dat.success){
+				var cUrl = '{{ mc_Route( 'default' ) }}'
+				window.location.replace( cUrl )
+			} else {
+				MsgError( dat.error )
+			}		
+		}		
+	
+	</script>
+	
+</body>
+</html>
+	

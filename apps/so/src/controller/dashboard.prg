@@ -11,7 +11,7 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Dashboard
 
-	//AUTENTICATE CONTROLLER oController
+	AUTENTICATE CONTROLLER oController
 	
 RETU SELF
 
