@@ -44,13 +44,16 @@ function Save() 	{
 
 	var oParam = new Object()
 		oParam[ 'action' ] = 'save'
-		oParam[ 'data'   ] = oBrw.GetDataChanges()
-		
+		oParam[ 'data'   ] = oBrw.GetDataChanges()		
 		
 	if ( oParam[ 'data' ].length == 0 )
 		return null 
+		
+	MsgYesNo( 'Do you want to update the data?', 'Save', null, 
+		function(){ 
+			MsgServer( URL_ROUTE, oParam, Post_Save )						
+		})		
 
-	MsgServer( URL_ROUTE, oParam, Post_Save )				
 }				
 
 function Post_Save( dat ) {

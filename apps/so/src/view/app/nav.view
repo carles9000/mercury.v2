@@ -53,6 +53,10 @@
 
         </div>
       </li>
+	  
+
+	  
+	  
 	  <div class="dropdown-divider"></div>
       <li class="nav-item">
         <a class="nav-link" onclick="MsgYesNo( 'Exit ?', 'System', null, Logout )"  href="#" ><i class="fa fa-power-off" aria-hidden="true"></i>&nbsp;Logout</a>
@@ -69,5 +73,15 @@
 	
 		window.location.href = '{{ mc_Route( "splash" ) }}'						
 	}
+	
+	// Add slideDown animation to dropdown
+	$('.dropdown').on('show.bs.dropdown', function(e){
+	  $(this).find('.dropdown-menu').first().stop(true, true).slideDown(300);
+	});
+
+	// Add slideUp animation to dropdown
+	$('.dropdown').on('hide.bs.dropdown', function(e){
+	  $(this).find('.dropdown-menu').first().stop(true, true).slideUp(300);
+	});	
 
 </script>

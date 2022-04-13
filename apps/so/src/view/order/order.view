@@ -54,7 +54,7 @@
 
 		DEFINE FORM o
 		
-			HTML o INLINE '<h3>Order</h3><hr>'
+			HTML o INLINE '<h3><i class="fa fa-shopping-basket" aria-hidden="true"></i>&nbsp;Order</h3><hr>'
 			
 		INIT FORM o  
 
