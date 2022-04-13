@@ -36,7 +36,7 @@ METHOD Test3( o ) CLASS Route
 
 	?? '<h3>Test 3. Url Friendly. Required and Optional parameters</h3><hr>'
 	
-	? "<code>DEFINE ROUTE 'rt.3' 	URL 'user/(id)/name/[what]' CONTROLLER 'test3@route.prg' OF oApp</code>"	
+	? "<code>DEFINE ROUTE 'rt.3' 	URL 'user/(id)/info/[what]' CONTROLLER 'test3@route.prg' OF oApp</code>"	
 	
 	? '<br><hr><b>Parameters</b><br>'
 	
