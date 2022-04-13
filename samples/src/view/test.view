@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{{ mc_GetApp():cTitle }}</title>
+	<link rel="icon" href="image/mini-mercury.png" type="image/x-icon" >
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
 </head>
@@ -15,7 +16,7 @@
 	
 	.title {
 		width:100%;
-		height:70px;
+		height:75px;
 		padding: 10px;
 	}
 	

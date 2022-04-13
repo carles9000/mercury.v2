@@ -5,20 +5,49 @@
   </head>
   <body>
     <form action="{{ MC_Route( 'valid.test' ) }}" method="post">
-      <br>required <input type="text" name="test_required" value="Hello">
-      <br>numeric  <input type="text" name="test_numeric" value="1234">
-      <br>string   <input type="text" name="test_string" value="Hi everybody!">
-      <br>len:   <input type="text" name="test_len" value="maria">
-      <br>max:   <input type="text" name="test_max" value="100">
-      <br>min:   <input type="text" name="test_min" value="1">
-      <br>maxlen:<input type="text" name="test_maxlen" value="Maria del O">
-      <br>minlen:<input type="text" name="test_minlen" value="Mar">
-      <br>logic<input type="text" name="test_logic" value="true">
-      <br>binary<input type="text" name="test_binary" value="1">
-      <br>date<input type="text" name="test_date" value="2022-02-07">
-      <br>formatter<input type="text" name="test_formatter" value="52">
-      <br>mail<input type="text" name="test_mail" value="SHARON@GMAIL.COM">
-      <br><br>
+		<table border="1">
+			<tr>
+				<td>required</td><td><input type="text" name="test_required" value="Hello"></td>
+			</tr>
+			<tr>
+				<td>numeric</td><td><input type="text" name="test_numeric" value="1234"></td>
+			</tr>	
+			<tr>
+				<td>string</td><td><input type="text" name="test_string" value="Hi everybody!"></td>
+			</tr>
+			<tr>
+				<td>len:</td><td><input type="text" name="test_len" value="maria"></td>
+			</tr>
+			<tr>
+				<td>max:</td><td><input type="text" name="test_max" value="100"></td>
+			</tr>
+			<tr>
+				<td>min:</td><td><input type="text" name="test_min" value="1"></td>
+			</tr>
+			<tr>
+				<td>maxlen:</td><td><input type="text" name="test_maxlen" value="Maria del O"></td>
+			</tr>
+			<tr>
+				<td>minlen:</td><td><input type="text" name="test_minlen" value="Mar"></td>
+			</tr>
+			<tr>
+				<td>logic</td><td><input type="text" name="test_logic" value="true"></td>
+			</tr>
+			<tr>
+				<td>binary</td><td><input type="text" name="test_binary" value="1"></td>
+			</tr>	
+			<tr>
+				<td>date</td><td><input type="text" name="test_date" value="2022-02-07"></td>
+			</tr>
+			<tr>
+				<td>formatter</td><td><input type="text" name="test_formatter" value="52"></td>
+			</tr>
+			<tr>
+				<td>mail</td><td><input type="text" name="test_mail" value="SHARON@GMAIL.COM"></td>
+			</tr>
+		</table>
+
+      <br>
       <input type="submit" value="Send data">
     </form>
   </body>
