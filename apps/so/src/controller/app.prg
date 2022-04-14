@@ -53,7 +53,7 @@ METHOD About( oController ) CLASS App
 <style>
 	.red { border:1px solid red; }
 	.blue { border:1px solid blue; }
-	.container {
+	.mycontainer {
 		width:480px;
 		margin-top: 5px;
 		height: 280px;
@@ -144,7 +144,7 @@ METHOD About( oController ) CLASS App
 	
 </style>
 	
-<div class="container">
+<div class="mycontainer">
 	
 		<div class="d-flex">
 			<div >

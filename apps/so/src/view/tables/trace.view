@@ -23,7 +23,7 @@
 					
 		INIT FORM o  		
 
-			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 SEARCH 	OF o	
+			DEFINE BROWSE oBrw ID 'ringo' HEIGHT 400 SEARCH	OF o	
 
 				oBrw:cLocale := 'es-ES'							
 				
