@@ -17,7 +17,22 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Counter
 
+	local hData 
+
 	AUTENTICATE CONTROLLER oController
+	
+	//	Check User Rol. This rol was loaded when you logged	
+	
+	GET TOKEN DATA hData OF oController
+	
+	hUser := hData[ 'user' ]
+	
+	do case
+		case hUser[ 'rol' ] == 'A' ; retu Self
+		otherwise 
+			oController:View( 'sys/error.view', 200, "I'm sorry, you don't have authorization" )
+			retu nil
+	endcase
 	
 RETU SELF
 

@@ -6,22 +6,54 @@
 	<title>Error</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
+	
+	<!-- Fonts Awesome 4.7 -->
+	
+	<link rel="stylesheet" href="{{ AppUrlCss() + 'font-awesome-4.7.0/css/font-awesome.min.css' }}">	
+	
 </head>
-<body>
-<div class="container">
-   <h4>Sistema Error</h4><hr>
-   
-	<div class="row- justify-content-center">
+<style>
 
+	body { margin:10px;}
+	
+	.flex-centered {
+	  display: flex;
+	  justify-content: center;
+	  margin-top: 31px;
+	  height: 46px;
+	}
+</style>
+
+<body>
+
+<div class="container">
+   <h4><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert system</h4><hr>
+   
+	<div class="row- justify-content-center">		
 		
+		<div class="alert alert-danger" role="alert">
+		  {{ pvalue(1) }}
+		</div>				
 		
-			<div class="alert alert-danger" role="alert">
-			  {{ pvalue(1) }}
-			</div>
-		
+		<div class="justify-content-center p-5" align="center">	
+			<button type="button" class="btn btn-secondary" onclick="GoMain()">
+				<i class="fa fa-handshake-o" aria-hidden="true"></i>&nbsp;Back to main menu
+			</button>			
+		</div>	
+
+		<hr>
 		
 	</div>
+	
+	<script>
+	
+		function GoMain() {			
+			window.location.href = '{{ mc_Route( "default" ) }}'
+		}
+		
+	</script>	
 </div>
+
 </body>
 </html>
    

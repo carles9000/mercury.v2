@@ -34,8 +34,7 @@ METHOD Auth( oController ) CLASS Access
 	local hData 		:= GetMsgServer()
 	LOCAL hTokenData 	:= {=>}
 	LOCAL hUser	 	:= {=>}
-	local oV 		
-	local oTrace		
+	local oV, oTrace, cRol 
 	
 
 	DEFINE VALIDATOR oV WITH hData
@@ -53,13 +52,13 @@ METHOD Auth( oController ) CLASS Access
 
 	//	Validacion de Usuario. Puedes poner un modelo de datos y validar... :-)
 	
-		IF hData[ 'user' ] == 'demo' .AND. hData[ 'psw'] == '1234'
-		
-			
+		IF hData[ 'user' ] == 'demo' .AND. ( hData[ 'psw'] == '1234' .or. hData[ 'psw'] == '777' )					
 		
 			//	Recojo datos de Usuario (from model)
 			
-				hUser := { 'id' => '1000', 'user' => 'dummy', 'name' => 'User Dummy...' }
+				cRol := if( hData[ 'psw'] == '777', 'A', '' )
+			
+				hUser := { 'id' => '1000', 'user' => 'demo', 'name' => 'User Demo...', 'rol' => cRol }
 			
 			//	Datos que incrustar en el token...	
 				

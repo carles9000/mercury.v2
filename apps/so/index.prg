@@ -72,6 +72,8 @@ FUNCTION Main()
 			DEFINE ROUTE 't.counter_action'	URL 't/counter_action'			CONTROLLER 'action@tables/counter.prg'		METHOD 'POST'	OF oApp			
 			DEFINE ROUTE 't.counter_search'	URL 't/counter_search'			CONTROLLER 'search@tables/counter.prg'		METHOD 'POST'	OF oApp			
 				
+			DEFINE ROUTE 't.trace'				URL 't/trace'					CONTROLLER 'show@tables/trace.prg'		METHOD 'GET'	OF oApp
+			
 		//	Report
 				
 			DEFINE ROUTE 'r.invoice'		URL 'r/invoice'				CONTROLLER 'invoice@report.prg'		METHOD 'POST'	OF oApp			

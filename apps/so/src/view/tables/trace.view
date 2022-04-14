@@ -1,0 +1,44 @@
+{{ mc_View( 'app/header_tables.view' ) }}
+
+{{ mc_Css( 'tables.css' ) }}	
+
+<body>
+
+{{ mc_View( 'app/nav.view', 'Tables' ) }}
+
+<div class="content main ">
+
+	<div class="container_table">			
+	
+	<?prg
+
+		local aRows := pValue(1)
+		local o, oCol, oBrw
+
+		DEFINE FORM o
+		
+			o:cSizing := 'sm'
+			
+			HTML o INLINE '<h4><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Trace</h4><hr>'			
+					
+		INIT FORM o  		
+
+			DEFINE BROWSE oBrw ID 'ringo' MULTISELECT CLICKSELECT HEIGHT 400 SEARCH 	OF o	
+
+				oBrw:cLocale := 'es-ES'							
+				
+				ADD oCol TO oBrw ID 'id' 		HEADER 'Id'
+				ADD oCol TO oBrw ID 'date' 		HEADER 'Date' TYPE 'D'
+				ADD oCol TO oBrw ID 'time' 		HEADER 'Time'
+				ADD oCol TO oBrw ID 'ip' 		HEADER 'Ip'								
+				
+			INIT BROWSE oBrw DATA aRows			
+			
+		END FORM o	RETURN
+	?>			
+	
+	</div>	
+	
+
+</body>
+</html>

@@ -37,6 +37,7 @@
       <li class="nav-item ">        
         <a class="nav-link" href="{{ mc_Route( 'o.show' ) }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Order</a>
       </li>
+	  
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fa fa-table" aria-hidden="true"></i>&nbsp;
@@ -49,10 +50,20 @@
          <a class="dropdown-item" href="{{ mc_Route( 't.tipo_pro' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Tipo Producto</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.emp' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Empleado</a>
          <a class="dropdown-item" href="{{ mc_Route( 't.shipper' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Shipper</a>
-         <a class="dropdown-item" href="{{ mc_Route( 't.counter' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Counters</a>
 
         </div>
       </li>	
+	  
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fa fa-table" aria-hidden="true"></i>&nbsp;
+			Tables (Sys)
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">          
+           <a class="dropdown-item" href="{{ mc_Route( 't.counter' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Counters</a>
+           <a class="dropdown-item" href="{{ mc_Route( 't.trace' ) }}"><i class="fa fa-table" aria-hidden="true"></i>&nbsp;Trace</a>                                             
+        </div>
+      </li>		  
 
       <li class="nav-item ">        
         <a class="nav-link" href="#" onclick="About()"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;About</a>

@@ -16,7 +16,14 @@ ENDCLASS
 
 METHOD New( oController ) CLASS Tables
 
+	local hData 
+
 	AUTENTICATE CONTROLLER oController
+	
+	GET TOKEN DATA hData OF oController
+	
+	? hData 
+	retu
 	
 RETU SELF
 
