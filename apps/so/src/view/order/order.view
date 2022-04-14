@@ -42,8 +42,7 @@
 					</button>
 					<div class="dropdown-menu">
 					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'id' )">Id Pedido</a>
-					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'cliente' )">Id Cliente</a>					  
-					  <!--<a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'cliente' )">Nombre Cliente</a>-->
+					  <a class="dropdown-item" href="#" onclick="Search_Select_Tag( 'cliente' )">Id Cliente</a>					  					 
 					</div>
 				  </div>
 				</div>					
@@ -166,7 +165,13 @@
 					$( '#search_name').data( 'tag', cTag )		
 					$( '#search_total').html( '0' )
 					$( '#search_name').html( cTag )
-					$( '#search').focus()
+					
+					if ( cTag == 'cliente' )
+						Load()
+					else
+						$( '#search').focus()
+					
+					
 				}				
 				//	----------------------------------
 				

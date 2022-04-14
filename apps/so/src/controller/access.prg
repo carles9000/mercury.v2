@@ -20,6 +20,7 @@ RETU SELF
 
 METHOD Login( o ) CLASS Access
 
+
 	//	Crearemos una pagina para entrar datos para posteriormente valorarlos...
 
 		o:View( 'sys/login.view' )
@@ -34,6 +35,7 @@ METHOD Auth( oController ) CLASS Access
 	LOCAL hTokenData 	:= {=>}
 	LOCAL hUser	 	:= {=>}
 	local oV 		
+	local oTrace		
 	
 
 	DEFINE VALIDATOR oV WITH hData
@@ -45,10 +47,15 @@ METHOD Auth( oController ) CLASS Access
 		oController:oResponse:SendJson( { 'success' => .f., 'error' => oV:ErrorString() } )			
 		retu 
 	endif
+	
+	oTrace		:= TraceModel():New()
+	oTrace:Insert()
 
 	//	Validacion de Usuario. Puedes poner un modelo de datos y validar... :-)
 	
 		IF hData[ 'user' ] == 'demo' .AND. hData[ 'psw'] == '1234'
+		
+			
 		
 			//	Recojo datos de Usuario (from model)
 			
@@ -82,3 +89,8 @@ METHOD Logout( oController ) CLASS Access
 	oController:View( 'splash.view' )
 
 RETU NIL
+
+
+//	Load datamodel		------------------------------------------ //
+
+	{% mh_LoadFile( "/src/model/tracemodel.prg" ) %}

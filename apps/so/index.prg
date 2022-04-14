@@ -12,7 +12,7 @@
 
 #include {% TWebInclude() %}
 
-#define APP_VERSION  '0.1'
+#define APP_VERSION  '1.0a'
 
 
 FUNCTION Main()
@@ -104,7 +104,7 @@ function MyConfig()
 
 	SET DATE TO ITALIAN 
 	SET DELETED ON 
-
+	
 retu 	
 
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'
@@ -115,3 +115,4 @@ function AppPathData() ;	retu if(  empty( AP_GetEnv( "PATH_DATA" ) ), MC_App_Pat
 function AppPathImg();	retu MC_App_Path() + '/images/'
 function AppPathReport();	retu if(  empty( AP_GetEnv( "PATH_REPORT" ) ), MC_App_Path() + '/data.report/', AP_GetEnv( "PATH_REPORT" ) )
 function App_Version() ; 	retu APP_VERSION 
+
