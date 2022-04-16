@@ -1,5 +1,5 @@
-#mytable tr:hover {background-color: #ddd;}
-#mytable tr:nth-child(even){background-color: #e0e6ff;}
+#mytable tbody tr:hover { background-color: #ddd; }
+/*#mytable tr:nth-child(even){background-color: #e0e6ff;}*/
 #mytable { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;border-collapse: collapse; width: 100%; }
 #mytable thead { background-color: #007bff;color: white;}
 
@@ -18,6 +18,8 @@ code {
 	width: 70px;
 }
 
+
+
 .btnbar {
 	float: right;
 	margin-top: 12px;				
@@ -25,7 +27,7 @@ code {
 
 #flag {
 	float: right;
-	margin-top: 5px;
+	margin-top: 4px;
 	margin-right: 10px;
 	width: 30px;
 	cursor: pointer;						
