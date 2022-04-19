@@ -2,7 +2,7 @@
 # Load init process...
 # --------------------------------------------------------------------------
 #SetEnv MH_INITPROCESS 		../lib/mercury.hrb,../lib/mercury.ch
-SetEnv MH_INITPROCESS 		../../lib/mercury.ch
+#SetEnv MH_INITPROCESS 		../../lib/mercury.ch
 SetEnv MH_MINIMALVERSION 	2.1.005
 
 # --------------------------------------------------------------------------

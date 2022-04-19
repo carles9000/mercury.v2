@@ -11,6 +11,8 @@
 // 	{% mc_InitMercury() %}								//	Init ErrorSystem
 
 #include {% TWebInclude() %}
+#include {% MercuryInclude( '../../lib/mercury.ch' ) %}
+
 
 #define APP_VERSION  '1.0a'
 
@@ -105,9 +107,10 @@ RETU NIL
 function MyConfig()
 
 	SET DATE TO ITALIAN 
-	SET DELETED ON 
+	SET DELETED ON 	
 	
 retu 	
+
 
 function AppUrlImg(); 	retu MC_App_Url() + 'images/'
 function AppUrlLib(); 	retu MC_App_Url() + 'lib/'
