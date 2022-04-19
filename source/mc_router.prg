@@ -395,7 +395,8 @@ METHOD ExecuteRouter( hInfo, hParam, cMap ) CLASS MC_Router
 
 			//cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
 
-			cCode :=  hb_memoread( hInfo[ 'filepath' ] )
+			cCode := "#include " + MercuryInclude() + HB_OsNewLine() + HB_OsNewLine()
+			cCode +=  hb_memoread( hInfo[ 'filepath' ] )
 				
 			::ExecuteCode( hInfo, cCode, hParam )
 			
@@ -404,7 +405,9 @@ METHOD ExecuteRouter( hInfo, hParam, cMap ) CLASS MC_Router
 			//cFile := ::oApp:cApp_Path + ::oApp:cPathController + hInfo[ 'file' ]
 
 			cCode := "#include 'hbclass.ch' "  + HB_OsNewLine()
-			cCode += "#include 'hboo.ch' " + HB_OsNewLine() + HB_OsNewLine()
+			cCode += "#include 'hboo.ch' " + HB_OsNewLine() 
+			cCode += "#include " + MercuryInclude() + HB_OsNewLine() + HB_OsNewLine()
+			
 			cCode +=  hb_memoread( hInfo[ 'filepath' ] )					
 		
 			::ExecuteClass( hInfo, cCode, hParam )
@@ -442,10 +445,8 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	local cClass, oClass, hError
 	local cCodePP := ''   
 	local oController   
-
 	
-	hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, @cCodePP ), Break( oError ) } )
-		
+	hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, @cCodePP ), Break( oError ) } )		
   
 	oController 	:= MC_Controller():New( hInfo[ 'method' ], hParam )
 

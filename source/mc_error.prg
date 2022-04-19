@@ -31,9 +31,10 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 	local aTagLine 	:= {}
 	local hError	:= {=>}
     local n, aLines, nLine, cLine, nPos, nErrorLine, nL  	
-	local nLin, nOffSet, lReview, ts_block, cProc
+	local nLin, nOffSet, lReview, ts_block, cProc, cVersion
 	local lSearch, cSearch
 	local lSearchTag := .f. 
+	local cI := ''
 
 	//	Init hError info 
 	
@@ -41,9 +42,13 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 		hError[ 'time' ]		:= time()
 		hError[ 'description' ]	:= ''
 		hError[ 'operation' ]	:= ''
-		hError[ 'filename' ]	:= ''
+		hError[ 'filename' ]	:= ''		
 		hError[ 'subsystem' ]	:= ''
-		hError[ 'subcode' ]		:= ''
+		hError[ 'os' ]			:= os()
+		hError[ 'modname' ]	:= ''
+		hError[ 'modversion' ]	:= ''
+		hError[ 'rdds' ]		:= ''		
+		hError[ 'subcode' ]	:= ''
 		hError[ 'args' ]		:= {}
 		hError[ 'stack' ]		:= {}
 		hError[ 'line' ]		:= 0
@@ -53,6 +58,17 @@ function MC_ErrorInfo( oError, cCode, cCodePP )
 		hError[ 'code' ]		:= cCode
 		hError[ 'codePP' ]		:= cCodePP
 		hError[ 'view' ]		:= mc_get( 'view', '')
+		
+	//	Info about mod 		
+		
+		cVersion := if( hb_isFunction( 'mh_modname' ), eval(&('{|| mh_modname() }')), 'Unknown' )
+		cVersion += if( hb_isFunction( 'mh_modversion' ), ' => ' + eval(&('{|| mh_modversion() }')), '')
+		
+		hError[ 'modversion' ]	:= cVersion
+
+		AEval( rddList(), {| x | cI += iif( empty( cI ), '', ', ' ) + x } )
+		
+		hError[ 'rdds' ] := cI			
 		
 
 	//	Check error from BLOCKS 
@@ -499,7 +515,12 @@ function MC_ErrorView( hError )
 		cHtml +=  '<tr><td class="description">System</td><td class="value">' + cInfo +  '</td><tr>'					
 		
 	endif 
+
 	
+	cHtml += '<tr><td class="description">Os</td><td class="value">' + hError[ 'os' ] + '</td><tr>'
+	cHtml += '<tr><td class="description">mod Version</td><td class="value">' + hError[ 'modversion' ] + '</td><tr>'
+	cHtml += '<tr><td class="description">Rdss</td><td class="value">' + hError[ 'rdds' ] + '</td><tr>'
+
 	
 	
 	BLOCKS TO cHtml 

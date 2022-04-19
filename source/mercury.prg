@@ -5,7 +5,7 @@
 	Date: 			28/11/21
 -------------------------------------------------------------------------------- */
 
-#define MC_VERSION 			'2.1.003'
+#define MC_VERSION 			'2.1.004'
 
 
 //	-------------------------------------------------------------------------------- 
@@ -42,6 +42,33 @@ static _hBlock
 //	---------------------------------------------------------------------------- //
 
 function mc_InitMercury()
-	//_d( 'mc_InitMercury')
+	
 	MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
 retu nil 
+
+function MercuryInclude( cFile )
+
+	local cIndexPath := hb_GetEnv( 'PRGPATH' ) + '/' 
+	
+	thread static cFileInclude := ''
+	
+	if !empty( cFileInclude )
+		retu cFileInclude 
+	endif
+
+	DEFAULT cFile TO 'lib/mercury/mercury.ch'	
+	
+	if file( cIndexPath + cFile  )	
+	
+		cFileInclude := '"' + cIndexPath + cFile + '"'
+
+		retu '"' + cIndexPath + cFile + '"'
+		
+	else 
+	
+		mh_DoError( 'Include file mercury not found ' + cIndexPath + cFile )
+	
+	endif 						
+	
+retu ''
+

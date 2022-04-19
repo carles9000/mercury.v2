@@ -1,0 +1,6 @@
+19.04.2022 => 2.1.004
+=====================
+New MercuryInclude(). Now you will need include file include this function at begin of app
+
+#include {% MercuryInclude() %}
+
