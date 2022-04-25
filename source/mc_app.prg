@@ -40,6 +40,7 @@ CLASS MC_App
 	CLASSDATA oRouter					
 	CLASSDATA oRequest
 	CLASSDATA oResponse
+	
 	CLASSDATA cLang									INIT 'en'
 	CLASSDATA cCharset								INIT 'utf-8'	//	'ISO-8859-1'
 		
@@ -70,7 +71,7 @@ METHOD New( cTitle, bInit ) CLASS MC_App
 	::bInit 		:= bInit	
 
 	::oRouter 		:= MC_Router():New( self )
-	::oResponse	:= MC_Response():New()
+	::oResponse		:= MC_Response():New()
 	
 
 	oApp := SELF

@@ -1,6 +1,7 @@
 //	------------------------------------------------------------------------------
 //	Title......: SO 
 //	Description: Sales Order (SO) for web
+//	Author.....: Carles Aubia
 //	Date.......: 24/03/2022
 //	Last Upd...: 24/03/2022
 //	------------------------------------------------------------------------------
@@ -8,10 +9,10 @@
 //	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}
 //	{% mh_LoadHrb( 'lib/tweb/tweb.hrb' )  %}
 
-// 	{% mc_InitMercury() %}								//	Init ErrorSystem
+// 	{% mc_InitMercury() %}									//	Init ErrorSystem
 
-#include {% TWebInclude() %}
-#include {% MercuryInclude( '../../lib/mercury.ch' ) %}
+#include {% TWebInclude() %}									//  TWeb file ch 
+#include {% MercuryInclude( '../../lib/mercury.ch' ) %}		//	Mercury file ch
 
 
 #define APP_VERSION  '1.0a'

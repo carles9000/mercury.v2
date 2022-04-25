@@ -1,44 +1,24 @@
-//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}
-// 	{% mc_InitMercury() %}	//	Inicialitza ErrorSystem
+//	------------------------------------------------------------------------------
+//	Title......: Mercury example test
+//	Description: Mercury example test
+//	Author.....: Carles Aubia
+//	Date.......: 24/03/2022
+//	Last Upd...: 24/03/2022
+//	------------------------------------------------------------------------------
+
+//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}			//	Load lib
+//	{% mc_InitMercury() %}								//	Init ErrorSystem
+
+
+#include {% MercuryInclude( '../lib/mercury.ch' ) %}		//	Default: actual path + 'lib/mercury/mercury.ch'
 	
 function main()
 
-	local oApp
-	
-/*		
-	El tema esta en que una definicio AUTH implica que tots els enrutats
-	hauran de tenir la mateixa regla.
-	Que pasa si vull xec una ruta per un altre via ?			
-	Solucio:Es defineix una rgla general i cada modul te el seu autenticate 
-	que agafara la config general o creara una definicó local per aquell modul
-*/
-	
-	//mc_Auth():Define( 'MYAPP', 'cookie', 'jwt', 'CHARLES-2022', 'Babe2022', 'html', 'unathorized' )
-	//mc_Auth():Define( 'MYAPP', 'query', 'jwt', 'CHARLES-2022', 'Babe2022', 'json', nil , { 'error' => .t., 'msg' => 'Error unauthorized' } )
-	//mc_Auth():Define( 'MYAPP', 'query', 'jwt', 'CHARLES-2022', 'Babe2022', 'json' )
-		
-	//	
-	//	Bearer -> token 
-	//	Basic auth -> user:psw 
-	//	API Key -> token 	
-	
-	//mc_Auth():Define( 'MYAPP', 'Bearer Token', 'jwt', 'CHARLES-2022', 'Babe2022' )
-	//mc_Auth():Define( 'MYAPP', 'Basic Auth', 'jwt', 'CHARLES-2022', 'Babe2022' )
-	//mc_Auth():Define( 'MYAPP', 'API Key', 'jwt', 'CHARLES-2022', 'Babe2022' )
-
-	
-	//mc_Middleware():Define( 'cookie', 'jwt', 'CHARLES-2022', 'Babe2022', 10, 'html', 'unathorized' )	
-	//mc_Middleware():Define( 'query', 'jwt', 'CHARLES-2022', 'Babe2022', 'json', nil , { 'error' => .t., 'msg' => 'Error unauthorized' } )
-	//mc_Middleware():Define( 'Bearer Token', 'jwt', nil , 'Babe2022', 'json', nil , { 'error' => .t., 'msg' => 'Error unauthorized' } )
-	//mc_Middleware():Define( 'Basic Auth', 'func', nil , 'Babe2022', 'json', nil , { 'error' => .t., 'msg' => 'Error unauthorized' }, {|cToken| MyValid(cToken)} )
-	//mc_Middleware():Define( 'API key', 'func', 'CHARLES-2022' , 'Babe2022', 'json', nil , { 'error' => .t., 'msg' => 'Error unauthorized' }, {|cToken| MyValid(cToken)} )
+	local oApp		
 	
 	DEFINE APP oApp TITLE 'App Mercury 1.00'  ON INIT TestInit() 
 	
-		DEFINE CREDENTIALS NAME 'CHARLES-2022' PSW 'Babe@2022' REDIRECT 'unathorized'				
-		//DEFINE CREDENTIALS NAME 'CHARLES-2022' PSW 'Babe@2022' TIME 10 REDIRECT 'unathorized'				
-		//DEFINE CREDENTIALS TYPE 'token' NAME 'CHARLES-2022' PSW 'Babe@2022' REDIRECT 'unathorized'				
-
+		DEFINE CREDENTIALS NAME 'CHARLES-2022' PSW 'Babe@2022' REDIRECT 'unathorized'					
 	
 		DEFINE ROUTE 'root'	URL '/' 				VIEW 'test.view' 				OF oApp
 		
@@ -108,17 +88,7 @@ function main()
 			
 			DEFINE ROUTE 'token.validatebearer' URL 'tk_validatebearer' CONTROLLER  'validate@middleware_bearer.prg'	METHOD 'POST' OF oApp						
 			DEFINE ROUTE 'token.validatebasic'  URL 'tk_validatebasic'  CONTROLLER  'validate@middleware_basic.prg'	METHOD 'POST' OF oApp						
-			DEFINE ROUTE 'token.validateapi'    URL 'tk_validateapi'    CONTROLLER  'validate@middleware_api.prg'		METHOD 'POST' OF oApp						
-			
-			
-/*
-			DEFINE ROUTE 'token.crea'			URL 'tk_crea' 			CONTROLLER  'creatoken@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.del'			URL 'tk_del' 			CONTROLLER  'deltoken@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.hello'			URL 'tk_hello' 			CONTROLLER  'hello_access@testaccess.prg'	OF oApp						
-			DEFINE ROUTE 'token.check.jwt'		URL 'tk_check_jwt'		CONTROLLER  'check_jwt@testaccess.prg'	METHOD 'POST'	OF oApp									
-			DEFINE ROUTE 'token.check.token'	URL 'tk_check_token'	CONTROLLER  'check_token@testaccess.prg'	METHOD 'POST'	OF oApp						
-*/			
-			
+			DEFINE ROUTE 'token.validateapi'    URL 'tk_validateapi'    CONTROLLER  'validate@middleware_api.prg'		METHOD 'POST' OF oApp										
 			
 		//	Restes
 			DEFINE ROUTE 'r5' URL 'testclass/[id]'	CONTROLLER 'info@testclass.prg' 		METHOD 'GET' OF oApp

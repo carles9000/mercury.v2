@@ -46,6 +46,8 @@ function mc_InitMercury()
 	MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
 retu nil 
 
+
+
 function MercuryInclude( cFile )
 
 	local cIndexPath := hb_GetEnv( 'PRGPATH' ) + '/' 

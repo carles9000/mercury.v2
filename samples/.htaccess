@@ -1,13 +1,4 @@
 # --------------------------------------------------------------------------
-# Carga Inicial de modulos hrb,ch,prg...
-# --------------------------------------------------------------------------
-#SetEnv MH_INITPROCESS 	../lib/mercury.hrb,../lib/mercury.ch
-SetEnv MH_INITPROCESS 	../lib/mercury.ch
-
-# Test -> https://www.htaccessredirect.net/
-
-
-# --------------------------------------------------------------------------
 # Impedir que lean los ficheros del directorio
 # --------------------------------------------------------------------------
 Options All -Indexes

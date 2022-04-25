@@ -433,6 +433,8 @@ retu nil
 METHOD ExecuteCode( hInfo, cCode, hParam ) CLASS MC_Router
 
 	local oController	:= MC_Controller():New( '', hParam )
+	
+	
 
 	mh_Execute( cCode, oController, hParam  )
 
@@ -444,11 +446,12 @@ METHOD ExecuteClass( hInfo, cCode, hParam ) CLASS MC_Router
 	local pSym, oHrb
 	local cClass, oClass, hError
 	local cCodePP := ''   
-	local oController   
+	local oController, oApp 
 	
 	hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, @cCodePP ), Break( oError ) } )		
   
 	oController 	:= MC_Controller():New( hInfo[ 'method' ], hParam )
+	
 
 	oHrb 	:= MC_Compile( @cCode, @cCodePP )
 
