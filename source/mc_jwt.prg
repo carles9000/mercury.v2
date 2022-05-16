@@ -29,7 +29,7 @@ CLASS MC_JWT
 	METHOD Refresh()					INLINE ::Encode()
 	
 	METHOD SetKey( cKey )				INLINE ::cKey := cKey 
-	METHOD SetTime( nLapsus )			INLINE ::nLapsus := nLapsus
+	METHOD SetTime( nLapsus )			INLINE if( valtype(nLapsus) == 'N' , ::nLapsus := nLapsus, nil)
 	
 	METHOD SetData( hData )
 	METHOD SetVar( cVar, cValue )
@@ -65,7 +65,7 @@ METHOD Encode() CLASS MC_JWT
 	LOCAL cPayload, cPayload64  	
 	LOCAL cSignature, cSignature64
 	LOCAL cJWT
-	
+
 	//	Actualizamos fecha de expiracion (CLAIMS)
 	
 		if ::lClaims 
@@ -80,6 +80,7 @@ METHOD Encode() CLASS MC_JWT
 			::aPayload[ 'lap'  ]:= ::nLapsus					//	lapsus
 		endif
 		
+
 	//	Codificamos Header y Payload
 	
 		cHeader   		:= hb_jsonEncode( ::aHeader ) 
@@ -91,6 +92,7 @@ METHOD Encode() CLASS MC_JWT
 	
 		cHeader64		:= hb_StrReplace( cHeader64 , '+/=', '-_ ' )
 		cPayload64 	:= hb_StrReplace( cPayload64, '+/=', '-_ ' )
+
 
 	//	Make signature	
 	

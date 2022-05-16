@@ -5,7 +5,7 @@
 	Date: 			28/11/21
 -------------------------------------------------------------------------------- */
 
-#define MC_VERSION 			'2.1.004'
+#define MC_VERSION 			'2.1.005'
 
 
 //	-------------------------------------------------------------------------------- 
@@ -21,6 +21,9 @@
 
 
 static _hBlock 
+thread static cFileInclude := ''
+
+//	-------------------------------------------------------------------------------- 
 
 #include "mc_app.prg"			//	App System
 #include "mc_router.prg"		//	Router System
@@ -41,36 +44,37 @@ static _hBlock
 
 //	---------------------------------------------------------------------------- //
 
-function mc_InitMercury()
+function mc_InitMercury( cFile )
 	
-	MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
-retu nil 
-
-
-
-function MercuryInclude( cFile )
-
-	local cIndexPath := hb_GetEnv( 'PRGPATH' ) + '/' 
+	local cIndexPath 		:= hb_GetEnv( 'PRGPATH' ) + '/' 
 	
-	thread static cFileInclude := ''
-	
-	if !empty( cFileInclude )
-		retu cFileInclude 
-	endif
+	local cPrg 
 
-	DEFAULT cFile TO 'lib/mercury/mercury.ch'	
+	//	Capture handleError 
 	
-	if file( cIndexPath + cFile  )	
-	
-		cFileInclude := '"' + cIndexPath + cFile + '"'
-
-		retu '"' + cIndexPath + cFile + '"'
+		MH_ErrorBlock( {|hError| MC_ErrorView( hError ) } )
 		
-	else 
-	
-		mh_DoError( 'Include file mercury not found ' + cIndexPath + cFile )
-	
-	endif 						
-	
-retu ''
+	//	Include harbour files. Set HB_INCLUDE 			
+		
+		HB_SetEnv( "HB_INCLUDE", MC_App_Path() + '/include/' )		
+		
+	//	Load include file 	
 
+		if file( cIndexPath + cFile  )	
+	
+			cFileInclude := cIndexPath + cFile 
+			
+		else 
+	
+			mh_DoError( 'Include file mercury not found ' + cFileInclude )
+		
+		endif 					
+	
+		__pp_AddRule( mh_PPRules(), hb_memoread( cFileInclude ) )
+	
+retu '' 
+
+
+function MercuryInclude()
+
+retu "'" + cFileInclude + "'"

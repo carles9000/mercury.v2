@@ -12,8 +12,20 @@ ENDCLASS
 
 METHOD New() CLASS MC_Viewer
 
-	::oResponse := MC_Response():New()
+	local cPrg
+
+	::oResponse := MC_Response():New()			
+	
+	
+	//	Cuado se ejecuta la vista se pierde las definiciones del preprocesador
+	//	Con este trick volvemos a cargar los comandos 
 		
+		cPrg := "<?prg #include " + MercuryInclude() + " ; retu '' ?>"
+
+		mc_InlinePrg( cPrg )
+		
+	//	----------------------------------------------------------------------
+	
 RETU Self
 
 
@@ -60,7 +72,7 @@ METHOD Exec( cFile, nCode, ... ) CLASS MC_Viewer
 		mc_set( 'view', cFile ) 
 
 		hError 	:= ErrorBlock( {| oError | MC_ErrorSys( oError, @cCode, cCodePP ), Break( oError ) } )
-	
+
 		mc_ReplaceBlocks( @cCode, "{{", "}}", nil, ... )			
 		
 		cHtml := mc_InlinePrg( @cCode, nil, ... )  

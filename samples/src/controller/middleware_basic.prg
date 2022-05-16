@@ -15,8 +15,8 @@ METHOD New( oController ) CLASS Middleware_Basic
 	//	definirlo aqui...
 
 		DEFINE CREDENTIALS VIA 'basic auth' OUT 'json' JSON { 'success' => .f., 'msg' => 'Unauthorized' } ;
-			VALID {|uValue| MyAccess( uValue )}
-			
+			VALID {|cUser,cPsw| MyAccess( cUser, cPsw )}
+
 	//	------------------------------------------------------------------------------
 
 	AUTENTICATE CONTROLLER oController 
@@ -34,23 +34,8 @@ RETU nil
 
 //	---------------------------------------------------------------------------------	//
 
-function MyAccess( u )
+function MyAccess( cKey, cPsw )
 
-	local nPos 
-	local cUser := ''
-	local cPsw  := ''
-	local lAuth := .f.
+	local lAuth := ( cKey == 'charly' .and. cPsw == '1234' )			
 	
-	_d( 'MyAccess', u )
-	
-	nPos := At( ':', u )
-	
-	if nPos > 0 
-		cUser := Substr( u, 1, nPos-1 )
-		cPsw  := Substr( u, nPos+1 )				
-	endif 
-	_d( cUser, cPsw )
-	
-	lAuth := ( cUser == 'charly' .and. cPsw == '1234' )		
-
-return lAuth
+retu lAuth 

@@ -1,3 +1,16 @@
+19.04.2022 => 2.1.005
+=====================
+new mc_InitMercury( cFile_Include ). It's the same as MercuryInclude() but this function, apart from 
+loading the mercury include, initializes more functions, such as error handling. Any initialization 
+of mercury will always go through here and we will not have to touch the code anymore.
+See samples/index.prg:
+
+//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}		// Load Mercury lib
+//	{% mc_InitMercury( '../lib/mercury.ch' ) %}		// Init Mercury system
+
+
+
+
 19.04.2022 => 2.1.004
 =====================
 New MercuryInclude(). Now you will need include file include this function at begin of app

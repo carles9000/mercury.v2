@@ -6,12 +6,10 @@
 //	Last Upd...: 24/03/2022
 //	------------------------------------------------------------------------------
 
-//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}			//	Load lib
-//	{% mc_InitMercury() %}								//	Init ErrorSystem
+//	{% mh_LoadHrb( '../lib/mercury.hrb' ) %}		//	Load Mercury lib
+//	{% mc_InitMercury( '../lib/mercury.ch' ) %}		//	Init Mercury system
 
 
-#include {% MercuryInclude( '../lib/mercury.ch' ) %}		//	Default: actual path + 'lib/mercury/mercury.ch'
-	
 function main()
 
 	local oApp		
@@ -130,7 +128,7 @@ function TestInit()
 	
 	SET DATE TO ITALIAN
 	
-	_d( mc_getapp():Version() )
+	//_d( mc_getapp():Version() )
 	
 retu 
 

@@ -5,8 +5,8 @@
 //	Last Upd...: 22/03/2022
 //	------------------------------------------------------------------------------
 
-//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}
-// 	{% mc_InitMercury() %}								//	Init ErrorSystem
+//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}			//	Load lib
+// 	{% mc_InitMercury( '../../lib/mercury.ch' ) %}		//	Init Mercury system
 
 #define APP_VERSION  '1.0a'
 

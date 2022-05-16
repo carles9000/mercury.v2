@@ -21,9 +21,9 @@ CLASS MC_Middleware
 	CLASSDATA nTime			     						INIT 3600
 	CLASSDATA bValid 
 	CLASSDATA lDbg										INIT .T. 
+	CLASSDATA hData										INIT {=>}
 	
 	DATA lAuth											INIT .F. 
-	DATA hData											INIT {=>}
 	
 	DATA cargo											INIT ''		
 	
@@ -83,14 +83,21 @@ METHOD Define( cVia, cType, cName, cPsw, nTime, cOut, cUrl_Redirect, hError, bVa
 
 	::cVia 					:=	lower(cVia)
 	
+	
 	if 	::cVia == 'basic auth' .or. ;
-		::cVia == 'api key'
+		::cVia == 'api key' .or. ;
+		::cVia == 'bearer token'
+	   
+	    if valtype( bValid ) == 'B'
+			cType := 'func'
+		endif
 	
-		cType := 'func'
+	endif
+			
 		
-	endif			
+
 	
-	::cType 				:=  cType 		
+	::cType 				:=  lower( cType )
 	::cName 				:=  cName 		
 	::cPsw 					:=  cPsw 			
 	::nTime 				:=  nTime
@@ -129,7 +136,7 @@ METHOD Valid() CLASS MC_Middleware
 	local cUrl 	:= ''		
 	local cHtml	:= ''
 	local oJwt
-	local cRealToken, cData
+	local cRealToken, cData, nPos, cUser, cPsw
 
 	::hData := {=>}
 	::lAuth := .f.
@@ -142,7 +149,7 @@ METHOD Valid() CLASS MC_Middleware
 		
 			cToken := mh_GetCookies( ::cName )
 			
-		case ::cVia == 'query' 		
+		case ::cVia == 'query' 	.or. ::cVia == 'token'
 			
 			cToken := ::oRequest:Request( ::cName )			
 			
@@ -201,7 +208,21 @@ METHOD Valid() CLASS MC_Middleware
 			case ::cType == 'func'
 			
 				if valtype( ::bValid ) == 'B' 
-					::lAuth 	:= Eval( ::bValid, cToken )
+				
+					if ::cVia == 'basic auth'
+					
+						nPos := At( ':', cToken )
+	
+						if nPos > 0 
+							cUser := Substr( cToken, 1, nPos-1 )
+							cPsw  := Substr( cToken, nPos+1 )				
+						endif
+					
+						::lAuth 	:= Eval( ::bValid, cUser, cPsw )						
+					else
+						::lAuth 	:= Eval( ::bValid, cToken )
+					endif
+					
 					::lAuth 	:= if( Valtype( ::lAuth ) == 'L', ::lAuth, .f. )
 					
 				endif 

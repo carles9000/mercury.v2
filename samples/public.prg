@@ -1,4 +1,4 @@
-//	{% mh_LoadHrb( '..\mercury.hrb' ) %}
+//	{% mh_LoadHrb( '..\lib\mercury.hrb' ) %}
 	
 //	--------------------------------------------------------------------------------------
 //	Examples: your <url> localhost/test

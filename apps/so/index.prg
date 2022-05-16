@@ -6,13 +6,10 @@
 //	Last Upd...: 24/03/2022
 //	------------------------------------------------------------------------------
 
-//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}
-//	{% mh_LoadHrb( 'lib/tweb/tweb.hrb' )  %}
+//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}			//	Load Mercury lib
+// 	{% mc_InitMercury( '../../lib/mercury.ch' ) %}		//	Init Mercury system
 
-// 	{% mc_InitMercury() %}									//	Init ErrorSystem
-
-#include {% TWebInclude() %}									//  TWeb file ch 
-#include {% MercuryInclude( '../../lib/mercury.ch' ) %}		//	Mercury file ch
+//	{% mh_LoadHrb( 'lib/tweb/tweb.hrb' )  %}			//	Load TWeb lib
 
 
 #define APP_VERSION  '1.0a'

@@ -7,8 +7,8 @@
 //	Example WS with API Key. Try key: mercury , psw:1234 with postman 
 //	------------------------------------------------------------------------------
 
-//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}
-// 	{% mc_InitMercury() %}								//	Init ErrorSystem
+//	{% mh_LoadHrb( '../../lib/mercury.hrb' ) %}			//	Load lib
+// 	{% mc_InitMercury( '../../lib/mercury.ch' ) %}		//	Init Mercury system
 
 #define WS_VERSION  '1.0a'
 
