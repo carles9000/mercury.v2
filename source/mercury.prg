@@ -68,9 +68,10 @@ function mc_InitMercury( cFile )
 	
 			mh_DoError( 'Include file mercury not found ' + cFileInclude )
 		
-		endif 					
+		endif 
 	
-		__pp_AddRule( mh_PPRules(), hb_memoread( cFileInclude ) )
+		__pp_AddRule( mh_PPRules(), hb_memoread( cFileInclude ) )		
+
 	
 retu '' 
 
